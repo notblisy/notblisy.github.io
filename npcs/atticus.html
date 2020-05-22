@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Baltaria Wiki
+</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Atticus</h1></div>
+
+<div class="textformat">
+<h2>Stories</h2>
+<p>It was a fairly big party the Herris' were throwing in celebration of the Summer solstice. Little Katz and Forebrand were wandering the gardens playing hide and seek through a small brush-maze, and in the midst of their play Katz bumped her head into Atticus, who was outside to relax and get away from the party. Katz freaked out, knowing Atticus's importance in the country, bowing and apologizing repeatedly. Atticus laughed and told her to calm down and just to keep her head high and watch where she was going. He pulled out a little candy from his pocket and gave it to young Forebrand and told the two to keep having fun, and continued on his way.
+</p>
+
+
+
+<h2>Description</h2>
+<p>Half elf leader, one of the four members of the oligarchy that runs Baltaria.<br>
+Operates largely in the North-East corner of the countries affairs. <br>
+Helped overthrow House Orien while they ran Nirva.<br>
+Often works on diplomatic issues in the courts of Baticul <br>
+Holds the archlight blade, one of the four sacred weapons.</p>
+
+
+<h2>Player Character Interaction</h2>
+<p>When the party had the opportunity to meet Atticus, they presented him with many different issues at hand, the most prominent of which was the Sanguine Knights return. Katz was sweating and nervous during her presentation, but Atticus, while clearly very concerned about the news, kept a calm demeanor and asked the party to attempt to collect the remaining shards of the soul destroyer while they figured a way to deal with the knight. 
+
+</p>
+</body>
+
+
+
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Baltaria Wiki
+</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Feldspar</h1></div>
+
+<div class="textformat">
+<h2>Atmosphere</h2>
+<p>Empty and dusty, feldspar may seem like a sad place at first, but you'll soon upon entry learn that every single person in this town is full of life just trying to do their best in a rough situation. It's got much positive atmosphere, and even at its worst when no-one in the town could make any money because One-Eyed-Jack was preventing them from using the mine, everyone kept their chins-up.
+
+
+</p>
+
+
+
+<h2>Description</h2>
+<p id="h.p_s34TT9epApkF" class="zfr3Q">Feldspar is the starting town of the adventure. Currently having bandit problems, and the party is hired to deal with them. It is a mining town.</p>
+<p id="h.p_pWZ77TN1OduS" class="zfr3Q">Fairly small population, not more than a few hundred.</p>
+<p id="h.p_zkNhHFQvOgQu" class="zfr3Q">Mining export town, back at it since one eyed jack was removed from the mine.</p>
+<p id="h.p_jwy3ft1hOjeG" class="zfr3Q">Has a clock tower</p>
+<p id="h.p_pdUdF-rEOkWu" class="zfr3Q">The place where the Sanguine Knight was spawned.</p>
+
+</body>
+
+
+
+</html>

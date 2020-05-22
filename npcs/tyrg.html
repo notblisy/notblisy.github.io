@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Baltaria Wiki
+</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Tyrg</h1></div>
+
+<div class="textformat">
+<h2>Stories</h2>
+<p>Tyrg is a white dragonborn who is Glanzends self proclaimed nemesis. He sought an apprenticeship under the Wizard Zambrosia, although he failed at that and Zambrosia tutored Glanzend. Tyrg began to hate Glanzend because of this, and got an apprenticeship under an evocation wizard instead. These feelings of distaste continue to fester, and he yearns for the day when he can put Glanzend in his place.
+
+
+</p>
+
+
+
+<h2>Description</h2>
+<p><p>
+White dragonborn rival to Glanzend, although Glanzend just seems to think they are friends.<br>
+Hails from the city of flamecrest<br>
+Originally studied in the same program as Glanzend at flamecrests school of magic, but sought the same tutor as glanzend and failed to achieve them as a mentor.<br>
+Glanzend met Tyrg in school, but the rest of the party first met them during a heist in one of the schools vaults.<br>
+Tyrg was assisting the Cult of the Iron Gear in attempting to steal Adamantine from a professors private vault.<br>
+White dragonborn with a small motor in his chest. Is said to amplify magical abilities, according to Hardy.</p>
+</p>
+
+
+<h2>Player Character Interaction</h2>
+<p>As we spotted Tyrg robbing the vault with the cult, Glanzend couldn't help be shocked at his former friends betrayal of the school and city, although Tyrg seemed to hold nothing but contempt for Glanzend and our party. Later on, Hardy informed us the White Dragonborn was not really their ally, but was just assisting them in exchange for the "Infinite Magic Engine" Hardy put in Tyrgs chest, as Tyrg was quite power hungry.
+
+</p>
+</body>
+
+
+
+</html>

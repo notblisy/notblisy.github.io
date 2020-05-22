@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Baltaria Wiki
+</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Search for the Shards Arc</h1></div>
+
+<div class="textformat">
+<h2>The story so far...</h2>
+<p>The party enters greywater swamp, and after a short while is ambushed by crocodiles. We walk for several hours, attempting to use detect magic to find the shard, but to no avail. We rest the night using a tiny hut created by Glanzend. After the evenings rest, immediately the party ran into a poisonous troll who downed Dr.Bolas and Katz, the party had to shortrest afterwards. But with each trip we get closer to a pack of undead we have been tracking with Forebrands primevil awareness.</p>
+
+<p>The party encountered said horde of undead and entered into a combat.</p>
+
+<p>The party finds another adventuring party, bearing the insignia of the baltaria ruinilogial society. Country wide guild of archaeologists and adventurers. Barnabas (Half elf), Ebrus-Dwarf, eric human, jegos drow. They have a catoblepus. They were part of a group known as the Ruiners, their motives are unclear but they don't appear to work for the sanguine knight.</p>
+
+<p>After a hard-fought battle, the party barely managed to defeat them. We stored the shard in the magic box. They wanted the shard to any end it seems, but we were not able to find out much about their motives. Dr.Bolas fell during the battle, but was revived by Sylas, an archefaye, however his class changed to glamour bard and his name changed to orchid. We did some shopping in Glimmer, and are current heading is the desert city of sunstone.</p>
+
+<p>Sunstone seemed to have been severely destroyed. Orcus is in the city, an ally of ours from Regans camp, he tells us that the Sanguine Knight is what destroyed a large portion of it. Whitemane believes the Sanguine Knight is unaware of the location of the shard, and the tomb of the iron king had no traps set off, so the shard is probably in the tomb. The party heads to the tomb, and on the way the sand seems to shift a lot, Katz shoots the shifting sands and out pops some scorpion men, like centaurs but scorpion lower bodies.</p>
+
+<p>We enter the temple of the iron king, and immediately bumble is hit by a trap. As we reverse the dungeons, glanzend lights the sconces with magic. Forebrand told us the location of all traps on the current floor, but we immediately stumbled upon another as we went down the temple. As we traversed the temple, we found two orbs the second floor, but, as soon as glanzend saw them in all their shiny glory, he went to grab one and both of the orbs woke up to be orbs of doom with knives. We barely scraped by in this fight.</p>
+
+
+</body>
+
+
+
+</html>

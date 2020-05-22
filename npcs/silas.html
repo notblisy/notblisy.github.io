@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Baltaria Wiki
+</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Silas</h1></div>
+
+<div class="textformat">
+<h2>Stories</h2>
+<p>As we enter the grove in greywater swamp, the Firbolg tells us to be careful as we enter the faywilds, and not to speak our names, for the creature that is in there may do something nefarious with it.
+
+
+</p>
+
+
+
+<h2>Description</h2>
+<p><p>Silas is an archfey, and we are unsure of the domain they are a demi-god of.<br>
+They met the party after being introduced by a firbolg, and told us the location of the shard in the swamp. On top of this, they are in a small bet with Wolfrarn, a dragonborn guard of his, as to whether or not our party will succeed. <br>
+They are a bit of a trickster, but seem to be rooting for us to succeed in our quest, from what it seems is out of boredom.</p>
+</p>
+
+
+<h2>Player Character Interaction</h2>
+<p>Our first interaction with Silas was them stealing Katz' name, because Katz didn't pay attention to the warning from the firbolg. Immediately after, they gave us the location of the shard in greywater swamp.</p>
+
+<p>After Dr. Corvach Bolas died heroically in the fight for the shard, Silas granted him life anew, but with a catch-- His whole being changed, in reflection of thanks to the fey who rose him from the dead.</p>
+</body>
+
+
+
+</html>

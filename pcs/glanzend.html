@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Baltaria Wiki
+</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Glänzend von Silberne Augen</h1></div>
+
+<div class="textformat">
+<h2>Introduction</h2>
+<p>I’m confident in my own abilities and do what I can to instill confidence in others.
+Always very friendly with just about anyone, and will just about always try to talk down a heated situation whether or not he is directly involved in it.
+I am very interested in things that are shiny and silver, especially if I can see my own reflection in it. I will also polish my own scales to keep them as brilliant as possible.</p>
+
+
+<div id="box">
+<h3>Attributes</h3>
+<table>
+ 
+    <td><i><b>Class</b></i></td>
+    <td>Wizard</td>
+  </tr>
+  <tr>
+    <td><i><b>Subclass</b></i></td>
+    <td>Transmutation</td>
+  </tr>
+<tr>
+    <td><i><b>Race</b></i></td>
+    <td>Dragonborn, Silver</td>
+  </tr>
+  <tr>
+    <td><i><b>Height</b></i></td>
+    <td>6'7"</td>
+  </tr>
+<tr>
+    <td><i><b>Weight</b></i></td>
+    <td>214lbs</td>
+  </tr>
+  <tr>
+    <td><i><b>Sex</b></i></td>
+    <td>Male</td>
+  </tr>
+    <tr>
+    <td><i><b>Alignment</b></i></td>
+    <td>Chaotic Good</td>
+  </tr>
+    <tr>
+    <td><i><b>Bond</b></i></td>
+    <td>Was a student under a highly sought after and skilled transmuation wizard, Zambrosia, who taught me the ins and outs of wizardry.</td>
+  </tr>
+    <tr>
+    <td><i><b>Flaw</b></i></td>
+    <td>Cannot but help pocket loose coins and shiny things, especially if silver or reflective.</td>
+  </tr>
+     <tr>
+    <td><i><b>Relationships</b></i></td>
+    <td>Zambrosia, Tyrg</td>
+  </tr>
+  
+</table>
+
+</div>
+
+
+
+<h2>Description</h2>
+<p>Glänzend is a rather tall and slender Silver Dragonborn.  His scales are exceptionally shiny even for one of his draconic ancestry. He also has a mildly pronounced spined fin going down the middle of his head to neck, much like what you would see on the Silver Dragons of his ancestry. Along with his high seated eyes, his gaze appears to have a very noble and "looking down at you" presence. His eyes are generally a cloudy grey color, but upon further inspection, you can see a hint of a silver glimmer within them that has become more and more prominent as heages.</p>
+
+<h2>Backstory</h2>
+<p> I was not the best in my wizard’s academy, but everyone always liked to be around me. Except for Tyrg (teerg) who was always the most skilled and resented me for that. Even more so after I got the apprenticeship with Zambrosia that he wanted.
+Tyrg - White Dragonborn Wizard (self-proclaimed nemesis) who then got his apprenticeship under an evocation specialist. Continuing to harbor more and more hatred towards me hoping to “put me in my place” (I know Tyrg does not like me, just not to what extent) 
+</p>
+<h2>Alignment and Motivation</h2>
+<p>Alignment: *Chaotic Good* Acts as his conscience directs him with little regard for what others expect of him. He makes his own way, but he's kind and benevolent. He believes in goodness and right but has little use for laws and regulations. He hates it when people try to intimidate others and tell them what to do. He follows his own moral compass, which, although good, may not agree with that of society.
+</p><p>Goal(s): Wants to be the one to save the day, specifically because of his own actions. EG: not necessarily dealing the final blow, but being the reason the final blow was possible.
+</p>
+<h2>Look-A-Like Artwork</h2>
+<img src=" " alt="pcimage">
+</div>
+</body>
+
+
+
+</html>

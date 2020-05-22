@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Baltaria Wiki
+</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Name</h1></div>
+
+<div class="textformat">
+
+
+
+
+<h2>Description</h2>
+<p>The cult of the Iron gear was a cult run by Hardy, a bit of a crazy man attempting to recreate warforged, but accidently ended up summoning the Sanguine Knight. The cult stole various bits of technology, and each of them had a mechanical limb replacing one they lost, as their signature mark. Their most notable theft was the stealing of a huge quantity of adamantine in Flamescrest, and finding the shard in the mine of feldspar. They were slowly picked apart by the Player Characters and eventually fell at the hands of them and The Sanguine Knight, which they accidentally rose. It is unknown if a new leader has taken Hardys place, but he is currently in custody of the police.
+</p>
+
+</body>
+
+
+
+</html>

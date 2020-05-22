@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Baltaria Wiki
+</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Nïrva</h1></div>
+
+<div class="textformat">
+<h2>Atmosphere</h2>
+<p>Seagulls crow and squawk as a salty breeze blows against the exhausted faces of men working the dock, giving them some releif. Several fairly brawny elven men are lifting barrels of fish off a large fishing vessel. "Good haul today, at least." Says one of the men whiping the sweat from his brow. "Aye, and once we're done we can relax at the Cas Lingwë and do some good drinkin'." Later that night at the bar the men can be seen drinking and relaxing to the sound of the waves crashing against the beach, which can be heard through most of the city. Outside their kids are playing in a street well lit by torches, and further down that road can be see the huge street of merchants closing their booths and shops up at the bizaar for the day. The city is finally quiet, all you can hear is the sound of the waves and the gulls. 
+
+
+</p>
+
+
+
+<h2>Description</h2>
+<p>N&iuml;rva is a big city on the northeast coast of Baltaria with a population of around 15,000. It's a port city that also has an expansive beach.</p>
+
+<p>Population: The city majority is high elves around 65%, and while they are pretty much the only people in upper class, that is not where they exclusively reside. Their are many peasant and worker class high elves as well. All manner of folk are welcome and live in this city, they are just less common.<br>
+Economy: The city is fueled by its fishing and tourism. Many variety of fish live off the coast, leading to a huge export of many different fish. The trade economy for anything else is smaller, just because the city is fairly remote and traderoutes through the forest are difficult and lengthy. The tourism industry is also big because of the scenic beach and many different seafood resturaunts that popped up because of the variety of fish.<br>
+Politics: N&iuml;rva defends about a dozen small villages with populations ranging around 1,000~ with its sizeable military in exchange for some taxation, and these villages also gain the benefits of tax free trade with the city and all the other villages nearby. The town is ruled by a Wife and Husband Dutchess and Duke. They have equal control over the city and its villages, and many of their cousins, brothers and sisters are delegated smaller matters, equivalent to acting as a sort of cabinet. While the people cannot vote typically, they are a very free people. The Dutchess and Duke realize that giving people freedom and treating them well leads to less trouble for everyone involved. Every week the Dutchess and Duke take a que of petitions from citizens to help deal with potential arising problems, and then they either handle it themselves or delegate to a cabinet member.<br>
+Culture: The city can best be described as a food city. Dozens and dozens of resturaunt line the jagged and winding streets, not to mention the food carts and stand. The people here love many different types of ocean delicacy, and love showing it off to not only the citizens, but tourists. This leads to once a year a huge Seafood Festival called &quot;E&auml;renya&quot;, which literally means sea-day in elven. In general most people here are fairly relaxed overall, despite working in the military, fish, or food industries being extremely stressful. Most people think it has to do with the beach, and the sound of the waves.<br>
+Description: The city is fairly expansive, and built in a less than helpful way. Its streets are narrow and winding, and buildings seemed to have been added without the idea of &quot;but what if the city expands more&quot;, so there is kind of a cramped feeling when you're looking at how close the buildings are packed. This maze of cramped and packed buildings leads right up to the docks and beach. The beach is extremely expansive, and it would be the width of the entire city of the docks had not been built. The beach is several miles long, but maybe a quarter mile wide. The docks are actually pretty cramped for how important fishing is, but they were built when the city was small and no one expected it to get this big.</p>
+
+
+
+</body>
+
+
+
+</html>

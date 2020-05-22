@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Baltaria Wiki
+</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Gregory Bumble</h1></div>
+
+<div class="textformat">
+<h2>Introduction</h2>
+<p>Gregory is a 22 year old  dedicated paladin of Pelor and is hellbent on protecting the weak.</p>
+
+
+<div id="box">
+<h3>Attributes</h3>
+<table>
+ 
+    <td><i><b>Class</b></i></td>
+    <td>Paladin</td>
+  </tr>
+  <tr>
+    <td><i><b>Subclass</b></i></td>
+    <td>Oath of Devotion</td>
+  </tr>
+<tr>
+    <td><i><b>Race</b></i></td>
+    <td>Halfling, hills</td>
+  </tr>
+  <tr>
+    <td><i><b>Height</b></i></td>
+    <td>3'9"</td>
+  </tr>
+<tr>
+    <td><i><b>Weight</b></i></td>
+    <td>96lbs</td>
+  </tr>
+  <tr>
+    <td><i><b>Sex</b></i></td>
+    <td>Male</td>
+  </tr>
+    <tr>
+    <td><i><b>Alignment</b></i></td>
+    <td>Lawful Good</td>
+  </tr>
+    <tr>
+    <td><i><b>Bond</b></i></td>
+    <td>I protect those who cannot protect themselves</td>
+  </tr>
+    <tr>
+    <td><i><b>Flaw</b></i></td>
+    <td>I view most gods as lesser than Pelor</td>
+  </tr>
+     <tr>
+    <td><i><b>Relationships</b></i></td>
+    <td>Pelor</td>
+  </tr>
+  
+</table>
+
+</div>
+
+
+
+<h2>Description</h2>
+<p>Gregory is quite small, however he is very bulky as far as halflings go, around his neck is a copper sun dedicated to his Deity, Pelor.  </p>
+
+<h2>Backstory</h2>
+<p>Gregory comes from a Halfling village called Hopsfeld, a larger than average Halfling town known for its beer. (that you can't convince Gregory isn't the best brew on earth) When Gregory was a boy he was quite small and weak even for Halfling standards. He was subject to constant abuse from the other Halfling children. The only place he would find sanctuary is the local temple to Pelor. The kind and encouraging words from priest gave the young Gregory new found confidence and the teachings of Pelor encouraged him to be brave in the face of danger and injustice. In this time Gregory would read from the Temples library. Apart from learning the deeper theological meanings of Pelors Light, He would read stories of great heroes that stood for justice, faith and against those evil, wretched undead that must be destroyed. However whilst reading these tales of adventures he came across the fact that none of the heroes in the stories were Halflings, this upset him and he swore to fix this wrong if given the chance. In the ages of Gregory becoming a man, he set out on improving himself both spiritually and physically, through  praying and training he has become a valued warrior and theologian in his community. He now sets forth to new adventures, pledging to Pelor he will protect the weak and those who can't defend themselves.  </p>
+<h2>Alignment and Motivation</h2>
+<p>Gregory Bumble is Lawful Good and has sworn to defend the poor, weak, infirm, young and old. As well as defending communities from the undead hordes. 
+</p>
+<h2>Look-A-Like Artwork</h2>
+<img src="https://lh4.googleusercontent.com/71BaVN0z4KJ5thJRdILXNwviUzueueSB1TGa5N0vrwTt35bAfGeQulgGZ6lBa2SPD7PxNSakNyiYnobvu7R3t9xWKNgoVngJLPRQsS6EWIxp42oYjK-e=w472 " alt="pcimage">
+</div>
+</body>
+
+
+
+</html>

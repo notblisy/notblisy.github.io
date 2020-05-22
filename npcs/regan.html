@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Baltaria Wiki
+</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Regan</h1></div>
+
+<div class="textformat">
+<h2>Stories</h2>
+<p>Katz and Forebrand kept hearing from their travels with their "escort" of the good lady, and how she welcomes everyone to her family who does not have a place in the world. As they entered her mansion after days of travel, at the top of the stairs stood a high-elf dressed exceptionally well, ecstatic to see her supposedly long-lost family member Forebrand.
+
+
+</p>
+
+
+
+<h2>Description</h2>
+<p>High elf of House Orien, perhaps the last House Orien member besides Forebrand Seralore(Pete)<br>
+Most recent known location was in the woods outside of Nirva, but she has since moved her operation elsewhere.<br>
+Is attempting to summon an outworld being known as &quot;Fulmahult the Autumn Star&quot;.</p>
+
+
+
+<h2>Player Character Interaction</h2>
+<p>Upon entering her home, we had heard nothing but praise of &quot;Regan the good lady&quot;, but she was only welcoming to Forebrand, as they are both of House Orien. She was extremely cold to Katz, and to the rest of the party as the showed up. But she showed restraint seemingly to win Forebrand over.</p>
+
+<p>She taught Forebrand of their powers to teleport, and her plans to bring the create known as Fulmalhault the Autumn star to our world. Her back room was full of crazy scribbles depicting her plans and different magics to attempt this.</p>
+</body>
+
+
+
+</html>

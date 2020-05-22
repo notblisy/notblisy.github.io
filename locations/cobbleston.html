@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Baltaria Wiki
+</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Cobbleston</h1></div>
+
+<div class="textformat">
+<h2>Atmosphere</h2>
+<p>
+</p>
+
+
+
+<h2>Description</h2>
+<p id="h.p_s34TT9epApkF" class="zfr3Q">Short bio of the city, one or two sentences</p>
+<ul class="n8H08c UVNKR">
+<li id="h.p_Hpi6zoixArcK" class="TYR86d zfr3Q"><strong>Population:</strong> Fairly large city</li>
+<li id="h.p_17sI5urkArcL" class="TYR86d zfr3Q"><strong>Economy:</strong> Cobbleston is a tinker town, with lots of different mechanical operations.</li>
+<li id="h.p_fNl6pUgwArcL" class="TYR86d zfr3Q"><strong>Politics:</strong> Powder Kegs are a tinkers guild in cobbleston. All that is known is there is a big project going on. (It's the train).</li>
+<li id="h.p_mXq9I0btArcL" class="TYR86d zfr3Q"><strong>Culture:</strong> Cobbleston is a pretty big bustling city with lots of people in it. The powder kegs are a guild started and primarily operating here.</li>
+<li id="h.p_NTboxi3YArcL" class="TYR86d zfr3Q"><strong>Description:</strong> Layout and general feel</li>
+</ul>
+<p id="h.p_LDRQVUHqArcM" class="zfr3Q">&nbsp;</p>
+
+</body>
+
+
+
+</html>

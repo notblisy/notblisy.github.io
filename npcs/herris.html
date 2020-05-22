@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Baltaria Wiki
+</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Zinnea and Ludan Herris</h1></div>
+
+<div class="textformat">
+<h2>Stories</h2>
+<p>Zinnea sighs and slumps in her throne. The last visitor for the day has just left. Exhausted, she says to her 
+busband "That was an angry batch today my dear. It seems we have more work to do next week than I'd like, I'll 
+assign cousin Cithrel to the work with the fishermen though, he seems to deal with them much better than I ever 
+can." Ludan nods in agreement and says "On top of that, Katz has been acting up again recently. I don't know what 
+we can do to help that poor girl, she seems so lost. She's 80 now, I hope we can figure something out for her soon, 
+she's almost an adult. So I think delegation is best so we can try to spend some time with her." As they settle in 
+for bed later that evening, a guard knocks on their bedroom door. "Yes, what is it?" Answers Zinnea. The guard 
+nervously says "Dutchess, someone has abandoned a child right in front of the gates of your castle with a small 
+note begging for help. The child was dropped right as the guard change occured, so we could not see or catch the 
+culprate. We thought you should know what happened." Zinnea and Ludan rush to the front gates as the guards are 
+just picking the child up to take to an orphanage. The moment the two of them saw the baby they were in love. 
+"Don't. Leave her with us. The note said they needed help, right?" Said Ludan. The Dutchess and Duke walk back into 
+the castle, newborn human in hand. </p>
+
+
+
+
+<h2>Zinnea Herris</h2>
+<p>Zinnea is the Dutchess of the city of Nïrva, Wife to Ludan Herris, and adoptive mother to Katz von Dunkelheit 
+and Forebrand Seralore. She is the blood heir to the throne of this city, and her husband took her name when they 
+married. Though he was also of royal descent. She is a tall, with fairly pale skin and jet black hair. Zinnea cares 
+for her children first, above all else. She can be a strict mother, but on the inside she is a softy, and just 
+wants the best for her kids. She didn't tolerate a lot of the trouble that Katz got into when she was younger, and 
+felt lost about how to help her. Though does her best to be a fair and just ruler to her people. Her main duties to 
+the city she prioritizes is taxation of the city and surrounding ward villages, handling a lot of the problems that 
+arise because of the military, and handling huge tourism industry.</p>
+
+<h2>Ludan Herris</h2>
+<p>Ludan is the Duke of Nïrva, Husband of Zinnea Herris, and adoptive father of Katz von Dunkelheit and Forebrand 
+Seralore. Ludan is a fairly short and sleight man, with short black hair. While his stature is small, he commands 
+respect and is extremely intense. His booming voice helps in this endeavor, and he is an extremely attentive 
+listener. When citizens are at the court to explain their greivances, they say it is almost as if he pierces their 
+soul with how intense his stare is. Ludan is a stern father, but extremely supportive. When his youngest daughter 
+wanted to join the guard, he did not think twice of it, and told the generals to treat her no different, and he 
+meant it. When his oldest was struggling to find her place, he had no issue with her desire to go adventuring to 
+find her place.</p>
+<h2>Adoption</h2>
+<p>While typically it might be rare for Elves to adopt and care for other races, especially royal Elves, the 
+Herris' were particularly privy to the idea of adopting children who need their help because of the son they lost. 
+The rulers had tried for many years to have a child, and continously failed to conveiced or had miscarraiges. The 
+day they finally had their beautiful boy, they could not have been happier. Unfortunately, at the young age of 10 
+their son while playing on the beach slipped and cracked his head on a rocky portion of the shore, and could not be 
+saved. This devastated both Zinnea and Ludan, and for quite a while they did not even try to conceive. Then they 
+day came, 95 years ago, an infant drow was left on their castle doorstep with a note that read but 3 words. Blessed 
+by Corellon. The infant came to be known as Katz von Dunkelheit of house Herris. 80 years later, a similar 
+situation occured, but with a note just saying Please. Help. Not hesitant one bit, the Herris' were prepared for 
+their second daughter, this time a human, to join their family.
+</p>
+<h2>Player Character Interaction</h2>
+<p>None so far ;)</p>
+</body>
+
+
+
+</html>

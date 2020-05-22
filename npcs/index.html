@@ -1,0 +1,86 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Baltaria Wiki
+</title>
+<link href="../style.css" rel="stylesheet" type="text/css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Baltaria Wiki</h1></div>
+
+<div class="textformat">
+<h2>Introduction</h2>
+<p>This is a google sites for Dakotas campaign set in the world of Baltaria. There will be a page for every playable character, along with NPCs, cities, and notes of the plot. 
+
+</p>
+<p>I try to keep any notes and information on this website as up to date as I can, if there's anything you think I should add, send me a text or discord dm.
+</p>
+
+
+
+<h2>Characters</h2>
+
+<p><a href="/baltaria/npcs/atticus.html">Atticus</a></p>
+<p><a href="/baltaria/npcs/isekandar.html">Ise Kandar</a></p>
+<p><a href="/baltaria/npcs/cassandra.html">Cassandra</a></p>
+<p><a href="/baltaria/npcs/whitemane.html">Whitemane</a></p>
+<p><a href="/baltaria/npcs/herris.html">Zinnea and Ludan Herris</a></p>
+<p><a href="/baltaria/npcs/bloodyrain.html">Sanguine Knight</a></p>
+<p><a href="/baltaria/npcs/hardy.html">Hardy</a></p>
+<p><a href="/baltaria/npcs/niero.html">Brother Niero</a></p>
+<p><a href="/baltaria/npcs/galileo.html">Galileo</a></p>
+<p><a href="/baltaria/npcs/regan.html">Regan Orien</a></p>
+<p><a href="/baltaria/npcs/richard.html">Rirchard</a></p>
+<p><a href="/baltaria/npcs/gakrun.html">Gakrun Break</a></p>
+<p><a href="/baltaria/npcs/tyrg.html">Tyrg</a></p>
+<p><a href="/baltaria/npcs/sain.html">Captain Sain</a></p>
+<p><a href="/baltaria/npcs/reeve.html">Reeve</a></p>
+<p><a href="/baltaria/npcs/spiritofvengeance.html">Spirit of Vengeance</a></p>
+<p><a href="/baltaria/npcs/colonel.html">The Colonel</a></p>
+<p><a href="/baltaria/npcs/silas.html">Silas</a></p>
+<p><a href="/baltaria/npcs/henryk.html">Henryk</a></p>
+
+</body>
+
+
+
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Baltaria Wiki
+</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Cult of the Iron Gear Arc</h1></div>
+
+<div class="textformat">
+<h2>The story so far...</h2>
+<p>Blissara and Katz entered Feldspar together and asked a guard for Henryk. The guard said he was at a bar and hard to miss with a &quot;dog man&quot;. They wanted into the bar and ordered drinks. At the same time Glanzend and Halfthor walked into the bar and struck up a conversation with us. We quickly found Henryk and his &quot;dog man&quot; friend, who was named ripjaw. Ripjaw was just eating an entire cow while Henryk was armed to the teeth with knives.  The town guard Katz and Blissara was named Ryan, and the one Glanzend and Halfthor met was named Jim.  Our mission given to us by Henryk was to take care of an up and coming bandit who wished to become a bandit king named One eyed Jack. He had taken over the mine of feldspar ruining the towns economy and being a general nuisance.  As we entered the mine there was only maybe 4-5 bandits in there and they were easily taken down, as we got deep into the mine we found One Eyed Jack being interrogated by some weird short guy, a goliath named Brother Niero, and a Warforged named Galileo (who was wearing eastern isles garb. All 3 of them were wearing hoods and cult of the Iron Gear Garb.  They were looking for a &quot;shard&quot;, which one eyed jack didn't know about, but was later found in that same cave. The party at first tried to just say these three could do whatever they want as long as they didn't kill jack, but when they tried to kill him Katz intervened and started a fight. The party fought Brother Niero and Galileo and defeated Galileo and didn't do too much damage to Brother Neiro as he escaped with the shard. They took one eyed jack back to feldspar to prison and got their payment from Henryk, then asked Henryk if he knew what was up with the cult of the iron gear. He said he didn't, but we should head to Cobbleston and ask for The Colonel. The party chose to head towards glimmer instead of taking the swamps, and then take an underground tunnel from glimmer to cobbleston.</p>
+
+<p> The party had just left feldspar and on the way to Glimmer, an underground Kobold town when they noticed a tipped caravan and some chattering. It turned out to be a bunch of goblins in a wheat field, along with their bugbear leader. They easily defeated them and then found out they were working for a bandit king Gakrun Break and his camp. They intended to interrogate the Bugbear who was clearly the party leader, but because they wanted to take the Bugbear along the journey as a prisoner for 2 overnights, Katz killed the bugbear much to everyone elses chagrin.</p>
+
+<p>The party entered glimmer and Glanzend seemed to get along well with much of the Kobold guard he spoke to. The party went to the most expensive inn called the purple gemerald. They had many purple themed drinks, including lavender milk.</p>
+
+<p>Everyone in this town kept saying two things: You have to check out the oozomancer and that the exit tunnel was filled with big scary spiders.</p>
+
+<p>The Oozatorium was run by a crazy Kobold named Reeve, and he seemed to make different weapons and poisons, and potions from ooze/slime. I believe these weapons are destroyed after a number of uses, but posses powerful effects. Dr.Bolas bought several, and Gregory Bumble taste tested a new potion reeve was working on to get a discount for Dr.Bolas.</p>
+
+<p>On the way out we went to deal with this towns spider problem, we went down the spider caves and found almost no spiders. We saw 3 Chokers and killed them, then when we went to find the spiders we found a lot of giant spiders and a Drider. The Drider was pretending to be a helpless girl, but it was a trap. We killed her and harvested her for food. Then we went back to Glimmer and got a reward for killing her and dealing with the problem.</p>
+
+<p>After talking to the colonel, we are pointed towards flamecrest to find out more info about the sacred weapons and the shards. We are also led to believe that the cult of the iron gear might not be as threatening as initially perceived.</p>
+
+<p></p>
+
+<p>On the way to flamecrest, we are ambushed by several goblins and goblinoids, all whom wear the crest of house orien(I forget house name.)</p>
+
+<p>After the fight, one of the enemies escapes and Forebrand and Katz recklessly charge forward towards them, desperate to find out more about Forebrands past. Upon arriving at the enemy encampment, they are greeted by a warforged named TD, and a man named Sargus. They inform us that we ought to come with them to meet a person named the good lady. She is apparently very eager to meet Forebrand, but has to accept Katz as they are a packaged deal. The situation is suspicious, but Katz and Forebrand agree to go with them. As they head deeper into the camp, it becomes apparent that there was a small militia here, and they could not have fought their way out of they wanted. However, everyone is extremely friendly and happy we came along willingly.</p>
+
+<p>After they get into the cart the rest of the party finally catches up. There is an extremely tense discussion between Glanzend and Sargus, about if we willingly came and if we could all go together. We could not. Katz left a note and a trail of Forebrands rations so the party could trail them all the way to the destination.</p>
+
+<p>Sargus also reveals himself to be a Raksasha, a demonic tiger person with reversed hands.</p>
+
+<p>The party successfully trailed Katz and Forebrand to a house in the woods near Nirva. It had brick walls. The house seemed as if it had once been quite regal, but was currently very dilapidated. In it was Regan, one of the bandit kings. She was a high elf who also had the House Orien seal, and taught forebrand to teleport, and revealed her plan and the history of the clan Orien. Our parents, Ludin and Zinnea, were usurpers of house Orien, who once ruled Nirva. But after becoming obsessed with summoning Fulmuhault the autumn star, an otherworldy diety, they were overthrown by Katz and Forebrands parents with the help of one of the four rulers, Atticus.</p>
+
+<p>Orcus, an Orc follower of Regan, noticed much tension between our group and Regan, and helped us escape the house. He didn't wish any harm to come to us, or his family, as he was fond of us and him.</p>
+
+<p>After our escape, we headed to Battacal, the capital city, and subsequently flamescrest. On the way we encountered a Hill Giant and its minions and killed them all and took their giants cookbook.</p>
+
+<p>We headed to flamecrest to learn about the history of the four great weapons, and any knowledge about the shards of the fifth weapons. As we arrived, the party did some various research through the library and Glanzend sought knowledge from his teacher, and through him we met another teacher who showed us to a vault with the shard, so we could attempt to analyze it in some capacity. However, Hardy, the leader of the cult of the iron gear, was there with Glanzends former student friend Teirge. Him and the cult of the iron gear were pulling a heist stealing a bunch of adamantine, but oddly leaving the shard, which we thought he was interesting. Teirge also had small motor in his chest, later learned to be a device meant to amplify his magical powers.</p>
+
+<p>The group quickly dispatched of all but the cult higher ups they caught during the Heist, then quickly surveyed the town for information. Katz and Forebrand interrogated a local crook named slippery pete, who was in fact our pal. He told us to check out the clock tower. The rest of the group also came across the information to check the clock tower as well. We investigated, but found nothing but a message to us from Hardy, the leader of the cult. Katz immediately dispelled it so we didn't see much of the message. But we did notice it was recorded in a clock tower. We recognized it as one in Cobbleston. We checked it, but it was a trap. This was filled with four iron golems, which was quite the struggle to defeat. Upon defeat, the group realized Hardy was actually in the starting town of Feldspar. We traveled to Feldspar from Glimmer, after using a teleportation circle from Cobbleston. Once in Feldspar, Hardy put the shard into a suit of armor forged from adamantine. This was a misguided attempt to re-create a warforged, as we learned. Nothing happened, however, and we fought with the cult in an attempt to apprehend them. During the middle of the fight, however, the armor stood up asking about its sword. It was extremely powerful, and defeated two Cult members on its own, then threw Hardy out a window. We all just stepped out of its way.</p>
+
+<p>Dr.Bolas managed to save Hardys life, however, upon interrogation, we found he knew little about what this thing was or how to help us. We did research of our own, and found out this construct is known as the Sanguine night. A being who wielded the soul destroyer, and wants to reforge its sword to continue its former path of destruction. The next course of action was to go to Nirva, in an attempt to use Katz and Forebrands parents to help contact some of the leaders of the country to make them aware of the dire situation.</p>
+
+<p>This was successful, and the party had a meeting with Atticus, who was informed of all the details, and who asked us to help collect the shards in an attempt to stop the Sanguine night from destroying the continent.</p>
+</body>
+
+
+
+</html>
