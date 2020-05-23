@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>
+Blisy RNG Guides
+</title>
+<link rel="stylesheet" type="text/css" href="../style.css" title="default" />
+<link rel="alternate stylesheet" type="text/css" href="../nightmode.css" title="alternate"/>
+<link rel="alternate stylesheet" type="text/css" href="../dnd.css" title="dnd"/>
+<script type="text/javascript" src="style.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Blisys rng guides</h1></div>
+<div class="butts">
+
+<ul>
+  <p>Guide Navigation</p>
+  
+<li><a href="#home">Home</a></li>
+  
+<li><a href="#news">News</a></li>
+  
+<li><a href="#contact">Contact</a></li>
+  
+<li><a href="#about">About</a></li>
+</ul>
+
+</div>
+<div class="textformat">
+<h2>Text Guide</h2>
+<p>
+
+Blink is an new RNG method for Colosseum developed by sina-poke. It is a way to use when a Pokemon Blinks its eyes in the status screen to determine your current seed. It is effective for Pokemon that are in quiet areas, but you must move through a noisey area to get to them because the save station is far away. In this guide I will use Suicune as an example. Suicune is in a room with absolutely no noise, but, the Under has a large amount of it, and it's not very controllable. This guide will show you how to combat it!
+
+</p>
+<h2>Prerequisits</h2>
+<p><strong>Pokemon Colosseum:</strong> Any language will do</p>
+<p><strong>Espeon or Misdreavus: </strong>These are the two easiest Pokemon to use Blink with. Misdreavus is easier to see Blink, but you must purify it before you can use Blink with it, so Espeon must be used for some early RNGs.</p>
+<p><strong>Your TID/SID Combo if you want a shiny: </strong>If you don't want a shiny, this doesn't matter, but you need both if you want one. If you're starting a new game, try my <a href="https://sites.google.com/view/blisyrng/colosseum/colosseum-idrng?authuser=0">Colosseum IDRNG</a> guide.</p>
+<p><strong>Tools:</strong></p>
+<ul>
+<li>Pokefinder by AdmiralFish - <a href="https://www.google.com/url?q=https%3A%2F%2Fgithub.com%2FAdmiral-Fish%2FPokeFinder%2Freleases&amp;sa=D&amp;sntz=1&amp;usg=AFQjCNF62bB-C08uI_hf-OL1doRMOz4fKg" target="_blank" rel="noopener">https://github.com/Admiral-Fish/PokeFinder/releases</a></li>
+<li>CoTool by Sina-Poke - <a href="https://drive.google.com/file/d/1hrlwBdvHPCPY2jKnRVuuTX_yfJLNDsl_/view" target="_blank" rel="noopener">https://drive.google.com/file/d/1hrlwBdvHPCPY2jKnRVuuTX_yfJLNDsl_/view</a></li>
+<li>XDSEED and XDPokemon Ginzaru-san - <a href="https://www.google.com/url?q=https%3A%2F%2Fweb.archive.org%2Fweb%2F20190331004129%2Fhttp%3A%2F%2Fwww.geocities.jp%2Fginzaru_xd%2F&amp;sa=D&amp;sntz=1&amp;usg=AFQjCNGr8R4Rum2OSP1Qgvr-QyjDA5QmZw" target="_blank" rel="noopener">https://web.archive.org/web/20190331004129/http://www.geocities.jp/ginzaru_xd/</a></li>
+</ul>
+<h2>Finding Initial Seed</h2>
+
+
+
+</body>
+
+
+
+</html>
