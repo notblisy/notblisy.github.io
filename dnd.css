@@ -267,10 +267,9 @@ overflow:visible;
 
 .butts ul {
   list-style-type: none;
-  margin-top: 47px;
+  margin-top: 42px;
   padding: 0;
   width: 19%;
-  background-color: pink;
   position: fixed;
   height: 100%;
   overflow: auto;
@@ -292,8 +291,7 @@ overflow:visible;
 
 .butts li a:hover:not(.active) {
   font-weight: bold;
-color: pink;
-background-color: #ffe6ea;
+font-decoration:underline;
 }
 
 .butts p{
