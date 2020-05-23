@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Blisy RNG Guides
+</title>
+<link href="style.css" rel="stylesheet" type="text/css" title="blisy" />
+<link href="nightmode.css" rel="alt stylesheet” type="text/css" title=”noibat” />
+<script type="text/javascript" src="style.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Blisys rng guides</h1></div>
+<div w3-include-html="sidebar.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div class="textformat">
+<h2>Introduction</h2>
+<p>This is a google sites for Dakotas campaign set in the world of Baltaria. There will be a page for every playable character, along with NPCs, cities, and notes of the plot. 
+
+</p>
+<p>I try to keep any notes and information on this website as up to date as I can, if there's anything you think I should add, send me a text or discord dm.
+</p>
+
+
+
+<h2>Pages</h2>
+<section>
+<div>
+<div tabindex="-1">
+<div>
+<div>
+<div>
+<div>
+<div>
+<div>
+<div>
+<p><a href="map.html">Map</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section>
+<div>
+<div tabindex="-1">
+<div>
+<div>
+<div>
+<div>
+<div>
+<div>
+<div>
+<p><a href="/baltaria/pcs/index.html">List of Player Characters</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section>
+<div>
+<div tabindex="-1">
+<div>
+<div>
+<div>
+<div>
+<div>
+<div>
+<div>
+<p><a href="/baltaria/npcs/index.html">List of Non-playable Characters</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section>
+<div>
+<div tabindex="-1">
+<div>
+<div>
+<div>
+<div>
+<div>
+<div>
+<div>
+<p><a href="/baltaria/locations/index.html">List of Locations</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section>
+<div>
+<div tabindex="-1">
+<div>
+<div>
+<div>
+<div>
+<div>
+<div>
+<div>
+<p><a href="/baltaria/factions/index.html>Factions</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section>
+<div>
+<div tabindex="-1">
+<div>
+<div>
+<div>
+<div>
+<div>
+<div>
+<div>
+<p><a href="/baltaria/story/index.html">The Story so far</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+
+</body>
+
+
+
+</html>
