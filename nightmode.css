@@ -22,6 +22,18 @@ color:white;
 
   
 }
+
+
+.imgfix{
+
+position:fixed;
+bottom: 0px;
+left:25%;
+background-image:url(noivernsimple.png);
+
+}
+
+
 .farts{
 
 }
