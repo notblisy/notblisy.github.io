@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Baltaria Wiki
+</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Katz von Dunkelheit</h1></div>
+<div class="textformat">
+<h2>Introduction</h2>
+<p>Footsteps ring through the air as Katz is dashing through the cobblestone streets. She looks behind her, she can still see them. She's panting, out of breath, with a black eye and broken wrist. That did not go well. Then again, she thought. Her fights never do. She always tried to pick fights with the biggest toughest people she could see, and tended to not have the money she promised if she lost the fight. Or she did have it, but definitely didn't want to give it up. So she bolted, as she always did. At least it made her a good runner. Just as she thinks she's out of breath and can't run anymore, she makes it to the castle gates and hops back over, a place no one had ever chased her to. As she sneaks back into her room, there's her mother, casting the light cantrip with a simultaniously worried and dissapointed look on her face, unsure what to do about her troublesome daughter. </p>
+
+
+<div id="box">
+<h3>Attributes</h3>
+<table>
+
+    <td><i><b>Class</b></i></td>
+    <td>Fighter</td>
+  </tr>
+  <tr>
+    <td><i><b>Subclass</b></i></td>
+    <td>Gunslinger</td>
+  </tr>
+  <tr>
+    <td><i><b>Race</b></i></td>
+    <td>Elf, Drow</td>
+  </tr>
+  <tr>
+    <td><i><b>Height</b></i></td>
+    <td>6'</td>
+  </tr>
+ <tr>
+    <td><i><b>Weight</b></i></td>
+    <td>150lbs</td>
+  </tr>
+  <tr>
+    <td><i><b>Sex</b></i></td>
+    <td>Katz is completely sex fluid, and can change physical sex at will after a long rest thanks to the blessing of Corallon. However she chooses to be female 95% of the time, and only changes to male if she wants to for deceptive purposes. She also tends to wake up from meditation male if she's have extremely bad anxiety.</td>
+  </tr>
+    <tr>
+    <td><i><b>Alignment</b></i></td>
+    <td>Lawful Neutral</td>
+  </tr>
+    <tr>
+    <td><i><b>Bond</b></i></td>
+    <td>Stop at nothing to help her brother, Forebrand Seralore</td>
+  </tr>
+    <tr>
+    <td><i><b>Flaw</b></i></td>
+    <td>Extremely Aloof at times</td>
+  </tr>
+     <tr>
+    <td><i><b>Relationships</b></i></td>
+    <td>Zinnea Herris, Ludan Herris, Forebrand Seralore</td>
+  </tr>
+  
+</table>
+
+</div>
+
+
+
+<h2>Description</h2>
+<p>Katz is a Drow with pale faded blue skin, white extremely long hair. She often keeps her hair in a high poneytail while leaving her bangs out in a sideswipe. Her full name is Katz von Dunkelheit. Her parents wanted to give her a Drow name so she would remember her heritage, as she did not come with a name. When in formal situations she introduces herself as Katz von Dunkelheit of House Herris, as to identify her family name.
+
+Despite living on the surface, Katz still doesn't love the sun, and always wears glasses frames with thinly cut amethyst lens as sunglasses.
+
+
+
+Upon reaching level 6, Katz developed an aberrant elven mark, a small tatoo looking mark in the same location forebrand has his house orion mark.</p>
+
+<h2>Backstory</h2>
+<p>Katz was abandoned as an infant after her indentured servant father discovered her blessing of Corallon, which is considered heracy of the extremely matriarchal Drow. Not knowing what came over him, he picked her up the moment he discovered this and dashed to the nearest city, and left her in front of royalty, something he thought an Elf with this blessing deserved.
+
+From then on Katz immediatly grew into a troubled child, raised by Zinnea Herris and Ludan Herris. While her parents loved her with all their heart, most of the other royals in the house despised her and the idea that she would one day inherit the throne of the city. Not only was she a dirty drow, but she wasn't even blood. Surely the Dutchess and Duke couldn't think she was worthy? But they did. This caused Katz to feel like she didn't have place in the world growing up, she didn't practice common at all and barely spoke it growing up, only speaking Elvish with her parents. She would often dash out in the middle of the night to pick fights or vandalize buildings, and she'd constantly skip her schooling, training, and tutoring. This went on for some time into her "teenage" elven years.
+
+That all changed the day her parents brought home her little brother. Katz felt an immediate connection to him, and was astonished at his rate of growth, not being used to humans since her only interaction with them was fighting them. The day she realized she was leaving impressions on her brother, Katz cleaned up her act quickly. Once her brother began speaking, and became fluent in Elven and Common at once, Katz started going to her tutor, learning the language in only 10 years, though she has quite the thick accent from only speaking Elvish for so long. She wanted to be a good role model, so she went back to school and finished her basic education, and when her brother showed interest in joining the city guard, Katz did the bootcamp training with him. (She did not join the guard as well). Her and her brother grew up extremely close, often getting into trouble together, but her little brother changed her completely. Together they end up leaving the city to discover not only their pasts, but their place in the world, and they would figure it out together, no matter what.</p>
+<h2>Alignment and Motivation</h2>
+<p>Katz is lawful neutral, as she doesn't feel like she belongs anywhere and has any right to influence the laws or her morals onto anyone else. Even in her own city, to which she is an heir she does not always feel she belongs. So she will tend to defend the laws and rules of the other cities and cultures she visits, and abides by them without issue or fuss. This only changes if herself, brother, or friends are in life or death danger.
+
+Her main motivation is find her purpose on this world, she feels lost. Along with that, her brother is attempting to find his birth family, and she wants to help him achieve that. Katz is unsure if she wants to dig up info about her birth family, as she knows how rutheless the Drow can be, but someone must have saved her, and she is rather curious about that.
+
+</p>
+<h2>Look-A-Like Artwork</h2>
+</div>
+</body>
+
+
+
+</html>

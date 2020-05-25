@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>
+Blisy RNG Guides
+</title>
+<link rel="stylesheet" type="text/css" href="../style.css" title="default" />
+<script type="text/javascript" src="style.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Desert Abomination</h1></div>
+<div class="textformat">
+<div class="monstertable">
+<div class="name">Desert Abomination</div>
+<div class="description">Large elemental, neutral</div>
+
+<div class="gradient"></div>
+
+<div class="red">
+    <div ><span class="bold red">Armor Class</span><span> 17</span></div>
+    <div><span class="bold red">Hit Points</span><span> 142 (15d10 + 60)</span></div>
+    <div><span class="bold red">Speed</span><span> 50 ft., burrow 40ft.</span></div>
+</div>
+
+<div class="gradient"></div>
+
+<table>
+    <tr><th>STR    </th><th>DEX   </th><th>CON    </th><th>INT   </th><th>WIS   </th><th>CHA   </th></tr>
+    <tr><td>22 (+6)</td><td>18 (+4)</td><td>19 (+4)</td><td>15 (+2)</td><td>10 (+0)</td><td>10 (+2)</td></tr>
+</table>
+    
+<div class="gradient"></div>
+
+<div><span class="bold">Saving Throws</span><span> Str +5, Dex +5</span></div>    
+
+<div><span class="bold">Damage Immunities</span><span> Lightning, Poison</span></div>
+
+<div><span class="bold">Damage Resistances</span><span> Fire, Bludgeoning, Piercing, and Slashing damage from nonmagical weapons</span></div>
+<div><span class="bold">Condition Immunities</span><span> Exhaustion, Grappled, Paralyzed, Petrified, Poisoned, Prone, Restrained, Unconcious</span></div>
+<div><span class="bold">Senses</span><span> darkvision 60ft., passive Perception 15</span></div>
+<div><span class="bold">Languages</span><span> Terran</span></div>
+<div><span class="bold">Challenge</span><span> 9 (5000 XP)</span></div> 
+    
+<div class="gradient"></div>
+
+ 
+<div class="attack"><span class="attackname">Earth Shield.</span><span class="description"> While the abomination is standing on or around dirt, rocks, or sand, it has +2 to its AC.</span></div>    
+<div class="attack"><span class="attackname">Harsh Granules.</span><span class="description"> Creatures that start their turn within 10 ft of the abomination must make a DC 14 Consitution saving throw. On a failed throw, creatures take 7(2d6) slashing damage and are blinded until their next turn. Successful throws cause creatures to take half damage and are not blinded.</span></div> 
+ 
+<div class="attack"><span class="attackname">Innate spellcasting.</span><span class="description"> The desert abomination's spellcasting ability is Intelligence(spell save DC 14). The desert abomination can innately cast the following spells, requiring no material components:<br>At will: <i>Blur, Disguise Self, Earthbind</i><br>3/day each: <i> Erupting Earth, Hold Person, See Invisibility, Wall of sand</i><br>1/day each:<i>Flesh to stone, Earthquake, Hold Monster, Wall of Stone</i></span></div>     
+<div class="actions red">Actions</div>
+    
+<div class="hr"></div>
+ 
+<div class="attack"><span class="attackname">Multiattack.</span><span> The Desert Abomination makes 2 Thundering Blow attacks.</span></div>    
+<div class="attack"><span class="attackname">Thundering Blow.</span><span class="description"> Melee Weapon Attack:</span><span> +9 to hit, reach 10 ft, one target.</span><span class="description">Hit:</span><span>25 (3d12+6) damage. Additionally, all hostile creatures within a 20 ft area must succeed on a DC 12 Constitution saving throw or lose all spell concentration.</span></div>
+<div class="attack"><span class="attackname">Quicksand.</span><span class="description"></span><span> The abomination targets a point it can see within 100 ft and causes the ground in a 20 ft radius cube to become soft and unstable. Creatures in the area must succeed on a DC 15 Dexterity saving throw or become restrained. Restrained creatures can use their action to make a DC 15 Strength check to attempt and escape.</span></div>   
+<div class="attack"><span class="attackname">Sand Coffin (Recharge 5-6).</span><span class="description"></span><span> The Abomination targets a creature within 5 ft. That creature must succeed on a DC 17 Dexterity saving throw or have its body completely encased by sand (Blinded creatures have disadvantage on this saving throw). While encased, the abomination constricts the sand, dealing 66 (12d10) bludgeoning damage and the creature then has disadvantage on attack rolls and Strength or Dexterity checks and savbing throws until the end of their next turn.</span>  
+<div class="actions red">Reactions</div>
+    
+<div class="hr"></div>
+<div class="attack"><span class="attackname">Innate Loyalty.</span><span class="description"></span><span> If the Abomination sees an ally being targeted with a melee or ranged attack within 30 ft, it can glide to the aide of the ally and intercept the attack. If the attack would hit the ally, the damage is split evenly between the ally and the Abomination.</span>  
+<h2>Creator</h2>
+This homebrew was written and worked on by <a href="https://twitter.com/EnvySSB">Envy</a>
+</div>
+<br><br><br>  
+
+</body>
+
+
+
+</html>
