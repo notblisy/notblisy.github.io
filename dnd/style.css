@@ -205,6 +205,16 @@ line-height:1.2;
 
 }
 
+#note{
+position:relative;
+width 100%;
+border:14px;
+border-style:solid;
+border-image:url(https://i.imgur.com/TwX1Hwm.png) 20 round;
+background-color:#c2cc90;
+background-clip: padding-box;
+}
+
 #characterbio{
 position:absolute;
 top:200px;
