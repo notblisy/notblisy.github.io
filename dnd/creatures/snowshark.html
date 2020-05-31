@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>
+Blisy RNG Guides
+</title>
+<link rel="stylesheet" type="text/css" href="../style.css" title="default" />
+<script type="text/javascript" src="style.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Snow Shark</h1></div>
+<div class="textformat">
+<div class="monstertable">
+<div class="name">Snow Shark</div>
+<div class="description">Large animal, neutral</div>
+
+<div class="gradient"></div>
+
+<div class="red">
+    <div ><span class="bold red">Armor Class</span><span> 16</span></div>
+    <div><span class="bold red">Hit Points</span><span> 94(9d10+45)</span></div>
+    <div><span class="bold red">Speed</span><span> 40ft., swim 40ft. </span></div>
+</div>
+
+<div class="gradient"></div>
+
+<table>
+    <tr><th>STR    </th><th>DEX   </th><th>CON    </th><th>INT   </th><th>WIS   </th><th>CHA   </th></tr>
+    <tr><td>20 (+5)</td><td>11 (+0)</td><td>21 (+5)</td><td>2 (-4)</td><td>10 (+0)</td><td>5 (-3)</td></tr>
+</table>
+    
+<div class="gradient"></div>
+
+<div><span class="bold">Skills</span><span> Perception +6</span></div>    
+
+<div><span class="bold">Damage Immunities</span><span>Cold</span></div>
+<div><span class="bold">Senses</span><span>Darkvision 60ft., passive perception 16 </span></div>
+<div><span class="bold">Challenge</span><span> 5 (1800 XP)</span></div> 
+    
+<div class="gradient"></div>
+
+<div class="attack"><span class="attackname">Blood Sense.</span><span class="description">If a creature has taken damage, the Snow Shark knows their location up to 240ft. </span></div>
+<div class="attack"><span class="attackname">Snow Shield.</span><span class="description">  The Shark gains +5 AC, +20 speed, and +5 to Stealth checks while in <b>Deep Snow</b></span></div>  
+<div class="attack"><span class="attackname">Swift Burrow.</span><span class="description">  If the Shark is within 10 ft. of <b>deep snow</b>, it may avoid opportunity attacks upon leaving hostile creatures spaces.</span></div>    
+<div class="attack"><span class="attackname">Standing Leap.</span><span class="description">  The Snow Shark's long jump is up to 30 ft. and its high jump is up to 15 ft., with or without a running start.</span></div>    
+<div class="actions red">Actions</div>
+    
+<div class="hr"></div>
+ 
+<div class="attack"><span class="attackname">Multiattack.</span><span> The Snow Shark makes 1 bite attack and 1 Thresher whip attack.</span></div>    
+<div class="attack"><span class="attackname">Bite.</span><span class="description"> Melee Weapon Attack:</span><span> +8 to hit, reach 5 ft, one target.</span><span class="description">Hit:</span><span>(4d12+4) peircing damage. On hit, the target is grappled(Escape DC 16). If the Snow Shark jumps at least 15 ft. as part of its movement, it can do <b><i>Bite.</i></b> while mid air, not taking an attack of opportunity, and the grapple DC is lowered to 14, but if it succeeds it takes the target with them for the remainder of its movement. If it does this, its turn is over.</span></div>
+<div class="attack"><span class="attackname">Thresher Whip.</span><span class="description"><span> The Snow Shark whips its tail at super sonic speed, and all creatures in a 30ft. cone in front of the Shark must make a DC 15 Constituion saving throw. On a failed saving throw, all creatures hit take 2d6 damage and are stunned for 1 round. On a success they take half damage and are not stunned.</span></div>
+<div class="attack"><span class="attackname">Cone of Cold(Once per day).</span><span class="description"><span> A blast of cold air erupts from your hands. Each creature in a 60-foot cone must make a DC 165Constitution saving throw. A creature takes 8d8 cold damage on a failed save, or half as much damage on a successful one. A creature killed by this spell becomes a frozen statue until it thaws.</span></div>
+<h2>Creator</h2>
+This homebrew was written and worked on by <a href="https://twitter.com/im_a_blisy">Blisy</a>
+</div>
+<br><br><br>  
+
+</body>
+
+
+
+</html>
