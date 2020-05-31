@@ -130,6 +130,77 @@ display:none;
 text-decoration: overline;
 }
 
+
+.sidebtn {
+  
+  color: #58170d;
+  font-size: 32px;
+  padding: 5px;
+  cursor: pointer;
+  font-family: Luminari;
+  font-variant: small-caps; 
+  font-weight: bold;
+  text-decoration: underline;
+  background-color: Transparent;
+  background-repeat:no-repeat;
+  border:none;
+}
+
+
+
+/* Dropdown Content (Hidden by Default) */
+.sidebtn-content {
+  display: none;
+  position: absolute;
+  top:40px;
+  border-width:14px;
+  border-style:solid;
+border-image:url(https://i.imgur.com/8MsvtTn.png) 20 round;
+background-color: #FFFFFF;
+  min-width: 160px;
+  max-height: 400px;
+  overflow-y: auto;
+    -ms-overflow-style: none;
+
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.sidebtn-content::-webkit-scrollbar{
+
+display:none;
+
+}
+
+/* Links inside the dropdown */
+.sidebtn-content a {
+  color: black;
+  font-weight: normal;
+  font-size: 16px;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  z-index: 1;
+     
+}
+
+/* Change color of dropdown links on hover */
+.sidebtn-content a:hover {background-color: #f1f1f1}
+
+/* Show the dropdown menu on hover */
+.sidebtn:hover .sidebtn-content {
+  display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.sidebtn:hover .sidebtn {
+text-decoration: overline;
+}
+
+
+
+
+
  * {
   box-sizing: border-box;
 }
