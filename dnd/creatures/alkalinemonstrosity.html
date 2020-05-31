@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>
+Blisy RNG Guides
+</title>
+<link rel="stylesheet" type="text/css" href="../style.css" title="default" />
+<script type="text/javascript" src="style.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Alkaline Monstrosity</h1></div>
+<div class="textformat">
+<div class="monstertable">
+<div class="name">Alkaline Monstrosity</div>
+<div class="description">Large elemental, neutral</div>
+
+<div class="gradient"></div>
+
+<div class="red">
+    <div ><span class="bold red">Armor Class</span><span> 17</span></div>
+    <div><span class="bold red">Hit Points</span><span> 127(15d10 + 45)</span></div>
+    <div><span class="bold red">Speed</span><span> 50ft., climb 40ft. </span></div>
+</div>
+
+<div class="gradient"></div>
+
+<table>
+    <tr><th>STR    </th><th>DEX   </th><th>CON    </th><th>INT   </th><th>WIS   </th><th>CHA   </th></tr>
+    <tr><td>16 (+3)</td><td>22 (+6)</td><td>16 (+3)</td><td>9 (-1)</td><td>10 (+0)</td><td>9 (-1)</td></tr>
+</table>
+    
+<div class="gradient"></div>
+
+<div><span class="bold">Saving Throws</span><span> Dex +5</span></div>    
+
+<div><span class="bold">Damage Immunities</span><span>Poison</span></div>
+
+<div><span class="bold">Damage Resistances</span><span> Fire, Lightning, Bludgeoning, Piercing, and Slashing damage from nonmagical weapons</span></div>
+<div><span class="bold">Condition Immunities</span><span> Exhaustion, Grappled, Paralyzed, Petrified, Poisoned, Restrained, Unconcious</span></div>
+<div><span class="bold">Senses</span><span> blindsight 30ft., darkvision 60ft., passive Perception 14</span></div>
+<div><span class="bold">Languages</span><span> Terran</span></div>
+<div><span class="bold">Challenge</span><span> 7 (2900 XP)</span></div> 
+    
+<div class="gradient"></div>
+
+ 
+<div class="attack"><span class="attackname">Amorphous Form.</span><span class="description"> The monstrosity can shift the particles in its body to mold into almost any shape it desires. When the monstrosity is targeted by a melee attack, ranged attack, or a projectile spell, it has a 20% chance of reacting to the threat by opening a hole in its body where the attack would hit; avoiding the attack or spell completely.</span></div>    
+<div class="attack"><span class="attackname">Metallic Instability.</span><span class="description"> Whenever the monstrosity takes damage that isn't Psychic or Necrotic, a metal particle is discharged from its body in a random direction. Roll a d8 to determine the direction. The first creature that the projectile would come in contact with must succeed on a DC16 Dexterity saving throw or take slashing damage equal to the size of the particle. If the first creature succeeds, the next creature in that direction must also make the saving throw and so on. The particle damage and size is dependant on the damage taken:<br>1-10 damage taken causes a small particle, dealing 5(1d10)<br>11-25 damage taken causes a medium particle, dealing 11(2d10)<br> 26 or more damage causes a large particle, dealing 20(3d10)</span></div> 
+ <div class="attack"><span class="attackname">Shape Changer.</span><span class="description"> The monstrosity can use its action to polymorph into any non-humanoid creature it has seen before. Its statistics, other than size, are the same in each form. Any equipment it is wearing or carrying is not transformed. It reverts to its true form if it dies.</span></div>  
+  
+<div class="actions red">Actions</div>
+    
+<div class="hr"></div>
+ 
+<div class="attack"><span class="attackname">Multiattack.</span><span> The Alkaline monstrosity makes 4 Impale attacks and 1 Face Blade attack. If the monstrosity has a creature restrained, it can also make an Engulf attack.</span></div>    
+<div class="attack"><span class="attackname">Face Blade.</span><span class="description"> Melee Weapon Attack:</span><span> +7 to hit, reach 20 ft, one target.</span><span class="description">Hit:</span><span>10 (2d6+3) peircing damage. On hit, the target is grappled(Escape DC 16). If an object or creature of laarge or smaller is hit by two Impale attacks, it is also restrained and the monstrosity can't make another Impale attack against it, until released. The monstrosity has four tentacles and can only restrain two objects or creatures at once. </span></div>
+<div class="attack"><span class="attackname">Impale.</span><span class="description"> Melee Weapon Attack:</span><span> +8 to hit, reach 5 ft, one target.</span><span class="description">Hit:</span><span>15 (2d8+6)  slashing damage. If tha target is a creature, it must succeed on a DC 15 Constitution saving throw or be afflicted by rust poison. A creature poisoned in this way can only make one attackon each of their turns and can make the saving throw at the end of their turns.</span></div>
+<div class="attack"><span class="attackname">Engulf.</span><span class="description"><span> The monstrosity can reel in a creature restrained by it and engulf them completely. The engulfed creature is blinded, restrained, and suffers 10 (3d6) piercing damage immediately and takes the same damage at the start of each of the monstrosity's turns. An englufed creature can take an action to attempt to escape with a successful DC 14 Strngth(Athletics) check. A successful saving throw causes the creature to break free and land prone on a space 5ft. away. Other creatures can also take an action to make a DC 14 Strength check to safely free an engulfed creature. </span></div>
+<h2>Creator</h2>
+This homebrew was written and worked on by <a href="https://twitter.com/EnvySSB">Envy</a>
+</div>
+<br><br><br>  
+
+</body>
+
+
+
+</html>
