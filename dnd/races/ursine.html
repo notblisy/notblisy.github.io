@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Baltaria Wiki
+</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Ursine</h1></div>
+<div class="textformat">
+<h2>Introduction</h2>
+<p>Placeholder</p>
+
+
+
+
+
+<h2>Lore</h2>
+<p>Place Holder
+</p>
+
+<h2>Appearance</h2>
+<p>Ursine range from 5 to 10ft. tall depending on subrace, and can be a variety of colors, from white to brown to black. Usually they are on the larger end, and are always bulky with both muscle and fat. There is no visual difference between males and females, including their voice, which is often a deep grumble. </p>
+<h2>Ursine Names</h2>
+<p>Placeholder
+</p>
+<p><b>Example Names:</b> Va-Rha-Shall, Si-Hal-Ette, Ti-So-Rhan, Ki-Kor-Elle, San-Vi-Tahr, Kor-Ja-Ku, Ran-Jon-Si, Sho-Fu-Lore, Mo-U-To, Gah-En-Vi, Il-Er-Shu, Mur-Dra-Fell.</p>
+<div id="note">
+<p style="font-size:16px;"><b>Love no one but the Earth</b></p>
+<p>
+Ursine tend to be very solitary and cold towards most people, even other Ursine. While they are cordial and do not mean disrespect, it is just because they are solitary. They usually only meet if it is important, and even if they have Ursine spouses it is not uncommon for them to go years without seeing eachother. The one thing they are warm to, is the Earth. Ursine have a deep connection with Nature and value the land they live in above all else, and would do anything to protect it from harm.</p>
+</div>
+<h2>Ursine Traits</h2>
+<p>Your Ursine has traits it shares with all other Ursine
+<br>
+<br>
+ <b><i>Ability Score Increase.</i></b> Your Strength Score increases by 2.
+<br>
+ <b><i>Age.</i></b> Ursine Age rapidly, reaching adulthood by 2 years old, but live an extremely long time, up to around 500 years. 
+<br><b><i>Alignment.</i></b>Ursine are typically a variety of Neutral, doing whatever it takes to protect the enviornment they live in.
+<br>
+<b><i>Size.</i></b> Ursine are on average 6ft - 10ft. tall and weight 600lbs to 900lbs
+<br>
+<b><i>Speed.</i></b> Your base walking speed is 30 ft.
+<br><b><i>Darkvision.</i></b> You have dark vision in all dark and dim conditions. You can see dim light within 60 ft. of you as if it were brightly lit, and in darkness as if it were dim light. You cannot discern the color of darkness, only shades of gray.
+<br><b><i>Here's a Claw for you.</i></b> Your claws are natural weapons, which you can use to make unarmed strikes. If you hit with them, you deal slashing damage equal to 1d4 + your Strength modifier, instead of the normal damage.
+<br><b><i>Language.</i></b> Your character can speak, read, and write Common and Ursine.
+<br><b><i>Subrace.</i></b> You choose from one of seven subraces of Ursine:
+<h2>Polar Ursine</h2>
+<p>
+Born and raised in the artic of this world, the Polar Ursine have to fight for every scrap of food and shelter they can because of the limited resources in the area. As a result, they have very harsh personalities and have a lot of difficulty trusting other with their resources.
+
+
+</p> 
+<p>
+<b><i> Ability Score Increase.</i></b> Your Constitution score increases by 1.
+<br>
+<b><i> The Tundra's Claws.</i></b> Once per day you may empower your Unarmed Melee Claw attacks to deal 1d4 extra cold damage, and enemies hit must make a constitution saving throw. If they fail, their movement is slowed by 10. This can only happen once per enemy. The slow lasts as long as the buffs duration. Duration is 1 minute. This may be used once per day. Damage increases by 1d4 at 6, 11, 16. This feature can only be used after a long or short rest.
+<br>
+<b><i> The cold bever bothered me anyway.</i></b> Because of a life lived in the arctic, the Polar Ursine are immune to nonmagical cold damage, and resist magical cold damage.
+<br>
+</p>
+<h2>Grizzly Ursine</h2>
+<p>Living in the forests, plains, and occasionally cities, the Grizzly Ursine is the most social Ursine with the races of man, and is the one most people will have seen. They are quick to agitate, often live alone, and are the most ferocios of the Ursine when angered. 
+</p>
+<p>
+<b><i> Ability Score Increase.</i></b> Your Strength Score increases by 1.
+<br>
+<b><i> Grizzlies Ferocity. </i></b> The Grizzly ursine may once a day become ferociously angry, empowering its unarmed strikes this round to deal an extra 1d4 damage, and the target must make a con saving throw. If failed they are stunned. damage increases by 1d4 at 6, 11, 16. 
+
+<br>
+
+
+</p>
+<h2>Forest Ursine</h2>
+<p>The Forest Ursine are extrmelely mobile and elusive. They tend towards a smaller size, and usually avoid conflict at all cost. Probably the least confrontational of the Ursine, the Forest Ursine wishes to hide in its forest and live amongst it, and nothing else.
+</p>
+<p>
+<b><i> Ability Score Increase.</i></b> Your Dexterity score increases by 1.
+<br>
+<b><i> Arboreal Movement.</i></b> You have 20ft. of Climb speed.
+<br>
+<b><i> Mask of Nature. </i></b> You can attempt to hide even when you are only lightly obscured by foliage, heavy rain, falling snow, mist, and other natural phenomena.
+<br>
+<b><i>Forests Will. </i></b> You may choose one 1st level spell from the Druid Spell list.
+</p>
+<h2>Sun Ursine</h2>
+<p>Spending their days atop mountains, the Sun Ursine derive most of their power from the Sun, and have a unique connection to it. Most of their days are spent lounging about relaxing in it. </P>
+<p>
+<b><i> Ability Score Increase.</i></b> Your Intelligence Score increases by 1.
+<br>
+<b><i> Solar Flare. </i></b> Choose a 15 ft area once a day to cause an extremely bright flash of sunlight in, enemies must make con saving throw or be blinded for 3 rounds. Range increases by 5ft at 6, 11, 16. This skill can only be used again after a short or long rest.
+
+<br>
+<b><i>Flameo, hotsman.</i></b> The Sun Ursine is immune to nonmagical fire damage, and resists magical fire damage.
+
+</p>
+<h2>Panda Ursine</h2>
+<p>Placeholder</p> 
+<p>
+<b><i> Ability Score Increase.</i></b> Your Dexterity Score increases by 1.
+<br>
+<b><i>Monks Training. </i></b> The panda ursine once a day can use one of the following skills: flurry of blows, step of the wind, and patient defense all as a bonus action. gain 1 extra use at 6, 11, 16. You gain all charges back on a short or long rest.
+
+</p>
+<h2>Cave Ursine</h2>
+<p>Placeholder</p> 
+<p>
+<b><i> Ability Score Increase.</i></b> Your Constitution Score increases by 1.
+<br>
+<b><i>Lumbering Giant.</i></b> Once a day the cave ursine can choose to cut its movement to 20 speed at the start of initiative, but be uneffected by difficult terrain, immune to prone, and immune to grapple
+conditions, the number of times you can do this increases at 6 and 16 to two and three respectivelly. You regain this feature after a short or long rest.
+<br>
+<b><i> Giant.</i></b> The Cave Ursing counts as 1 size larger for carrying weight, mounting, and grapple.
+</p>
+
+
+
+</p>
+</div>
+</body>
+
+
+
+</html>
