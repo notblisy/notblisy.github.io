@@ -1,0 +1,352 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>
+Blisy RNG Guides
+</title>
+<link rel="stylesheet" type="text/css" href="../style.css" title="default" />
+<link rel="alternate stylesheet" type="text/css" href="../nightmode.css" title="alternate"/>
+<link rel="alternate stylesheet" type="text/css" href="../dnd.css" title="dnd"/>
+<script type="text/javascript" src="../style.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Honey Tree RNG</h1></div>
+<div class="butts">
+
+<ul>
+  <p>Guide Navigation</p>
+  
+<li><a href="#prereq">Prerequisits</a></li>
+  
+<li><a href="#tables">Encounter Tables</a></li>
+  
+<li><a href="#munchlax">Munchlax</a></li>
+
+<li><a href="#end">Notes and Conclusions</a></li>
+</ul>
+
+
+</div>
+<div class="textformat">
+<h2>Video Guide</h2>
+<iframe width="100%" height="683" src="https://www.youtube.com/embed/X9JKOZnIr4s" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<h2>Text Guide</h2>
+<p>
+This is a simple guide just to help you understand Honey Tree Mechanics. 
+</p>
+<h2><a name="prereq">Prerequisits</a></h2>
+
+<li><a href="https://github.com/Admiral-Fish/PokeFinder/releases">Pokefinder by AdmiralFish</a></li>
+<li><a href="https://github.com/dylmeadows/EonTimer/releases">Eon timer</a></li>
+<h2>Overview</h2>
+<p>
+This is an article about how to put a specific Pokemon you want onto a Honey Tree in Diamond/Pearl/Platinum. This is a fairly simple type of RNG, but it is not officially supported so it can take some figuring out, and this article will help you to do it. The first portion of this article will explain the mechanics of the Honey tree so you can RNG any Pokemon you want, but at the end I will have a section explicitly explaining how to get just Munchlax. 
+</p>
+<p>
+So, Honey Tree is a Method 1 RNG and it has its own encounter slot / table system. On top of that, because this is a Method 1 RNG, NPCs that walk in random patterns can influence what frame you're on. Here is a list of safe trees:
+</p>
+<p>These locations have no NPCs to worry about: Floaroma Meadow, Valley Windworks, Fuego Ironworks, Route 205N  </p>
+<p>
+These locations have NPCs that all can be stopped with the Vs. Seeker: Route 207, Route 208, Route 210 South, Route 214, Route 218, Route 221 
+</p>
+<h2><a name="tables">Encounter Table</a></h2>
+<p>First, we'll talk about the table system it's using. The encounter slots vary based on game and tree type. Munchlax trees have different encounter slots than normal trees. Here is what the tables look like, and it won't make sense at first.
+
+</p>
+<table>
+  <tr>
+    <th>Diamond/Pearl Non-Munchlax</th>
+    <th>Column 1 [30-99]</th>
+    <th>Column 2 [10-29]</th>
+<th>Fail [0-9]</th>
+  </tr>
+  <tr>
+    <td>Row 1 [60-99]</td>
+    <td>Wurmple</td>
+     <td>Combee</td>
+    <td></td>
+   
+   
+  </tr>
+  <tr>
+        <td>Row 2 [40-59]</td>
+    <td>Cascoon/Silcoon</td>
+     <td>Burmy</td>
+<td></td>
+  </tr>
+  <tr>
+    <td>Row 3 [20-39]</td>
+    <td>Combee</td>
+     <td>Cherubi</td>
+<td></td>
+  </tr>
+  <tr>
+   <td>Row 4 [10-19]</td>
+   <td>Burmy</td>
+     <td>Aipom</td>
+<td></td>
+  </tr>
+  <tr>
+     <td>Row 5 [5-9]</td>
+    <td>Cherubi</td>
+     <td>Heracross</td>
+<td></td>
+  </tr>
+  <tr>
+    <td>Row 6 [0-4]</td>
+    <td>Aipom</td>
+     <td>Wurmple</td>
+<td></td>
+  </tr>
+</table>
+<br>
+<br>
+<table>
+  <tr>
+    <th>Diamond/Pearl Munchlax</th>
+    <th>Column 1 [30-99]</th>
+    <th>Column 2 [10-29]</th>
+    <th>Fail [1-9]</th>
+    <th>Munchlax [0]</th>
+  </tr>
+  <tr>
+    <td>Row 1 [60-99]</td>
+    <td>Wurmple</td>
+     <td>Combee</td>
+     <td></td>
+    <td>Munchlax</td>
+   
+   
+  </tr>
+  <tr>
+        <td>Row 2 [40-59]</td>
+    <td>Cascoon/Silcoon</td>
+     <td>Burmy</td>
+     <td></td>
+    <td>Munchlax</td>
+  </tr>
+  <tr>
+    <td>Row 3 [20-39]</td>
+    <td>Combee</td>
+     <td>Cherubi</td>
+     <td></td>
+    <td>Munchlax</td>
+  </tr>
+  <tr>
+   <td>Row 4 [10-19]</td>
+   <td>Burmy</td>
+     <td>Aipom</td>
+     <td></td>
+    <td>Munchlax</td>
+  </tr>
+  <tr>
+     <td>Row 5 [5-9]</td>
+    <td>Cherubi</td>
+     <td>Heracross</td>
+     <td></td>
+    <td>Munchlax</td>
+  </tr>
+  <tr>
+    <td>Row 6 [0-4]</td>
+    <td>Aipom</td>
+     <td>Wurmple</td>
+     <td></td>
+    <td>Munchlax</td>
+  </tr>
+</table>
+<br>
+<br>
+<table>
+  <tr>
+    <th>Platinum Non-Munchlax</th>
+    <th>Column 1 [30-99]</th>
+    <th>Column 2 [10-29]</th>
+<th>Fail [0-9]</th>
+  </tr>
+  <tr>
+    <td>Row 1 [60-99]</td>
+    <td>Combee</td>
+     <td>Burmy</td>
+    <td></td>
+   
+   
+  </tr>
+  <tr>
+        <td>Row 2 [40-59]</td>
+    <td>Wurmple</td>
+     <td>Cherubi</td>
+<td></td>
+  </tr>
+  <tr>
+    <td>Row 3 [20-39]</td>
+    <td>Burmy</td>
+     <td>Combee</td>
+<td></td>
+  </tr>
+  <tr>
+   <td>Row 4 [10-19]</td>
+   <td>Cherubi</td>
+     <td>Aipom</td>
+<td></td>
+  </tr>
+  <tr>
+     <td>Row 5 [5-9]</td>
+    <td>Aipom</td>
+     <td>Aipom</td>
+<td></td>
+  </tr>
+  <tr>
+    <td>Row 6 [0-4]</td>
+    <td>Aipom</td>
+     <td>Heracross</td>
+<td></td>
+  </tr>
+</table>
+<br>
+<br>
+<table>
+  <tr>
+    <th>Platinum Munchlax</th>
+    <th>Column 1 [30-99]</th>
+    <th>Column 2 [10-29]</th>
+    <th>Fail [1-9]</th>
+    <th>Munchlax [0]</th>
+  </tr>
+  <tr>
+    <td>Row 1 [60-99]</td>
+    <td>Combee</td>
+     <td>Burmy</td>
+     <td></td>
+    <td>Munchlax</td>
+   
+   
+  </tr>
+  <tr>
+        <td>Row 2 [40-59]</td>
+    <td>Wurmple</td>
+     <td>Cherubi</td>
+     <td></td>
+    <td>Munchlax</td>
+  </tr>
+  <tr>
+    <td>Row 3 [20-39]</td>
+    <td>Burmy</td>
+     <td>Combee</td>
+     <td></td>
+    <td>Munchlax</td>
+  </tr>
+  <tr>
+   <td>Row 4 [10-19]</td>
+   <td>Cherubi</td>
+     <td>Aipom</td>
+     <td></td>
+    <td>Munchlax</td>
+  </tr>
+  <tr>
+     <td>Row 5 [5-9]</td>
+    <td>Aipom</td>
+     <td>Aipom</td>
+     <td></td>
+    <td>Munchlax</td>
+  </tr>
+  <tr>
+    <td>Row 6 [0-4]</td>
+    <td>Aipom</td>
+     <td>Heracross</td>
+     <td></td>
+    <td>Munchlax</td>
+  </tr>
+</table>
+<p>In these tables it uses Method 1 to determine what is on the tree. The first thing to note is that like with most Method 1 uses, you'll be targeting the frame after your current frame. IE, if you're on frame 44, the frame you hit will be 45. It uses the lower half of the PID of these frames, which means the right four digits, and they're in hex. The way the first frame corresponds to the table is the Column section.
+</p>
+<img src="images/frame46.png" alt "TID" style="width: 100%;">
+<p>
+ So in this example, I'm on frame 45, which means my Column will be determined by frame 46. The value here is F60D, as it's the right four digits of the PID on frame 46. What you do to figure out which column you land in is open a calculator on your computer, and switch it to programmer mode. The click the Hex bubble and type in the PID there. Then, switch it to decimal. This will output a decimal value.Divide this new value by 656. If you get a 0-9 as a result on a normal tree, that means this frame won't spawn a Pokemon. If you get a 10-29 you get column 2 on the table, and if you get a 30-99, you get column 1 on the table. If it's a munchlax tree, a 0 is munchlax, a 1-9 is a fail, a 10-29 is column 1, and a 30-99 is column 2. 
+</p>
+
+
+<img src="images/f60d.png" alt "TID" style="width: 100%;">
+
+<p>In my F60D example, I convert it to decimal resulting in 62989, then divide that by 656 to get 96, which is column 1 on my munchlax tree!
+</p>
+<p>So, once you have the Column determined, it's time to figure out which row you hit. It's worth pointing out that row does not matter if you are aiming for a munchlax, as all the rows in the munchlax tree produce munchlax. 
+</p>
+<p>So, to determine the row we hit, we replicate the process we just did but with the frame afterwards. In my example this means frame 47 determines what Row I'll be getting. Otherwise, the process is exactly the same. You take the lower half of the PID, convert it to decimal, and divide it by 656. The result then corresponds to the number listed on the row.  0-4 is row 6, 5-9 is row 5, 10-19 is Row 4, 20-39 is row 3, 40-59 is row 2, and 60-99 is row 1.
+</p>
+<img src="images/frame46.png" alt "TID" style="width: 100%;">
+<br>
+<img src="images/39f9.png" alt "TID" style="width: 100%;">
+<p> In my example I have the PID 38F9, and convert it to decimal to get 14585. Then, I divide this by 656 to get 22. This means on my non-munchlax tree I get a Combee! So if I slathered Honey on frame 45, I'd receive a Combee 6 hours later. Using this information, you can get whatever Pokemon you want on any safe Honey Tree! Good luck!
+
+</p>
+<h2><a name="munchlax">Munchlax</a></h2>
+<p>
+Munchlax is a much rarer Pokemon for several reasons. The first of which is how rare it is on the Column section. Your PID needs to go through the formula and end up with 0, which is not very common. On top of that, only 4 trees in the entire game can even spawn Munchlax. 2 of them are based on your Trainer ID, and the other 2 are based on your Secret ID. You can find out what they would be here: <a href="https://www.dragonflycave.com/sinnoh/honey-trees">Dragonfly Cave Munchlax Tree Locator</a> (Note, if you input your Secret ID here too it works, even though it just says input trainer ID number). 
+</p>
+<p>
+With that out of the way, here is the easiest way to RNG a Munchlax to spawn onto the tree. 
+
+
+</p>
+<p>Paste this seed 4c11152f  into seed to time, and hit it. If you are unfamiliar, here is a guide on how to hit your initial seed in DPP: <a href="https://www.youtube.com/watch?v=SWTlb1xcU7s">Gen 4 RNG Basics</a>
+<br>
+Once you've confirmed your seed, advance to frame 44 and slather honey on the tree. It's that simple! Munchlax will then spawn, regardless of if it's Diamond/Pearl/Platinum, and then you can RNG it using stationary Method J or soft reset if you're into shiny hunting that way. 
+</p>
+
+<h2><a name="end">Notes and Conclusions</a></h2>
+
+
+<p>This is essentially a Method 1 RNG with Extra steps, but I hope this article was helpful to you!
+
+
+</p>
+
+<p>Thank you for reading, I hope you succeed in getting your Honey Tree Pokemon. If you have any questions feel free to ask me on Twitter @im_a_blisy  or join my discord. https://discord.gg/QchhXQv
+
+</p>
+
+
+
+
+</div>
+</body>
+
+
+
+</html>

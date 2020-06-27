@@ -239,7 +239,7 @@ th, td {
 
 }
 
-tr:nth-child(even) {background: #c2cc90}
+tr:nth-child(even) {background: white}
 
 h3{
 text-align: center;
