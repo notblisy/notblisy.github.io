@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Baltaria Wiki
+</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Arborian</h1></div>
+<div class="textformat">
+<h2>Introduction</h2>
+<p>Placeholder</p>
+
+
+
+
+
+<h2>Lore</h2>
+<p>A Trees early life, the first 10 years or so, start as a sapling where they are semi-concious. During that decade they take in information from their surrounding, and are usually discovered through magical searching by a Druidic enclave, a clan of Wood Elves, or a tribe of Forest Gnomes. Upon being discovered, they are taken care of by the people who find them, and are guarded near 24/7 while being taught things about the world through spoken word. After the Tree awakens, it comes to grips with its reality and the world it inhabits, typically spending another 5-10 years reaching maturity and learning from the clan that found it. Once it has learned all it can, it leaves to wander the world, to find a place to root. 
+</p>
+
+<h2>Appearance</h2>
+<p>Arborians are so similar looking to typical trees that it can be distinguish from their actual tree-family counterparts. They have two branches mid-trunk that are treated as arms, and their many roots have them walk across the ground like spiders. They have two eyes, no nose, and usually a fairly small mouth.  </p>
+<h2>Arborian Names</h2>
+<p>Arborians are usually named by whatever type of people find them, and their names are usually easily translated across any language. It's typically just the species of tree they are, and the place they are from, in the language of the race that found them. 
+</p>
+<p><b>Example Names:</b> Willow of Deadwood, Pine of Neverwinter.</p>
+<div id="note">
+<p style="font-size:16px;"><b>A Place to Root</b></p>
+<p>
+Arborians, if they want to live exceptionally long lives(past 1000 yrs.), must eventually take root somewhere in the world. This is the biggest decision of their lives, as once they take root they can never move again. Most Arborians entire lifes journey is wandering the world to find the perfect place. Many never do, though few choose to not root. Most return to the forest of their birth to root, because it is safe and the people who raised them are there. Once here they often grow to be massive and revered for their vast wisdom they gained during their travels by the people who live there.</p>
+</div>
+<h2>Arborian Traits</h2>
+<p>Your Arborian has traits it shares with all other Arborians.
+<br>
+<br>
+ <b><i>Ability Score Increase.</i></b> Your Wisdom Score increases by 2.
+<br>
+ <b><i>Age.</i></b>Arborians age very slowly, reaching adulthood takes a minimum of 15 years, but often takes over 20. They also live an extremely long time, easily past 500 years, often several thousand once they root.
+<br><b><i>Alignment.</i></b> Arborians are almost always a variety of good, and must be led very far astray to become evil. They will do whatever it takes to protect their forest.
+<br><b><i>Stillness.</i></b> While standing still, you have advantage on stealth checks if in enviornments where trees are naturally growing, even with no cover. 
+<br><b><i>Weaknesses.</i></b> You take 2x damage from the Fire Type damage.
+<br><b><i>I have asked the Plants.</i></b> You can speak with plants at all times.  
+<br><b><i>Friends up top.</i></b> You have advantage on all animal handling checks when it comes to avians that naturally dwell in trees, and any arborial animals.
+<br><b><i>Language.</i></b> Your character can speak, read, and write Common and one of: Druidic, Elven, or Gnomish. 
+<br><b><i>Subrace.</i></b> You choose from one of three subraces of Arborians:
+<h2>Bonzai Arborian</h2>
+<p>
+Small, but charming, Bonzai Arborians are the smallest Arborians around. Extremely uncommon, these Arborians often grow in heavy Jungles and once awakened, the only known trait they all share is a particular vanity about the looks of their branches.
+
+</p> 
+<p>
+<b><i> Ability Score Increase.</i></b> Your Charisma score increases by 1.
+<br>
+<b><i>Size.</i></b> 1-3 ft. Tall.
+<br>
+<b><i>Weight.</i></b> 50-80lbs.
+<br>
+<b><i>Speed.</i></b> 25 ft.
+<br>
+<b><i> Chlorophyll.</i></b> Once per short rest, while you are in direct sunlight, you may double your movement speed for 3 rounds of combat. 
+<br>
+</p>
+<h2>Pinish Arborian</h2>
+<p>
+Pinish Arborians are the type who easily fit in with mans society, being around the size and stature of them. Often quiet and just looking to find their way and their place, they spend their days wandering. 
+
+</p> 
+<p>
+<b><i> Ability Score Increase.</i></b> Your Strength score increases by 1.
+<br>
+<b><i>Size.</i></b> 6-8 ft. Tall.
+<br>
+<b><i>Weight.</i></b> 150-280lbs.
+<br>
+<b><i>Speed.</i></b> 30 ft.
+<br>
+<b><i> Rooted.</i></b> If you take no movement this round, you become rooted and you cannot be moved by enemies or knocked prone unless they succeed an 18 DC Strength saving throw. This effect is also applied while you are in standing still using the Stillness race feature.
+<br>
+</p>
+<h2>Oaken Arborian</h2>
+<p>
+Lumbering, the Oaken Arborian are a people that take the world at their own pace, and often have trouble working with others because of their unbearably slow pace at which they do things at. In the end, they mean well, and just want to find what they enjoy in the world before they settle. 
+
+</p> 
+<p>
+<b><i> Ability Score Increase.</i></b> Your Constitution score increases by 1.
+<br>
+<b><i>Size.</i></b>8-15 ft. tall
+<br>
+<b><i>Weight.</i></b> 250-380lbs.
+<br>
+<b><i>Speed.</i></b> 35 ft.
+<br>
+<b><i> Natural Armor.</i></b> Because of your size and shape of your body, you are ill-suited to wearing armor. Your thick bark provides ample protect however; it gives you a base AC of 17(your Dexterity modifier doesn't affect this number). You gain no benefit from wearing armor, but if you are using a shield you can apply the shields bonus as normal. 
+<br>
+<b><i>Long-Limbed.</i></b> When you make a melee attack on your turn, your reach for it is 5 feet greater than normal.
+<br>
+</p>
+</div>
+</body>
+
+
+
+</html>
