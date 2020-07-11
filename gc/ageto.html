@@ -1,0 +1,184 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>
+Blisy RNG Guides
+</title>
+<link rel="stylesheet" type="text/css" href="../style.css" title="default" />
+<link rel="alternate stylesheet" type="text/css" href="../nightmode.css" title="alternate"/>
+<link rel="alternate stylesheet" type="text/css" href="../dnd.css" title="dnd"/>
+<script type="text/javascript" src="../style.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Ageto Celebi RNG</h1></div>
+<div class="butts">
+
+<ul>
+  <p>Guide Navigation</p>
+  
+<li><a href="#prereq">Prerequisits</a></li>
+  
+<li><a href="#initseed">Finding Initial Seed</a></li>
+  
+<li><a href="#rng">Doing the RNG</a></li>
+
+<li><a href="#end">Notes and Conclusions</a></li>
+</ul>
+
+
+</div>
+<div class="textformat">
+<h2>Video Guide</h2>
+
+<h2>Text Guide</h2>
+<p>
+This guide will cover the way you can rng the Celebi on the Japanese Bonus Disc for Pokemon Colosseum. I will also briefly explain how the rng for the Pikachu works, but will not cover it in-depth at is is very similar to the celebi.
+</p>
+<h2><a name="prereq">Prerequisits</a></h2>
+<p>
+<ul>
+<li>Japanese Pokemon Colosseum with all 48 Purified Shadow Pokemon</li>
+<li>Japanese Pokemon Colosseum Bonus Disc.</li>
+<li>GBA to GC Link cable. </li>
+At least 2 Japanese GBA Pokemon Games in the Hall of Fame(Reccomend RS, since FRLG has to completely finish the Sevii Islands story to do which takes a while).</li>
+<li><a href="https://web.archive.org/web/20190331004129/http://www.geocities.jp/ginzaru_xd/">XD Pokemon and XD Check</a></li>
+<li>5000 Pokecoupons in at least 2 Japanese GBA Games. This is done by grinding Mt.Battle for coupons with a team from the GBA registered while the GBA is plugged in.</li>
+<li>A stat calculator of your choice, I reccomend Metalkids IV Calculator.</li>
+<li>20 or 30 rare candies. It's easy to get rare candies using the RS Japanese item glitch:</li>
+<li>Or emerald clone glitch</li>
+<li>Or Zigzagoon pickup farming in RS</li>
+<li>You will also need this tool: <a href="https://www.axfc.net/u/3526084">Celebi Frame Calculator</a></li>
+<li>Password: Cerebigetdaze</li>
+<li>It is in Japanese but here is a translation:</li>
+<p>The numbers next to what you can do to frame advance are how many times you are willing to do that type of advancement. The final celebi/pikachu received IS NOT part of your advancements.
+</p>
+
+
+
+
+</ul>
+</p>
+
+
+<h2>Frame advancement methods.</h2>
+<p>
+Each picture here will show how to do a type of frame advancement with descriptive text beneath it.
+</p>
+<img src="images/idrngsetup.png" alt "TID" style="width: 100%;">
+
+<h2><a name="initseed">Finding Initial Seed</a></h2>
+<p>First, click the gen 3 tools tab in Pokefinder. Then, click gamecube seed finder. A new window will pop up, and you should click the colo tab. After this, boot Pokemon Colosseum. If you don't have the colo.precalc file, it will link you to a download page for it. All you must do is place the colo.precalc file into the same file as the Pokefinder.exe to get the seed searcher to work. After you do that, restart Pokefinder.</p>
+<img src="images/BLINKinitseed.png" alt "TID" style="width: 100%;">
+<p>In Pokemon Colosseum, head to Battle now on the main menu, then select single battle, then select Ultimate difficulty. Then you'll be at a team preview of a randomly given team. </p>
+<img src="images/mainmenu.png" alt "main menu" style="width: 24%;">
+<img src="images/singlesordoubles.png" alt "singdub" style="width: 24%;">
+<img src="images/ultimateidfficulty.png" alt "ultdiff" style="width: 24%;">
+<img src="images/teampreview.png" alt "teampee" style="width: 25%;">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Main Menu &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Singles or Doubles &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ultimate Difficulty 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Team preview</p>
+<p>Once at the team preview, take note of the trainer name and lead Pokemon. In this case, it is Wes and Metagross. Click those two options in the seed finder, and hit search. Then, hit B to back out of this menu back to the battle now menu. Go back into ultimate difficult and do the same thing again. Repeat the entire process until a seed is given, and copy said seed to the clipboard. It should take 5-6 attempts to find your seed.</p>
+<h2>CoTool</h2>
+<p>
+Open CoTool. Click the "ID" tab. In this tab, then check the first box. This is where you will paste your seed. In the two boxes below the first, set the frame range you're willing to wait in EonTimer. I find 10,000 as a maximum to be acceptable, but you can increase it if you'd like. Below that are four checkboxes. Check the first. The three below it are the following: Search for a specific TID, a specific SID, and a specific TID/SID combo to make a PID shiny. In this guide, I will only be using the third box, but you can use all three together if you want. The more specific you get the larger your frame range search should be. I paste the any of the PIDs from the PID Column in Pokefinder into the box I have checked in the picture, with PID D60F6779
+</p>
+<p>
+
+Hit the search button to see any results. I tend to look for the lowest frame possible because I am impatient. If there is not one fairly low, I switch PIDs among the filtered spreads until I find one. Once an acceptable frame is found, open EonTimer. Note, the frame is the second column from the left.
+
+
+</p>
+
+<img src="images/cotoolidrng.png" alt "TID" style="width: 100%;">
+<p>While CoTool is in Japanese, I do not believe it needs a translation picture because it is so simple to understand. 
+
+
+</p>
+<h2><a name="rng">Doing the RNG</a></h2>
+<p>
+In EonTimer, go to the gen 3 tab, and set the mode to standard, lag to zero, and the target frame to the one in CoTool. 
+</p>
+<img src="images/eontimeridrng.png" alt "TID" style="width: 100%;">
+<p>Then, start EonTimer at the same time as you press A to start a new game.
+</p>
+
+<img src="images/startnewgameidrng.png" alt "TID" style="width: 100%;">
+<p>
+Either type your name out or select one of the premade names, and wait at the prompt. Once the timer hits 0, press A to confirm your name
+
+</p>
+<img src="images/nameselectidrng.png" alt "TID" style="width: 100%;">
+
+<p>
+After this watch the intro cutscene and wait. If your TID is there, congratulations, you're done!
+</p>
+
+<img src="images/tidpicidrng.png" alt "TID" style="width: 100%;">
+
+<p>
+If you got the wrong ID, open CoTool and  uncheck all boxes under the first ID box. Then, check the second ID box and type the trainer ID you actually hit. We can now see how many frames off we were. Simply find the difference between the frame you aimed for and the frame you hit, and make an adjustment. If you were early, add the difference. If you were late, subtract the difference. Then, we try again from the setup.
+
+
+
+</p>
+
+<img src="images/missedidrng.png" alt "TID" style="width: 100%;">
+<p>Here I show you how to find the ID you potentially hit, as if ID 28706 is the one I hit instead.
+</p>
+
+<h2><a name="end">Notes and Conclusions</a></h2>
+
+
+<p>While this RNG is fairly consistent, it will take several tries because there is some amount of uncontrollable noise. I also recommend if you are typing your own name instead of picking from a pre-selected name, try and type your name in the same manner every single time. </p>
+<p>Also, do not be afraid to aim for very low frames. Frame 450 is around 8 seconds, and it's very reasonable to type a shorter name in that timeframe, or use a pre-selected one.   
+
+
+</p>
+
+<p>Thank you for reading, I hope you succeed in getting your custom trainer ID in Pokemon Colosseum. If you have any questions feel free to ask me on Twitter @im_a_blisy  or join my discord. https://discord.gg/QchhXQv
+
+</p>
+
+
+
+
+</div>
+</body>
+
+
+
+</html>
