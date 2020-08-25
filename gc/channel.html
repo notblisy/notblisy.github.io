@@ -1,0 +1,178 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>
+Blisy RNG Guides
+</title>
+<link rel="stylesheet" type="text/css" href="../style.css" title="default" />
+<link rel="alternate stylesheet" type="text/css" href="../nightmode.css" title="alternate"/>
+<link rel="alternate stylesheet" type="text/css" href="../dnd.css" title="dnd"/>
+<script type="text/javascript" src="../style.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Channel Jirachi RNG</h1></div>
+<div class="butts">
+
+<ul>
+  <p>Guide Navigation</p>
+  
+<li><a href="#prereq">Prerequisits</a></li>
+
+<li><a href="#finding">Finding a Target</a></li>
+  
+<li><a href="#initseed">Finding your initial seed</a></li>
+ 
+<li><a href="#advancer">Advancing to your Target </a></li>
+
+<li><a href="#conclusion">Notes and Conclusions</a></li>
+</ul>
+
+
+</div>
+<div class="textformat">
+<h2>Video Guide</h2>
+<iframe width="100%" height="685" src="https://www.youtube.com/embed/e2hGP30Dge8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<h2>Text Guide</h2>
+<p>
+This guide will cover how to RNG Manipulate Jirachi received from the PAL copies of Pokemon Channel. This works for any language European copy, and the Australian copy. This is the best way to RNG Jirachi in gen 3 because of its ease and diversity. Unlike the U.S. Bonus disc, there are thousands of possible shiny spreads, and it does not require multiple frame perfect inputs. 
+</p>
+<h2><a name="prereq">Prerequisits</a></h2>
+<p>
+<ul>
+<li><b>Pokemon Ruby or Sapphire:</b> The save file must have entered the hall of fame. It must also match the Language you have set Pokemon Channel to. IE, and English game can work with English channel. Region does not matter, US games work. Only region that does not work is Japanese.</li>
+<li><b>Pokemon Channel European Version:</b> This is the only version that gives out a Jirachi.
+
+</li>
+<li><b>If in NTSC Region(USA,CA, Mexico, Japan):</b> A way to play PAL games. Easiest way is hacked Wii or Freeloader GC Disc.</li>
+<li><b>GBA to GC Link cable:</b> This is to connect the GBA so you may receive Jirachi.
+
+</li>
+<li><b<GBA:</b> This is because the Nintendo DS does not have a link cable port for GBA.</li>
+<li><a href="https://github.com/Admiral-Fish/PokeFinder/releases">Pokefinder By Admiral Fish</a></li>
+<li><a href="https://gist.github.com/Admiral-Fish/6111ca2c19ee3a7a382aa5b897deef4c/archive/a97d1573bb88053f5b76edd5fa0dbc61d55c01eb.zip">Jirachi Advancer by Admiral Fish</a></li>
+<li><a href="https://sites.google.com/view/blisyrng/channel-jirachi/channel-jirachi-public-tools?authuser=0">XD Seed by Ginzaru</a></li>
+<li>A calculator and a timer. I usually use google timer or my phone.</li>
+</ul>
+</p>
+
+<h2><a name="finding">Finding a Target.</a></h2>
+<img src="images/channeltarget.png" alt "channeltarget" style="width: 100%;">
+<p>We will search for your target Jirachi using Gamecube section on Pokefinder. Click the searcher tab, then for "Method" Choose Channel. In here you can specify the stats, nature, and shiny trait. I suggest searching for multiple targets at once! Once you find several candidates, right click and output to CSV so you can copy multiple seeds at once. 
+
+</p>
+
+ 
+<h2><a name="initseed">Finding Initial Seed</a></h2>
+<p>Load Pokemon Channel and select "Options" right away.</p>
+<p>While there, in PokeFinder, open the gen 3 drop down, and select gamecube, then gamecube seed finder. In gamecube seed finder, chick the channel tab.
+
+</p>
+<p>
+Then, go back to the main menu, watch the order the "New game/Options/Continue/Special" options appear, and select the order option that you see using the add button. Then, go back into "Options" In Pokemon Channel. Repeat this 10 times, then hit search. The remove Button will delete the current row of Title Pattern you input, just in-case you make a mistake. Once you finish your inputs, it will find a seed shortly.
+</p>
+<img src="images/channelseedsearch.png" alt "channeltarget" style="width: 100%;">
+<p>Once you have found your initial seed, Copy it onto the clipboard by clicking yes, then open XDSEED. Go to the fourth tab from the left, and paste the Initial Seed into the top box.  In frame range, the lower two boxes, set how many frames you're willing to wait. Most Jirachi frames are far away, so I reccomend a high range like 999999999. For example, around 10,000,000 frames is 24 hours(It may vary because of the inconsistent nature of frame advancement). In the Large bottom box, paste all the seeds you like that we found in PokeFinder. If a Jirachi is close enough for your liking, continue. If not, reset the gamecube or Wii and repeat the seed finding step until a Jirachi is on a closer frame. 
+
+
+</p>
+<img src="images/seeddistance.png" alt "channeltarget" style="width: 100%;">
+
+<h2><a name="advancer">Advancing to your Target</a></h2>
+<p>Once you find out how many frames away your target Jirachi is, we can advance towards it using several different methods. 
+</p>
+<img src="images/eggchannel.png" alt "initseedageto" style="width: 100%;"> 
+<p>Egg channel advances 112 frames per second in the Desert, and 103 per second in the Pond. Also, the frames advance very quickly while an egg is hatching, so please keep this in mind. On top of this, if an Egg hatches and you are not there, it may switch to a different channel, so pay attention to how long the egg has to hatch. 
+</p>
+<img src="images/reportchannel.png" alt "initseedageto" style="width: 100%;"> 
+<p>The report channel advances 52 frames per second. Best used for smaller distances, usually less than 100k. But it is also good for overnight uses if you do not have a long timer on your egg channel and you must rest. 
+</p>
+<p>The way to calculate how long you must wait is simple. Take the number of frames you must advance and divide by the number of frames per second advanced. Then, divide by 60. This will be how many minutes you must wait. I suggest a lot of leeway with this. Undershoot your target by several thousand frames. 
+</p>
+<p><b>Example:</b> 4010626 is the amount of frames until Jirachi. -10,000 is 4000626. Divided by 112 for Desert Report channel is 35719.875. Divided by 60 is roughly 10 hours. 
+
+</p>
+<img src="images/jirachiseedfinder.png" alt "rachiseed" style="width: 100%;">
+<p>Once your advances are done, return to the main menu with the report channel. After this, go into "Options" again. Then, return to the Gamecube Seed finder in Pokefinder and repeat the same process as we did with finding our initial seed. You will have a new seed, much closer to your target.
+
+</p>
+
+<img src="images/seeddistance2.png" alt "rachiseed" style="width: 100%;">
+<p>
+Once this is done, paste your new current seed into XDSEED. If your frame is more than 5000 away, you must go back to using the report or egg channel for advances again. I suggest report since you are most likely closer now. Repeat this process until you are within 5000 frames of your target.
+
+
+</p>
+<h2>Jirachi Advancer</h2>
+<p>Once within 5000 frames, open Jirachi Advancer type your current seed first, and then your target seed in the lower box. It will then print out a list of actions you must take to get to your Target seed. 
+
+
+</p>
+<img src="images/jirachiadvancer.png" alt "advancer" style="width: 100%;">
+
+<p>All of these are preformed from the Options menu
+<br>
+<b>TITLE:</b> Return to title screen->Go into "Options"
+<br>
+<b>Reject Jirachi:</b> Select "Jirachi", but say no to receiving it. Then go back into "Options".
+<br>
+<b>Special:</b> Return to title screen-> Select "Special" -> Hit start immediatly, then "End". Return to "Options".
+<br>
+<b>Receive Jirachi:</b> Receive a Jirachi.
+</p>
+
+<h2><a name="conclusion">Notes and Conclusion</a></h2>
+<p>I think the most important takeaway is that when you do the inconsistent advancements you should always undershoot your target frame by a signifigant advantage. Also, unfortunately some Jirachis will not be reachable and you'll get close to your target and will be told "Target Jirachi is not reachable" by Jirachi Advancer. If this is the case, you did nothing wrong but got unlucky.
+
+
+</p>
+<p>Let me know if you have any questions, cheers. Enjoy the Jirachi.
+</p>
+<p>Thank you for reading, I hope you succeed in getting your Jirachi. If you have any questions feel free to ask me on Twitter @im_a_blisy  or join my discord. https://discord.gg/QchhXQv
+
+</p>
+
+
+
+
+</div>
+</body>
+
+
+
+</html>
