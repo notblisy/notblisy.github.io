@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html>
+    <body>
+Target frame <input type="number" id="targetframe">
+        <br>
+        <br>
+Out of TV Frames <input type="number" id="outsideoftv">
+        <br>
+        <br>
+<button type="button" onclick="myFunction()">
+    Calculate
+        </button>
+        <p id="demo"></p>
+        <p id="demo2"></p>
+
+<script>
+function myFunction(){
+    var targetframe = document.getElementById('targetframe').value;
+    var outoftvframe = document.getElementById('outsideoftv').value;
+    var insidetv = Number(targetframe) - Number(outoftvframe);
+    var tvprint = Number(insidetv) / 313;
+    var remainder = Number(insidetv) % 313;
+    var totalframes = Number(outoftvframe) + Number(remainder);
+    
+    document.getElementById("demo").innerHTML = tvprint.toFixed(0);
+    document.getElementById("demo2").innerHTML = totalframes.toFixed(0);
+
+    
+    
+    
+    
+}
+    
+</script>
+    
+    </body>
+</html>
