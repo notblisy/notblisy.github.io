@@ -54,15 +54,15 @@ function includeHTML() {
 includeHTML();
 </script>
 <div id="header-img">
-<div id="header"><h1>BlisysTV</h1></div>
+<div id="header"><h1>Frames to MS</h1></div>
 <div w3-include-html="sidebar.html"></div> 
 
 <script>
 includeHTML();
 </script>
-<div class="textformat">
+<div class="javascriptformat">
 
-       Game:  <select name="game" id="game" onchange="introchange()">
+       Select your Game: <br><select name="game" id="game" onchange="introchange()">
     <option value="121">Fire Red 1.0</option>
     <option value="120">Fire Red 1.1</option>
     <option value="114">Leaf Green</option>
@@ -72,14 +72,14 @@ includeHTML();
 
   </select>
   <br><br>
-        Console:  <select name="console" id="console" onchange="consolechange()">
+       Select your Console: <br> <select name="console" id="console" onchange="consolechange()">
     <option value="59.7275">GBA</option>
     <option value="59.6555">NDS</option>
     <option value="60">New 3DS/2DS</option>
     <option value="60">Old 3DS/2DS</option>
   </select>
   <br><br>
-           Method:  <select name="method" id="method" onchange="delaychange()">
+           Method:  <br><select name="method" id="method" onchange="delaychange()">
     <option value="20">Method 1/2/4</option>
     <option value="261">Sweet Scent(Outdoors)</option>
     <option value="268">Sweet Scent(Indoors)</option>
@@ -100,7 +100,7 @@ Intro in MS
         <input type="number" id="delaybox" value="-20">
         <br>
         <br>
-Target frame <input type="number" id="targetframe">
+Target frame: <br><input type="number" id="targetframe">
         <br>
         <br>
 
@@ -109,28 +109,27 @@ Target frame <input type="number" id="targetframe">
         </button>
 <br>
 
-Flat MS: <input type="number" id="totalms">
+Flat MS: <br><input type="number" id="totalms">
 <br>
-Flowtimer MS Total: <input id="flowtimerout">
+Flowtimer MS Total:<br> <input id="flowtimerout">
 
-        <p>
-            Frame hit
-        </p>
+        <br><br>
+            <b>Frame hit</b><br>
 <input type="number" id="framehit"><br><br>
         <button type="button" onclick="blisytvupdate()">
             Calculate
         </button>
         <br>
         <br>
-        adjust frames by:  
+        Frame Adjusted By: <br>
         <input type="number" id="adjusttvby">
         <br>
         <br>
-        adjust ms by:  
+        MS Adjusted By: <br>  
         <input type="number" id="adjustotalby">
 <br>
 <br>
-New Flowtimer Total: <input id="updatedflowtimertotal">        
+New Flowtimer Total: <br><input id="updatedflowtimertotal">        
 <script>
 
     

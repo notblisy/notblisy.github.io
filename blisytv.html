@@ -53,28 +53,31 @@ function includeHTML() {
 includeHTML();
 </script>
 <div id="header-img">
-<div id="header"><h1>BlisysTV</h1></div>
+<div id="header"><h1>BlisyTV</h1></div>
 <div w3-include-html="sidebar.html"></div> 
 
 <script>
 includeHTML();
 </script>
-<div class="textformat">
-
-       Game:  <select name="game" id="game" onchange="introchange()">
+<div class="javascriptformat">
+Select your Game:
+<br>
+      <select name="game" id="game" onchange="introchange()">
     <option value="121">Fire Red 1.0</option>
     <option value="120">Fire Red 1.1</option>
     <option value="114">Leaf Green</option>
 
   </select>
   <br><br>
-        Console:  <select name="console" id="console" onchange="consolechange()">
+        Select your Console: 
+<br> <select name="console" id="console" onchange="consolechange()">
     <option value="59.7275">GBA</option>
     <option value="59.6555">NDS</option>
 
   </select>
   <br><br>
-           Method:  <select name="method" id="method" onchange="delaychange()">
+           Method: 
+<br><select name="method" id="method" onchange="delaychange()">
     <option value="20">Method 1/2/4</option>
     <option value="261">Sweet Scent(Outdoors)</option>
     <option value="268">Sweet Scent(Indoors)</option>
@@ -95,53 +98,54 @@ Intro in MS
         <input type="number" id="delaybox" value="-20">
         <br>
         <br>
-Target frame <input type="number" id="targetframe">
+Target frame <br><input type="number" id="targetframe">
         <br>
         <br>
-Out of TV Frames <input type="number" id="outsideoftv">
+Frames to spend out of TV <br> <input type="number" id="outsideoftv">
         <br>
         <br>
 <button type="button" onclick="blisytv()">
     Calculate
         </button>
 <br>
-  Frames in TV: <input type="number" id="tvframes">
+  Frames in TV: <br><input type="number" id="tvframes">
 <br>
-Frames in Total: <input type="number" id="totalframes">
+Frames in Total: <br><input type="number" id="totalframes">
 <br>
-MS in TV: <input type="number" id="tvms">
+MS in TV: <br><input type="number" id="tvms">
 <br>
-MS in Total: <input type="number" id="totalms">
+MS in Total: <br><input type="number" id="totalms">
 <br>
-Flowtimer MS Total: <input id="flowtimerout">
+Flowtimer MS Total: <br><input id="flowtimerout">
 
-        <p>
-            Frame hit
-        </p>
+        <br>
+<br>
+  <b><i>Frame hit</b></i>
+        <br>
 <input type="number" id="framehit"><br><br>
         <button type="button" onclick="blisytvupdate()">
             Calculate
         </button>
         <br>
         <br>
-        adjust tv by:  
+        Adjust TeachyTV Frames by:<br>  
         <input type="number" id="adjusttvby">
         <br>
         <br>
-        adjust total by:  
+        Adjust Total Frames by: <br> 
         <input type="number" id="adjustotalby">
 <br>
 <br>
-Adjust tv ms by: <input type="number" id="adjusttvmsby">
+Adjust TeachyTV ms by: <br><input type="number" id="adjusttvmsby">
 <br>
 <br>
-Adjust total ms by: <input type="number" id="adjusttotalmsby">
+Adjust Total ms by: <br><input type="number" id="adjusttotalmsby">
 <br>
 <br>
-New Flowtimer TV: <input type="number" id="updatedtvflowtimer">
+New Flowtimer TeachyTV: <br><input type="number" id="updatedtvflowtimer">
 <br>
 <br>
-New Flowtimer Total: <input id="updatedflowtimertotal">        
+New Flowtimer Total: <br><input id="updatedflowtimertotal">        
 <script>
 
     
