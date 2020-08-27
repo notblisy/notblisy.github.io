@@ -53,28 +53,37 @@ function includeHTML() {
 includeHTML();
 </script>
 <div id="header-img">
-<div id="header"><h1>Blisys rng guides</h1></div>
+<div id="header"><h1>BlisysTV Online Edition</h1></div>
 <div w3-include-html="sidebar.html"></div> 
 
 <script>
 includeHTML();
 </script>
 <div class="textformat">
-<h2>BlisyTV Online Edition</h2>
- Console:  <select name="console" id="console">
-    <option value="59.7275">GBA</option>
-    <option value="59.6555">NDS</option>
-    <option value="60">Old 3DS</option>
-    <option value="60">New 3DS</option>
-  </select>
-  <br><br>
-           Game:  <select name="game" id="game">
+
+      Game:  <select name="game" id="game" onchange="introchange()">
     <option value="121">Fire Red 1.0</option>
     <option value="120">Fire Red 1.1</option>
     <option value="114">Leaf Green</option>
     <option value="0">Ruby / Sapphire</option>
             <option value="0">Emerald</option>
             <option value="0">SM/USUM</option>
+
+  </select>
+  <br><br>
+        Console:  <select name="console" id="console" onchange="consolechange()">
+    <option value="59.7275">GBA</option>
+    <option value="59.6555">NDS</option>
+    <option value="60">New 3DS/2DS</option>
+    <option value="60">Old 3DS/2DS</option>
+  </select>
+  <br><br>
+           Method:  <select name="method" id="method" onchange="delaychange()">
+    <option value="20">Method 1/2/4</option>
+    <option value="261">Sweet Scent(Outdoors)</option>
+    <option value="268">Sweet Scent(Indoors)</option>
+    <option value="0">ID RNG</option>
+            
 
   </select>
   <br><br>
@@ -105,7 +114,8 @@ Out of TV Frames <input type="number" id="outsideoftv">
         <p id="demo4"></p>
 
 <script>
-  var targetframe;
+    
+    var targetframe;
     var outoftvframe;
     var console;
     var fps;
@@ -117,25 +127,86 @@ Out of TV Frames <input type="number" id="outsideoftv">
     var seedlagms;
     var introtimerms;
     var abraframems;
+    var consoletext;
+    var gametext;
+    var methodboxvalue;
     
     function settings()
     
     {  
     //this pulls all the settings for ttv calculator
+     methodboxvalue = document.getElementById('method').value;
      targetframe = document.getElementById('targetframe').value; //this is the target frame
      outoftvframe = document.getElementById('outsideoftv').value; // this is how long you spend outside ttv
      console = document.getElementById('console'); //This sets the value of fps
      fps = console.options[console.selectedIndex].value; 
      game = document.getElementById('game'); //this sets the seed lag value for frlg
      seedlag = game.options[game.selectedIndex].value;
+     gametext = game.options[game.selectedIndex].text;
      introtimer = document.getElementById('introtimer').value; //this sets the introtimer value
      abraframe = document.getElementById('abraframe').value; //this sets the abra frame value
      delaybox = document.getElementById('delaybox').value; //this sets the delaybox value(lag before generation)
      seedlagms = 1 / Number(fps) * 1000 * seedlag; // this convers seedlag into ms
      introtimerms = Number(introtimer) + Number(seedlagms); //this adds seedlag to introtimer to compensate 
      abraframems = ((1 / Number(fps) * 1000) * Number(abraframe) )+ Number(introtimerms); //makes abraframe an ms value and then adds introtimer to it for eventual flowtimer output
-    
+     consoletext = console.options[console.selectedIndex].text;
     }
+    function introchange(){
+        
+        settings();
+        
+        if(seedlag == 0){
+            document.getElementById('introtimer').value = "5000";
+            
+        }else {
+            document.getElementById('introtimer').value = "35000";
+           
+        }
+        
+    }
+    function consolechange(){
+        settings(); //calls settings function
+        if(consoletext == "New 3DS/2DS"){
+document.getElementById('introtimer').value = "2500";            
+            
+        }else if(consoletext == "Old 3DS/2DS"){
+            document.getElementById('introtimer').value = "3500";
+            
+        }
+        
+        
+    }
+    function delaychange(){
+        settings();
+        if(methodboxvalue == 20){
+            document.getElementById('delaybox').value = "-20";
+            
+        }else if(methodboxvalue == 261){
+            document.getElementById('delaybox').value = "-261";
+            
+            
+        }else if(methodboxvalue == 268){
+         document.getElementById('delaybox').value = "-268";
+
+            
+        }else if(methodboxvalue == 0 && gametext == "Ruby / Sapphire"){
+                        document.getElementById('delaybox').value = "-75";
+
+            
+        }else if(methodboxvalue == 0 && gametext == "Emerald"){
+         document.getElementById('delaybox').value = "-50";
+        }else if(methodboxvalue == 0 && gametext == "Fire Red 1.0"){
+         document.getElementById('delaybox').value = "-249";
+        }else if(methodboxvalue == 0 && gametext == "Fire Red 1.1"){
+         document.getElementById('delaybox').value = "-249";
+        }else if(methodboxvalue == 0 && gametext == "Leaf Green"){
+         document.getElementById('delaybox').value = "-249";
+        }
+        
+        
+        
+    }
+    
         function blisytv(){
             settings();
     //this excecutes when you hit the calculate button 
@@ -148,23 +219,27 @@ Out of TV Frames <input type="number" id="outsideoftv">
     var tvprintms = (1 / Number(fps) * 1000) * Number(tvprint);
     var totalframesms = (1 / Number(fps) * 1000) * Number(totalframes);
     var totalms = Number(totalframesms) + Number(introtimerms);
-    var abraframems = ((1 / Number(fps) * 1000) * Number(abraframe) )+ Number(introtimerms);
+    var abraframems = ((1 / Number(fps) * 1000) * (Number(abraframe) - 20 + Number(seedlag))) + Number(introtimerms);
     
     document.getElementById("demo").innerHTML = "Frames in TV: " + tvprint.toFixed(0);
     document.getElementById("demo2").innerHTML = "Total frames: " + totalframes.toFixed(0);
     document.getElementById("demo3").innerHTML = "MS in TV: " + tvprintms.toFixed(0);
     
-    if(abraframe == "0" ){
+    if(abraframe == "0" && methodboxvalue != 0){
     document.getElementById("demo4").innerHTML = "Total MS: " + totalms.toFixed(0) + "/" + introtimer;
         
         
-    }else{
+    }else if(methodboxvalue == 0){
+        document.getElementById("demo4").innerHTML = "Total MS: " + totalms.toFixed(0);
+        
+    }  else{
     document.getElementById("demo4").innerHTML = "Total MS: " + totalms.toFixed(0) + "/" + abraframems.toFixed(0) + "/" +introtimer;
 
         
     }
     
 }
+    
     
     
 
