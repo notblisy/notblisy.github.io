@@ -53,7 +53,7 @@ function includeHTML() {
 includeHTML();
 </script>
 <div id="header-img">
-<div id="header"><h1>BlisysTV Online Edition</h1></div>
+<div id="header"><h1>BlisysTV</h1></div>
 <div w3-include-html="sidebar.html"></div> 
 
 <script>
@@ -61,7 +61,7 @@ includeHTML();
 </script>
 <div class="textformat">
 
-      Game:  <select name="game" id="game" onchange="introchange()">
+       Game:  <select name="game" id="game" onchange="introchange()">
     <option value="121">Fire Red 1.0</option>
     <option value="120">Fire Red 1.1</option>
     <option value="114">Leaf Green</option>
@@ -108,11 +108,39 @@ Out of TV Frames <input type="number" id="outsideoftv">
 <button type="button" onclick="blisytv()">
     Calculate
         </button>
-        <p id="demo"></p>
-        <p id="demo2"></p>
-  <p id="demo3"></p>
-        <p id="demo4"></p>
+<br>
+  Frames in TV: <input type="number" id="tvframes">
+<br>
+Frames in Total: <input type="number" id="totalframes">
+<br>
+MS in TV: <input type="number" id="tvms">
+<br>
+MS in Total: <input type="number" id="totalms">
+<br>
+Flowtimer MS Total: <input id="flowtimerout">
 
+        <p>
+            Frame hit
+        </p>
+<input type="number" id="framehit"><br><br>
+        <button type="button" onclick="blisytvupdate()">
+            Calculate
+        </button>
+        <br>
+        <br>
+        adjust tv by:  
+        <input type="number" id="adjusttvby">
+        <br>
+        <br>
+        adjust total by:  
+        <input type="number" id="adjustotalby">
+<br>
+<br>
+Adjust tv ms by: <input type="number" id="adjusttvmsby">
+<br>
+<br>
+Adjust total ms by: <input type="number" id="adjusttotalmsby">
+        
 <script>
     
     var targetframe;
@@ -221,24 +249,64 @@ document.getElementById('introtimer').value = "2500";
     var totalms = Number(totalframesms) + Number(introtimerms);
     var abraframems = ((1 / Number(fps) * 1000) * (Number(abraframe) - 20 + Number(seedlag))) + Number(introtimerms);
     
-    document.getElementById("demo").innerHTML = "Frames in TV: " + tvprint.toFixed(0);
-    document.getElementById("demo2").innerHTML = "Total frames: " + totalframes.toFixed(0);
-    document.getElementById("demo3").innerHTML = "MS in TV: " + tvprintms.toFixed(0);
-    
+    document.getElementById("tvframes").value = tvprint.toFixed(0);
+    document.getElementById("totalframes").value = totalframes.toFixed(0);
+    document.getElementById("tvms").value = tvprintms.toFixed(0);
+    document.getElementById("totalms").value = totalms.toFixed(0);
     if(abraframe == "0" && methodboxvalue != 0){
-    document.getElementById("demo4").innerHTML = "Total MS: " + totalms.toFixed(0) + "/" + introtimer;
+    document.getElementById("flowtimerout").value = totalms.toFixed(0) + "/" + introtimer;
         
         
     }else if(methodboxvalue == 0){
-        document.getElementById("demo4").innerHTML = "Total MS: " + totalms.toFixed(0);
+        document.getElementById("flowtimerout").value = totalms.toFixed(0);
         
     }  else{
-    document.getElementById("demo4").innerHTML = "Total MS: " + totalms.toFixed(0) + "/" + abraframems.toFixed(0) + "/" +introtimer;
+    document.getElementById("flowtimerout").value = totalms.toFixed(0) + "/" + abraframems.toFixed(0) + "/" +introtimer;
 
         
     }
     
 }
+ function blisytvupdate(){
+     settings();
+     var framehit;
+     var adjusttv;
+     var adjusttv2;
+     var adjustout;
+     framehit = document.getElementById('framehit').value;
+     adjusttv = Number(targetframe) - Number(framehit);
+     adjusttv2 = Number(adjusttv) / 313;
+     adjustout = Number(adjusttv) % 313;
+     if(adjustout > 156){
+         adjustout = 313 - Number(adjustout);
+         adjusttv2++;
+         
+     }else if(adjustout < -156){
+         adjustout = 313 + Number(adjustout);
+         adjusttv2--;
+         
+         
+     }var adjusttotal = Number(adjustout) + Number(adjusttv2);
+    if(adjusttv2 >= 0){
+    document.getElementById('adjusttvby').value = Math.floor(adjusttv2);
+
+}else{
+    document.getElementById('adjusttvby').value = Math.ceil(adjusttv2);
+}
+
+     document.getElementById('adjustotalby').value = adjustout;
+     var adjusttotalms;
+     var adjusttvms;
+     adjusttvms = document.getElementById('adjusttvby').value;
+     adjusttotalms = document.getElementById('adjustotalby').value;
+     var msout;
+     var tvmsout;
+     msout = 1 / Number(fps) * 1000 * Number(adjusttotalms);
+     tvmsout = 1 / Number(fps) * 1000 * Number(adjusttvms);
+     document.getElementById('adjusttvmsby').value = tvmsout.toFixed(0);
+     document.getElementById('adjusttotalmsby').value = msout.toFixed(0) ;
+     
+ }   
     
     
     
