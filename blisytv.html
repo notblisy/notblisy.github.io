@@ -105,7 +105,7 @@ Out of TV Frames <input type="number" id="outsideoftv">
         <p id="demo4"></p>
 
 <script>
-
+function blisytv(){
     //this pulls all the settings for ttv calculator
     var targetframe = document.getElementById('targetframe').value; //this is the target frame
     var outoftvframe = document.getElementById('outsideoftv').value; // this is how long you spend outside ttv
@@ -120,7 +120,7 @@ Out of TV Frames <input type="number" id="outsideoftv">
     var introtimerms = Number(introtimer) + Number(seedlagms); //this adds seedlag to introtimer to compensate 
     var abraframems = ((1 / Number(fps) * 1000) * Number(abraframe) )+ Number(introtimerms); //makes abraframe an ms value and then adds introtimer to it for eventual flowtimer output
 
-function blisytv(){
+
     //this excecutes when you hit the calculate button 
     var introtimerframes = Number(introtimerms) / 1000 * Number(fps); //converts intro timer into frames
     var insidetv = (Number(targetframe) - Number(outoftvframe))/313 + 33; //this figures out how long you spend in teachytv. it's 313 frames per second, adding 33 to compensate for the 34 frame startup and 1 frame end lag.
