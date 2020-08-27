@@ -60,8 +60,8 @@ includeHTML();
 includeHTML();
 </script>
 <div class="textformat">
-<h2>Introduction</h2>
-   Console:  <select name="console" id="console">
+<h2>BlisyTV Online Edition</h2>
+ Console:  <select name="console" id="console">
     <option value="59.7275">GBA</option>
     <option value="59.6555">NDS</option>
     <option value="60">Old 3DS</option>
@@ -96,7 +96,7 @@ Target frame <input type="number" id="targetframe">
 Out of TV Frames <input type="number" id="outsideoftv">
         <br>
         <br>
-<button type="button" onclick="myFunction()">
+<button type="button" onclick="blisytv()">
     Calculate
         </button>
         <p id="demo"></p>
@@ -105,7 +105,7 @@ Out of TV Frames <input type="number" id="outsideoftv">
         <p id="demo4"></p>
 
 <script>
-function myFunction(){
+function blisytv(){
     //this pulls all the settings for ttv calculator
     var targetframe = document.getElementById('targetframe').value;
     var outoftvframe = document.getElementById('outsideoftv').value;
@@ -118,9 +118,8 @@ function myFunction(){
     var delaybox =document.getElementById('delaybox').value;
     var seedlagms = 1 / Number(fps) * 1000 * seedlag;
     var introtimerms = Number(introtimer) + Number(seedlagms);
+    var abraframems = ((1 / Number(fps) * 1000) * Number(abraframe) )+ Number(introtimerms);
 
-    
-    
     //this excecutes when you hit the calculate button 
     var introtimerframes = Number(introtimerms) / 1000 * Number(fps);
     var insidetv = (Number(targetframe) - Number(outoftvframe))/313 + 33;
@@ -131,10 +130,21 @@ function myFunction(){
     var tvprintms = (1 / Number(fps) * 1000) * Number(tvprint);
     var totalframesms = (1 / Number(fps) * 1000) * Number(totalframes);
     var totalms = Number(totalframesms) + Number(introtimerms);
-    document.getElementById("demo").innerHTML = tvprint.toFixed(0);
-    document.getElementById("demo2").innerHTML = totalframes.toFixed(0);
-    document.getElementById("demo3").innerHTML = tvprintms.toFixed(0);
-    document.getElementById("demo4").innerHTML = totalms.toFixed(0);
+    var abraframems = ((1 / Number(fps) * 1000) * Number(abraframe) )+ Number(introtimerms);
+    
+    document.getElementById("demo").innerHTML = "Frames in TV: " + tvprint.toFixed(0);
+    document.getElementById("demo2").innerHTML = "Total frames: " + totalframes.toFixed(0);
+    document.getElementById("demo3").innerHTML = "MS in TV: " + tvprintms.toFixed(0);
+    
+    if(abraframe == "0" ){
+    document.getElementById("demo4").innerHTML = "Total MS: " + totalms.toFixed(0) + "/" + introtimer;
+        
+        
+    }else{
+    document.getElementById("demo4").innerHTML = "Total MS: " + totalms.toFixed(0) + "/" + abraframems.toFixed(0) + "/" +introtimer;
+
+        
+    }
 
     
     
@@ -142,8 +152,6 @@ function myFunction(){
     
 }
     
-</script>
-
 
 
 
