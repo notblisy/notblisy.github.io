@@ -61,10 +61,39 @@ includeHTML();
 </script>
 <div class="textformat">
 <h2>Introduction</h2>
-<p>Target frame</p> <input type="number" id="targetframe">
+   Console:  <select name="console" id="console">
+    <option value="59.7275">GBA</option>
+    <option value="59.6555">NDS</option>
+    <option value="60">Old 3DS</option>
+    <option value="60">New 3DS</option>
+  </select>
+  <br><br>
+           Game:  <select name="game" id="game">
+    <option value="121">Fire Red 1.0</option>
+    <option value="120">Fire Red 1.1</option>
+    <option value="114">Leaf Green</option>
+    <option value="0">Ruby / Sapphire</option>
+            <option value="0">Emerald</option>
+            <option value="0">SM/USUM</option>
+
+  </select>
+  <br><br>
+Intro in MS
+        <br><input type="number" id="introtimer" value="35000">
+        <br>
+        <br>        
+        Abra Frame<br>
+        <input type="number" id="abraframe" value="0">
         <br>
         <br>
-<p>Out of TV Frames </p><input type="number" id="outsideoftv">
+        Delay Box<br>
+        <input type="number" id="delaybox" value="-20">
+        <br>
+        <br>
+Target frame <input type="number" id="targetframe">
+        <br>
+        <br>
+Out of TV Frames <input type="number" id="outsideoftv">
         <br>
         <br>
 <button type="button" onclick="myFunction()">
@@ -72,18 +101,40 @@ includeHTML();
         </button>
         <p id="demo"></p>
         <p id="demo2"></p>
+  <p id="demo3"></p>
+        <p id="demo4"></p>
 
 <script>
 function myFunction(){
+    //this pulls all the settings for ttv calculator
     var targetframe = document.getElementById('targetframe').value;
     var outoftvframe = document.getElementById('outsideoftv').value;
-    var insidetv = Number(targetframe) - Number(outoftvframe);
-    var tvprint = Number(insidetv) / 313;
-    var remainder = Number(insidetv) % 313;
-    var totalframes = Number(outoftvframe) + Number(remainder);
+    var console = document.getElementById('console');
+    var fps = console.options[console.selectedIndex].value;
+    var game = document.getElementById('game');
+    var seedlag = game.options[game.selectedIndex].value;
+    var introtimer = document.getElementById('introtimer').value;
+    var abraframe = document.getElementById('abraframe').value;
+    var delaybox =document.getElementById('delaybox').value;
+    var seedlagms = 1 / Number(fps) * 1000 * seedlag;
+    var introtimerms = Number(introtimer) + Number(seedlagms);
+
     
+    
+    //this excecutes when you hit the calculate button 
+    var introtimerframes = Number(introtimerms) / 1000 * Number(fps);
+    var insidetv = (Number(targetframe) - Number(outoftvframe))/313 + 33;
+    var tvprint = Number(insidetv);
+    var remainder = (Number(targetframe) - Number(outoftvframe)) % 313;
+    var outsidetv = (Number(remainder) + Number(outoftvframe) - 33);
+    var totalframes = Number(tvprint) + Number(outsidetv) + Number(delaybox);
+    var tvprintms = (1 / Number(fps) * 1000) * Number(tvprint);
+    var totalframesms = (1 / Number(fps) * 1000) * Number(totalframes);
+    var totalms = Number(totalframesms) + Number(introtimerms);
     document.getElementById("demo").innerHTML = tvprint.toFixed(0);
     document.getElementById("demo2").innerHTML = totalframes.toFixed(0);
+    document.getElementById("demo3").innerHTML = tvprintms.toFixed(0);
+    document.getElementById("demo4").innerHTML = totalms.toFixed(0);
 
     
     
