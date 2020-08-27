@@ -105,27 +105,28 @@ Out of TV Frames <input type="number" id="outsideoftv">
         <p id="demo4"></p>
 
 <script>
-function blisytv(){
-    //this pulls all the settings for ttv calculator
-    var targetframe = document.getElementById('targetframe').value;
-    var outoftvframe = document.getElementById('outsideoftv').value;
-    var console = document.getElementById('console');
-    var fps = console.options[console.selectedIndex].value;
-    var game = document.getElementById('game');
-    var seedlag = game.options[game.selectedIndex].value;
-    var introtimer = document.getElementById('introtimer').value;
-    var abraframe = document.getElementById('abraframe').value;
-    var delaybox =document.getElementById('delaybox').value;
-    var seedlagms = 1 / Number(fps) * 1000 * seedlag;
-    var introtimerms = Number(introtimer) + Number(seedlagms);
-    var abraframems = ((1 / Number(fps) * 1000) * Number(abraframe) )+ Number(introtimerms);
 
+    //this pulls all the settings for ttv calculator
+    var targetframe = document.getElementById('targetframe').value; //this is the target frame
+    var outoftvframe = document.getElementById('outsideoftv').value; // this is how long you spend outside ttv
+    var console = document.getElementById('console'); //This sets the value of fps
+    var fps = console.options[console.selectedIndex].value; 
+    var game = document.getElementById('game'); //this sets the seed lag value for frlg
+    var seedlag = game.options[game.selectedIndex].value;
+    var introtimer = document.getElementById('introtimer').value; //this sets the introtimer value
+    var abraframe = document.getElementById('abraframe').value; //this sets the abra frame value
+    var delaybox =document.getElementById('delaybox').value; //this sets the delaybox value(lag before generation)
+    var seedlagms = 1 / Number(fps) * 1000 * seedlag; // this convers seedlag into ms
+    var introtimerms = Number(introtimer) + Number(seedlagms); //this adds seedlag to introtimer to compensate 
+    var abraframems = ((1 / Number(fps) * 1000) * Number(abraframe) )+ Number(introtimerms); //makes abraframe an ms value and then adds introtimer to it for eventual flowtimer output
+
+function blisytv(){
     //this excecutes when you hit the calculate button 
-    var introtimerframes = Number(introtimerms) / 1000 * Number(fps);
-    var insidetv = (Number(targetframe) - Number(outoftvframe))/313 + 33;
-    var tvprint = Number(insidetv);
-    var remainder = (Number(targetframe) - Number(outoftvframe)) % 313;
-    var outsidetv = (Number(remainder) + Number(outoftvframe) - 33);
+    var introtimerframes = Number(introtimerms) / 1000 * Number(fps); //converts intro timer into frames
+    var insidetv = (Number(targetframe) - Number(outoftvframe))/313 + 33; //this figures out how long you spend in teachytv. it's 313 frames per second, adding 33 to compensate for the 34 frame startup and 1 frame end lag.
+    var tvprint = Number(insidetv); //this sets the value of inside ttv
+    var remainder = (Number(targetframe) - Number(outoftvframe)) % 313; //this is the remainder of frames you can spend out of ttv
+    var outsidetv = (Number(remainder) + Number(outoftvframe) - 33); //this adds the remainder to the outside of tv frames value to figure out how long the player will spend out of the tv
     var totalframes = Number(tvprint) + Number(outsidetv) + Number(delaybox);
     var tvprintms = (1 / Number(fps) * 1000) * Number(tvprint);
     var totalframesms = (1 / Number(fps) * 1000) * Number(totalframes);
