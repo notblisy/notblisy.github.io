@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -242,22 +243,22 @@ document.getElementById('introtimer').value = "2500";
     }
     
         function blisytv(){
-            settings();
+            settings(); //calls settings 
     //this excecutes when you hit the calculate button 
     var introtimerframes = Number(introtimerms) / 1000 * Number(fps); //converts intro timer into frames
-    var insidetv = (Number(targetframe) - Number(outoftvframe))/ 313 + 33; //this figures out how long you spend in teachytv. it's 313 frames per second, adding 33 to compensate for the 34 frame startup and 1 frame end lag.
-    var tvprint = Number(insidetv); //this sets the value of inside ttv
+    var insidetv = (Number(targetframe) - Number(outoftvframe)) / 313 + 33; //this figures out how long you spend in teachytv. it's 313 frames per second, adding 33 to compensate for the 34 frame startup and 1 frame end lag.
+    var tvprint = Math.floor(insidetv); //this sets the value of inside ttv
     var remainder = (Number(targetframe) - Number(outoftvframe)) % 313; //this is the remainder of frames you can spend out of ttv
     var outsidetv = (Number(remainder) + Number(outoftvframe)) - 33; //this adds the remainder to the outside of tv frames value to figure out how long the player will spend out of the tv
     var totalframes = Number(tvprint) + Number(outsidetv) + Number(delaybox);
-    var tvprintms = 1 / Number(fps) * 1000 * Number(tvprint.toFixed(0));
-    var totalframesms = (1 / Number(fps) * 1000) * Number(totalframes);
-    var totalms = Number(totalframesms) + Number(introtimerms);
+    var tvprintms = 1 / Number(fps) * 1000 * Number(tvprint);
+    var totalframesms = (1 / Number(fps) * 1000) * Math.floor(totalframes);
+    var totalms = Math.floor(totalframesms) + Number(introtimerms);
     var abraframems = ((1 / Number(fps) * 1000) * (Number(abraframe) - 20 + Number(seedlag))) + Number(introtimerms);
     
-    document.getElementById("tvframes").value = tvprint.toFixed(0);
-    document.getElementById("totalframes").value = totalframes.toFixed(0);
-    document.getElementById("tvms").value = tvprintms.toFixed(0);
+    document.getElementById("tvframes").value = tvprint;
+    document.getElementById("totalframes").value = Math.floor(totalframes);
+    document.getElementById("tvms").value = Math.floor(tvprintms);
     document.getElementById("totalms").value = totalms.toFixed(0);
     if(abraframe == "0" && methodboxvalue != 0){
     document.getElementById("flowtimerout").value = totalms.toFixed(0) + "/" + introtimer;
@@ -289,8 +290,8 @@ document.getElementById('introtimer').value = "2500";
      adjusttv = Number(targetframe) - Number(framehit);
      adjusttv2 = Number(adjusttv) / 313;
      adjustout = Number(adjusttv) % 313;
-     if(adjustout > 156){
-         adjustout = 313 - Number(adjustout);
+     if(adjustout >= 156){
+         adjustout = -313 + Number(adjustout);
          adjusttv2++;
          
      }else if(adjustout < -156){
