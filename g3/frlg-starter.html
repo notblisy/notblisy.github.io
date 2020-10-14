@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>
+Blisy RNG Guides
+</title>
+<link rel="stylesheet" type="text/css" href="../style.css" title="default" />
+<link rel="alternate stylesheet" type="text/css" href="../nightmode.css" title="alternate"/>
+<link rel="alternate stylesheet" type="text/css" href="../dnd.css" title="dnd"/>
+<script type="text/javascript" src="../style.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>FRLG Starter RNG</h1></div>
+<div class="butts">
+
+<ul>
+  <p>Guide Navigation</p>
+  
+<li><a href="#prereq">Prerequisits</a></li>
+  
+<li><a href="#SID">Hitting your Secret ID</a></li>
+  
+<li><a href="#shinyframe">Shiny Starter</a></li>
+
+<li><a href="#end">Notes and Conclusions</a></li>
+</ul>
+
+
+</div>
+<div class="textformat">
+<h2>Text Guide</h2>
+<p>
+In this guide I'll show you how to manipulate a shiny starter in Pokemon Fire Red or Leaf Green. This is a more advanced guide than other Gen 3 things, so I don't reccomend attempting it until you have a basic understanding of Gen 3 and FRLG Rng in general. You will be expected to know how to hit initial seeds, and how to hit your target frame. 
+
+</p>
+<p>The way this RNG Manip works is we aim for a specific frame for our SID, then repeatedly check Shiny frames on the Starter Pokemon until we find a match, so this can be a time consuming and tedious process.</p>
+<h2><a name="prereq">Prerequisits</a></h2>
+<p><strong>Pokemon FRLG:</strong> You must set the language to fast and know the version. For LG, the version doesn't matter. To know the version of FR, watch the intro. If the word "Presents" appears under the Gamefreak logo, you have 1.1. If not, it's 1.0.</p>
+<p><strong>Calibrated Seeds: </strong>You must have a list of calibrated seeds for your games version and language. A list of English seeds can be found here: <a href="https://docs.google.com/spreadsheets/d/1Mf3F4kTvNEYyDGWKVmMSiar3Fwh1PLzWVXUvGx9YxfA">Gen 3 Seeds</a> </p>
+<p><strong>A Programmer Calculator:</strong> You can just use the calculator in Windows, click the menu in the top left, and click Programmer there.</p>
+<p><strong>Tools:</strong></p>
+
+<li><a href="https://github.com/Admiral-Fish/PokeFinder/releases">Pokefinder by AdmiralFish</a></li>
+<li><a href="https://github.com/jjaldridge2009/Gen-3-Seed-Assistant/releases">Gen 3 Seed Assistant by PapaJefe</a></li>
+<li><a href="http://gunnermaniac.com/ft">Flowtimer by Stringflow</a></li>
+<li><a href="https://blisy.net/flowtimerconverter.html">Flowtimer Converter by Blisy</a></li>
+
+<h2><a name="SID">Hitting your Secret ID</a></h2>
+<p>During the start of a new game file in FRLG, the RNG moves much quicker than normal, and it becomes near impossible to hit your initial seed(This would require 3 frame perfect inputs for TID alone, and 4 if you want TID+SID). However, your TID is actually what the initial seed is. Using this information, we can reverse calculate what our secret ID is using what TID we got, we just have to aim for a specific frame. The SID is generated 249 frames after you press A on this screen in the English versions:</p>
+<img src="images/frlgsidspot.png" alt "tidwhen" style="width: 100%;">
+
+<p>It is different amounts of frames in other languages, but research has not been done on all of them. In italian it's 236 frames on the fast speed setting, and in Japanese it's 201 frames. Thanks to PapaJefe and Diance for these numbers.</p>
+<p>So pick a relatively high frame, around 1000~ to aim for a SID. You won't know what the SID will be until after the RNG is done, but you will have a general frame range of where you could have landed. Open flowtimerconverter, select your game and console, and put SID as the Method. If you're using a non-english version, change the delay box value to match your language here as a negative number. If it's an English copy, leave it as-is. Then put the target frame of yours into the "Target Frame" Box. I will aim for frame 1149. It should look like this: </p>
+<img src="images/flowtimerconverter.png" alt "ftconv" style="width: 100%;">
+<p>Then, copy the value that says "Flat MS" and paste it into flowtimer.</p>
+<img src="images/flowtimervalue.png" alt "flowtimervalue" style="width: 100%;">
+<p>Once the value is pasted into flowtimer, what you do is reset the game, select "New Game", and play up until the name entry screen. Here, type your name out and hover over the Ok button. Hit Start on flowtimer and Ok on your game at the same time on this screen, the get through the rest of the intro to the final screen as fast as possible. Once at the final screen, once flowtimer finishes its countdown, hit A to start the game.</p>
+<p>At this point, check your Trainer ID. In DEC mode on the Programmer Calculator, type the TID. Then, click the HEX button to see what your initial seed was, like this.</p>
+<img src="images/calculator.png" alt "calc" style="width: 100%;">
+<p>On the left is my TID, on the right is its value as a HEX Seed.</p>
+<p>Now, we open PokeFinder, click the tools dropdown, and click researcher. We will use this tool to list a series of potential SIDs for us. Leave the tab on 32Bit and the Common RNGs as LCRNG. In the Customs section, set Custom 1 to 16Bit High, and type 1 in the right-most box. Then, in the paremeters section, set your starting frame to around 10~ before your target frame. In my case, it's 1140 because my target frame was 1149. Then set max results to 1000, and in the Seed box, type the HEX version of your TID. In my case, it's D49A. Yours will most likely be different. Then, hit generate. Once generated, scroll down to your target frame. The "Custom 1" section is a list of SIDs depending on the frame you've hit. If I hit exactly frame 1149, my SID would be 24497. Since the SID value is not visible to us, what we do is figure out what our SID is by RNGing the starter assuming the SID is one of the values shown here.</p>
+<img src="images/researcher.png" alt "research" style="width: 100%;">
+<p>Here is how my Researcher looks as a reference.</p>
+
+<h2><a name="shinyframe">Shiny Starter</a></h2>
+
+<p>The way this process works is as follows: </p>
+<p>Step 1: Open Gen 3 Seed Assistant, set Shiny to "Star/Square", and type your TID in the TID Box.</p>
+<p>Step 2: For SID, pick a SID from the list we generated in researcher. The first one I'll choose to pick is frame 1150. This is a SID of 30099.</p>
+<p>Step 3: Then, set the Method to Method 1, the target frame to 5000, and the +- to 4999.</p>
+<p>Step 4: In the "Enter Seeds" box, put all of your common seeds for a given intro timer length and hit generate. Gen 3 Seed Assistant will show you a list of potential shiny frames on all the seeds you put in ranging from frame 1-10,000.</p>
+<p>Step 5: At this point, you pick a frame you wish to aim for, and try to hit it. I'll be aiming for the Brave Shiny frame on frame 2704 Seed C673, since that's one of my most common seeds on these settings.</p>
+<img src="images/seedassistantshiny.png" alt "seedshinyassist" style="width: 100%;">
+<p>Step 6: Now, set up flowtimerconverter as normal for FRLG RNG. Set your Intro in MS to your setting for that seed, Leave the method as 1/2/4, and the delaybox at -20, and set your Target frame to your target frame. This time, though, copy the "Flowtimer MS Total" value into flowtimer. </p>
+<img src="flowtimerconverter2.png" alt "ftc2" style="width:100%;">
+<p>Step 7: So, now you set the target frame to what your target frame is, +- 10 frames. Change shiny to "Any", and change the gender ratio to 87.5/12.5 male to female. Leave the seed and method boxes alone. Then, when you receive a Pokemon, type its stats into the IV Calculator part of Gen 3 Seed Assistant, and hit Search for Seed to see what seed and frame you've hit. If you miss your target frame/seed, put what frame you hit into the "Frame Hit" Box on flowtimerconvert and hit calculate. It will adjust your target MS for you, and paste that new value into flowtimer, and retry until you hit your target frame.</p>
+<img src="images/energetic.png" alt "energy" style="width:100%;">
+<p>This is the text you hit A on to receive the Pokemon when flowtimer ends, after the Yes/No Box</p>
+<img src="images/1stattempt.png" alt "1st" style="width:100%;">
+<p>Here is an image of me hitting a Modest Bulbasaur on frame 2703 on seed F25, I simply typed the stats and nature into the IV calculator to learn what frame I've hit.</p>
+<p>Step 8: If you hit the correct frame and got a shiny, great! You know what your SID is and have a shiny, you're done, but if not, we have to adjust.</p>
+<p>Step 9: So, here is me hitting my target frame but not getting the shiny.</p>
+<img src="images/2ndattempt.png" alt "2nd" style="width:100%;">
+<p>As you can see, this was my target and with the SID I tried, it would have been shiny, but it's not. So what we do in this scenario, is take a look back at researcher, and try to use a SID 1 frame below or above the frame we tried to hit. And if you fail again, you do the same thing, go one more above or below. I would do this to about 10 frames early to 10 frames late, and if you find nothing, re-try for a new SID and be more mindful of your timing.</p>
+<p>Here is my successful attempt: </p>
+<img src="images/success.png" alt "icheatedandusedpkhextocheck" style="width:100%;">
+<p>If you notice, my SID was on frame 1153, which means I was 4 frames late from my target. So it can take a fair bit of time before you find what SID you aim for, but with patience, you'll be able to both know your SID and find a shiny starter! Good luck!</p>
+
+<h2><a name="end">Notes and Conclusions</a></h2>
+
+<p>This RNG may seem complicated at first, but it's really very simple. The difficult part is how tediuous and time consuming it is. You usually have to hit your target frame at least 3-5 times if you're lucky and precise with your SID frame.</p>
+
+<p>Thank you for reading, I hope you succeed in getting your Pokemon. If you have any questions feel free to ask me on Twitter @im_a_blisy or join my discord. <a href="https://www.google.com/url?q=https%3A%2F%2Fdiscord.gg%2FQchhXQv&amp;sa=D&amp;sntz=1&amp;usg=AFQjCNGa0ml1VToT2Fz03xxVN5PUNkTLWg" target="_blank" rel="noopener">https://discord.gg/QchhXQv</a> If you speak another language other than English fluently, and would like to translate this guide, please, contact me and I'd love to help :D</p>
+
+</div>
+</body>
+
+
+
+</html>
