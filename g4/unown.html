@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>
+Blisy RNG Guides
+</title>
+<link rel="stylesheet" type="text/css" href="../style.css" title="default" />
+<link rel="alternate stylesheet" type="text/css" href="../nightmode.css" title="alternate"/>
+<link rel="alternate stylesheet" type="text/css" href="../dnd.css" title="dnd"/>
+<script type="text/javascript" src="../style.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Unown HGSS RNG</h1></div>
+<div class="butts">
+
+<ul>
+  <p>Guide Navigation</p>
+  
+<li><a href="#prereq">Prerequisits</a></li>
+  
+<li><a href="#reqread">Required Reading</a></li>
+  
+<li><a href="#generation">Unown Generation</a></li>
+
+<li><a href="#deduce">Deducing Unown</a></li>
+
+<li><a href="#radio">Using the Radio</a></li>
+
+<li><a href="#end">Notes and Conclusions</a></li>
+</ul>
+
+
+</div>
+<div class="textformat">
+<h2>Text Guide by BruceMan Shuffle</h2>
+<p>This is a text guide for how to RNG Manipulate Unown in HGSS by Bruceman Shuffle, you can find them on discord at angietwist
+#4965 or on reddit as <a href="https://www.reddit.com/user/BruceTwist/">BruceTwist</a>. Thanks for allowing me to host this here, Bruce!</p>
+<h2><a name="prereq">Prerequisits</a></h2>
+
+<li><a href="https://github.com/Admiral-Fish/PokeFinder/releases">Pokefinder by AdmiralFish</a></li>
+<li><a href="https://github.com/dylmeadows/EonTimer/releases">Eon timer by Dylan Meadows</a></li>
+<li><a href="http://co291424.com/tool/KnownUnown.php">KnownUnown</a>
+<li>In-game you will ideally need 1-2 Chatots with a recorded Chatter and/or Juggler Irwin registered in your PokéGear, and some roaming legendary Pokémon to help verify your seed.</li>
+<li>This guide also assumes the reader is capable of standard Method K Wild RNG Manipulation, if you feel the need to refresh your memory, consult your favourite guide from Smogon, or other such sources. Will work both for Emulator and Retail.</li>
+<h2><a name="reqread">Required Reading for Unown</a></h2>
+<p>In Pokémon HeartGold and SoulSilver the only place to obtain Unown is in the basement of the Ruins of Alph via wild encounter after unlocking various forms via completing picture puzzles. Once you have acquired all the forms of the alphabet (A-Z), and share the progress in the Research Lab of your completed report, you unlock the ! and ? forms on the first floor of the Ruins. Obtaining a full Unown Pokédex is somewhat tedious, and for this reason, people claim that a full Shiny Unown Pokédex is considerably difficult and/or tedious outside of FireRed and LeafGreen as it is significantly more difficult to predict the form of the shiny Unown you want.
+It is highly recommended that you have not caught any Unown forms in your save file as of this point, and if you have, make a note of which forms you have registered in the Unown Report key item. This is also made considerably easier if you have all Unown forms released by completing the 4 puzzles in the Ruins of Alph and unlocking the special rooms to make the unlocking of the ! and ? forms easier. For reference, <a href="https://bulbapedia.bulbagarden.net/wiki/Ruins_of_Alph">the Bulbapedia article on the Ruins of Alph</a> is very helpful at all stages of this preparation.</p>
+
+<h2><a name="generation">Unown Generation</a></h2>
+<p>It is a well known fact that the Personality Value, or PID, determined the form of an Unown in the third generation of Pokémon which had its own issues when wanting to shiny hunt them, but the process is a bit more involved in the fourth generation. At the bottom you can find a blogpost detailing the process of generation. It is well worth a read.
+Thankfully, the Mysterious Transmission that plays on the PokéGear while in the Ruins of Alph increases the probability of encountering unobtained forms, and the form generated is somewhat independent of the regular PIDRNG frames that are used for wild encounters. Consequently, it is possible to obtain all unown forms with the same PID and IVs, with the exception of the ! and ? forms.
+</p>
+<p>This guide will showcase several cases of utilising the radio to obtain different Unown Forms.
+</p>
+
+<h2><a name="deduce">Deducing the Unown form of a desired spread</a></h2>
+<p>We will now run through an example of catching your first shiny Unown while knowing the form, or even choosing your own letter! Use PokéFinder (or preferred equivalent) to find a spread you would like to have be shiny, and have all your in game necessities.</p>
+<img src="images/targetunown.png" alt "TU" style="width: 100%;">
+<p>I will be going for this frame, and I will now check what form it is in KnownUnown. You can increase the search range of the Unown Frames in KnownUnown from 0-200 to a range of your preference. Some of the frames may not match with those in Pokéfinder, and this is due to some spreads showing the corresponding Unown RNG seed. To find yours, you can look for your desired IVs/PID and match it with the letter for your spread.
+</p>
+<img src="images/lettere.png" alt "letterE" style="width: 100%;">
+<p>It is the letter E when no radio calls are done. </p>
+<img src="images/confirmform.png" alt "confirmform" style="width: 100%;">
+<p>Proceed to now hit your desired frame and confirm the form.
+Now that I have caught my Unown E, I will check off E on the second page of KnownUnown as being registered in my Unown Report, as this will now impact the availability of other Unown forms.
+</p>
+
+<h2><a name="radio">Using the Radio</a></h2>
+<p>The Mysterious Transmission from the radio can do one of two things to an encounter frame:
+<li>1. Cause a random and fixed other letter to appear as opposed to the form that appears when the radio isn’t used. This alternate form will always appear regardless of the number of forms you have caught. In our first example, we would have obtained an Unown letter C.</li>
+<li>2. Causes a random letter from the alphabet to appear from a randomised order of the alphabet. The form you encounter will be the first from the left, and for each new form registered in the Unown Report, the form that appears will move one to the right.</li>
+</p>
+<p>In this next example I will be going for this frame</p>
+<img src="images/thisframeunown.png" alt "thisframe" style="width: 100%;">
+<p>Which corresponds to this result in KnownUnown. </p>
+<img src="images/thisresultunown.png" alt "thisframe" style="width: 100%;">
+<p>What we can now see is that if we didn’t use the radio for this frame, we would obtain Unown letter R, but one application of the Mysterious Transmission and having already registered one letter in our report, we will now obtain the letter M. Once again, hit the seed to confirm.
+</p>
+<img src="images/confirmform2.png" alt "confirmform" style="width: 100%;">
+<p>It is important to note that for each form you collect, check them off in KnownUnown so that the alternate forms are accurate. Because of this, and the fact that all letters of the alphabet become available as you catch more forms for this frame, you can potentially pick a frame that you like, catch that form, check it off as registered on KnownUnown, and then re-use that frame and apply the Mysterious Transmission and obtain all Unown forms with the same spread but different forms.
+</p>
+<p>The right-most column on KnownUnown will display the form of the spread as either ! or ? once you complete the Unown sidequest and report back to the man in the Ruins of Alph office.
+</p>
+<h2><a name="end">Notes and Conclusions</a></h2>
+<p>I hope this guide was helpful and informative for an RNG that has not been done much, or has little attention given to it. This was partly inspired by the recent love of Unown on this subreddit, as well as my own little research project. Happy RNG-ing!
+</p>
+<p> If any issues for procedure, accuracy, or credit are spotted, please let me know and I will edit/take action as appropriate.</p>
+<p><b>Credits and Sources:</b> 
+
+<li><a href="https://docs.google.com/document/d/1YjgYbfFLINlN6WW2ZK-nFqPbkYIcARkCVlI10JkcC98/edit">Bruce Twists Original Guide</a></li>
+<li><a href="https://twitter.com/_gon_z/status/1151871686607687681?s=21">GonZ - the person who made KnownUnown from Yie's writeup on Twitter.</a></li>
+<li>Bulbapedia for the Ruins of Alph article</li>
+
+
+</p>
+<p>Thank you for reading, I hope you succeed in getting your Unown. If you have any questions feel free to ask me on Twitter @im_a_blisy  or <a href="https://discord.gg/QchhXQv">join my discord</a>. 
+
+</p>
+
+
+
+
+</div>
+</body>
+
+
+
+</html>
