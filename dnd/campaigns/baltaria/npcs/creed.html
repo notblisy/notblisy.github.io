@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Baltaria Wiki
+</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Creed</h1></div>
+
+<div class="textformat">
+<h2>Stories</h2>
+<p>Bloodied and beaten, at the ends of his ropes, Creed sits on one knee surrendering to Gakrun. However, instead of mercy, he receives brutality, and Gakrun pins him down and slowly and brutally rips Creeds arms off one by one, leaving Creed to die.  
+</p>
+
+
+
+<h2>Description</h2>
+<p>Creed is a tall Hob Goblin with two robotic arms provided by the former Cult of the Iron Gear leader, Hardy. 
+</p>
+
+
+<h2>Player Character Interaction</h2>
+<p>We first met Creed in our very first adventure together, venturing into the cave with the Cult of the Iron Gear, where Creed worked with Nero and Hardy. After his getaway, we didn't see him until we went to the clocktower in Feldspar to fight the awakened Bloody Rain. Creed actually fell out the window and was presumed dead, but little did we know we'd meet him again while planning to launch an assault on Gakrun Breaks camp. 
+
+</p>
+<p>Upon first seeing him, Katz shot him. But after cooling down and some healing magic, Creed explained to us here that he used to have a small band of Goblinoids he considered his friends and soldiers, but was usurped by Gakrun Break in an honor bound duel, where Gakrun ripped his arms off. Creed was headed back to his old group which had become signifigantly more massive to challenge for his right to leadership. We agreed to assist him, and he was succesful in overthrowing Gakrun. He is now working with Baticul to establish this camp as a new official town. 
+</p>
+</body>
+
+
+
+</html>
