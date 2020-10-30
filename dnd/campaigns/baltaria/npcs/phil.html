@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Baltaria Wiki
+</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Phil</h1></div>
+<div class="textformat">
+<h2>Introduction</h2>
+<p>Phil walks up to us and gives a firm dad handshake, states his name, and lays his credentials out. Very to the point, but relaxed. He seemed like the right for us right away!
+</p>
+
+<div id="box">
+<h3>Attributes</h3>
+<table>
+
+    <td><i><b>Class</b></i></td>
+    <td>Artificer</td>
+  </tr>
+  <tr>
+    <td><i><b>Subclass</b></i></td>
+    <td>Alchemist</td>
+  </tr>
+  <tr>
+    <td><i><b>Race</b></i></td>
+    <td>Human</td>
+  </tr>
+  <tr>
+    <td><i><b>Age</b></i></td>
+    <td>Middle-Aged</td>
+  </tr>
+ <tr>
+    <td><i><b>Build</b></i></td>
+    <td>Dad-bod</td>
+  </tr>
+  <tr>
+    <td><i><b>Sex</b></i></td>
+    <td>Male</td>
+  </tr>
+</table>
+
+</div>
+
+
+
+<h2>Description</h2>
+<p>Phil is a middle aged family man who likes to make potions and do a lot of researching. He lacks adventuring experience, but is looking to move to Baticul and gain new experience. In general seemed like a chill guy. We liked his potion making ability as exceptional support weather or not it comes to making combat potions, or making potions for guild revenue. </p>
+
+
+</div>
+</body>
+
+
+
+</html>

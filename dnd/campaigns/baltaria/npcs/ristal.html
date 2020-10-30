@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Baltaria Wiki
+</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Ristal</h1></div>
+<div class="textformat">
+<h2>Introduction</h2>
+<p>Ristal enters the scene without us even seeing him get there-- Somehow, his stealth and skill eluded all of our perceptions and he was just in the seat when we all blinked. Left a big first impression on us. 
+</p>
+
+<div id="box">
+<h3>Attributes</h3>
+<table>
+
+    <td><i><b>Class</b></i></td>
+    <td>Rogue</td>
+  </tr>
+  <tr>
+    <td><i><b>Subclass</b></i></td>
+    <td>Inquisitive</td>
+  </tr>
+  <tr>
+    <td><i><b>Race</b></i></td>
+    <td>Elf, Drow</td>
+  </tr>
+  <tr>
+    <td><i><b>Age</b></i></td>
+    <td>Young, probably 100-200</td>
+  </tr>
+ <tr>
+    <td><i><b>Build</b></i></td>
+    <td>Slim</td>
+  </tr>
+  <tr>
+    <td><i><b>Sex</b></i></td>
+    <td>Male</td>
+  </tr>
+</table>
+
+</div>
+
+
+
+<h2>Description</h2>
+<p>Ristal is a smooth talkin and walkin Drow who slid into our team using his expert stealth. He appealed to us both because of his ability to gather intelligence, and since we have a few different people who we do not know the whereabouts of, we decided tracking was of importance to us. In addition, he had worked with ships a bit, so we thought he could aide us there in a pinch.</p>
+
+
+</div>
+</body>
+
+
+
+</html>

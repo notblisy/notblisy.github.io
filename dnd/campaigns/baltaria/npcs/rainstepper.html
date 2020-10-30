@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Baltaria Wiki
+</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Rainstepper</h1></div>
+<div class="textformat">
+<h2>Introduction</h2>
+<p>Rainstepper approaches the interview at a snails pace, doesn't blink during the entire interview, and speaks rather slowly. Upon consideration, Rainstepper thanks us, and the vanishes without a trace, with speed we could not have expected. 
+</p>
+
+<div id="box">
+<h3>Attributes</h3>
+<table>
+
+    <td><i><b>Class</b></i></td>
+    <td>Sorcerer</td>
+  </tr>
+  <tr>
+    <td><i><b>Subclass</b></i></td>
+    <td>Shadow Magic</td>
+  </tr>
+  <tr>
+    <td><i><b>Race</b></i></td>
+    <td>Tabaxi</td>
+  </tr>
+  <tr>
+    <td><i><b>Age</b></i></td>
+    <td>Old-aged</td>
+  </tr>
+ <tr>
+    <td><i><b>Build</b></i></td>
+    <td>Slim</td>
+  </tr>
+  <tr>
+    <td><i><b>Sex</b></i></td>
+    <td>Female</td>
+  </tr>
+</table>
+
+</div>
+
+
+
+<h2>Description</h2>
+<p>Rainstepper is an extremely slow moving Tabaxi sorcerer who does not seem to blink. Hired by the PCs to be a part of their guild, H.H.O.G. They went to Flamecrest Academy, are very used to working in the Arctic, and have defended Flamecrest from a White Dragon. </p>
+
+
+</div>
+</body>
+
+
+
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Baltaria Wiki
+</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../style.css" rel="stylesheet" type="text/css">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Morlos</h1></div>
+<div class="textformat">
+<h2>Introduction</h2>
+<p>The interview had been a bit mundain, aside from Morlos damp resume. But Katz had a fun time conversing with him in Aquan, and then we all learned something that made him an instant hire-- His potentional knowledge about the Southern Isles.
+</p>
+
+<div id="box">
+<h3>Attributes</h3>
+<table>
+
+    <td><i><b>Class</b></i></td>
+    <td>Sorcerer</td>
+  </tr>
+  <tr>
+    <td><i><b>Subclass</b></i></td>
+    <td>Storm</td>
+  </tr>
+  <tr>
+    <td><i><b>Race</b></i></td>
+    <td>Triton</td>
+  </tr>
+  <tr>
+    <td><i><b>Age</b></i></td>
+    <td>25-30. Young.</td>
+  </tr>
+ <tr>
+    <td><i><b>Build</b></i></td>
+    <td>Fit</td>
+  </tr>
+  <tr>
+    <td><i><b>Sex</b></i></td>
+    <td>Male</td>
+  </tr>
+</table>
+
+</div>
+
+
+
+<h2>Description</h2>
+<p>Morlos is a Triton Sorcerer who looks like the ocean. His resume was damp when he handed it to us, but we liked his sailing experience and sea battle experience, fearing we may need to head to the Southern Isles one day, as he knows someone who may be capable of helping us get there. He also has experience surviving fighting the Spider-Skull pirates, and has acted as body guard before.</p>
+
+
+</div>
+</body>
+
+
+
+</html>
