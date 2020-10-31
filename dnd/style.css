@@ -198,7 +198,29 @@ text-decoration: overline;
 }
 
 
+.elemental{
+  
+  
+  
+}
 
+.elemental input,
+.elemental .submenu {
+  display: none;
+}
+
+/*position the label*/
+label {
+
+  display: inline-block;
+  cursor: pointer;
+}
+
+/*show the submenu when input is checked*/
+.elemental input:checked ~ .submenu {
+  display: block;
+
+}
 
 
  * {
