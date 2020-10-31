@@ -25,6 +25,7 @@ Baltaria Wiki
 <div class="dropdown">
   <button class="dropbtn">NPC List</button>
   <div class="dropdown-content">
+<div class="dropdown2">
  <button class="dropdown-btn">Leaders<i class="fa fa-caret-down"></i></button>
   <div class="dropdown-container">
     <a href="/dnd/campaigns/baltaria/npcs/atticus.html">Atticus</a>
@@ -34,7 +35,9 @@ Baltaria Wiki
 <a href="/dnd/campaigns/baltaria/npcs/herris.html">Zinnea and Ludan Herris</a>
 <a href="/dnd/campaigns/baltaria/npcs/creed.html">Creed</a>
   </div>
+  </div>
 <br>
+<div class="dropdown2">
 <button class="dropdown-btn">Villains <i class="fa fa-caret-down"></i></button>
   <div class="dropdown-container">
  <a href="/dnd/campaigns/baltaria/npcs/bloodyrain.html">Sanguine Knight</a>
@@ -42,14 +45,18 @@ Baltaria Wiki
 <a href="/dnd/campaigns/baltaria/npcs/richard.html">Rirchard</a>
 <a href="/dnd/campaigns/baltaria/npcs/gakrun.html">Gakrun Break</a>
 <a href="/dnd/campaigns/baltaria/npcs/tyrg.html">Tyrg</a>
+<div class="dropdown2">
     <button class="dropdown-btn">Cult of the Iron Gear <i class="fa fa-caret-down"></i></button>
   <div class="dropdown-container">
 <a href="/dnd/campaigns/baltaria/npcs/hardy.html">Hardy</a>
 <a href="/dnd/campaigns/baltaria/npcs/niero.html">Brother Niero</a>
 <a href="/dnd/campaigns/baltaria/npcs/galileo.html">Galileo</a>
+</div>
+</div>
   </div>
   </div>
 <br>
+<div class="dropdown2">
 <button class="dropdown-btn">Guild Members <i class="fa fa-caret-down"></i></button>
   <div class="dropdown-container">
 <a href="/dnd/campaigns/baltaria/npcs/rainstepper.html">Rainstepper</a>
@@ -58,6 +65,7 @@ Baltaria Wiki
 <a href="/dnd/campaigns/baltaria/npcs/ristal.html">Ristal</a>
 <a href="/dnd/campaigns/baltaria/npcs/braun.html">Braun</a>
 <a href="/dnd/campaigns/baltaria/npcs/morlos.html">Morlos</a>
+</div>
   </div>
 <a href="/dnd/campaigns/baltaria/npcs/sain.html">Captain Sain</a>
 <a href="/dnd/campaigns/baltaria/npcs/reeve.html">Reeve</a>
@@ -110,22 +118,4 @@ Baltaria Wiki
 
 </ul>
 </div>
-
-<script>
-/* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
-var dropdown = document.getElementsByClassName("dropdown-btn");
-var i;
-
-for (i = 0; i < dropdown.length; i++) {
-  dropdown[i].addEventListener("click", function() {
-  this.classList.toggle("active");
-  var dropdownContent = this.nextElementSibling;
-  if (dropdownContent.style.display === "block") {
-  dropdownContent.style.display = "none";
-  } else {
-  dropdownContent.style.display = "block";
-  }
-  });
-}
-</script>
 </html>

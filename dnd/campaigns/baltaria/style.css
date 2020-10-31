@@ -106,42 +106,6 @@ display:none;
 
 }
 
-.dropdown-btn {
-  color: black;
-  font-weight: normal;
-  font-size: 16px;
-  padding: 12px 16px;
-  text-decoration: none;
-  z-index: 1;
-  background: none;
-  border: none;
-  font-family: Luminari;
-  font-variant: small-caps; 
-
-}
-
-/* On mouse-over */
-.dropdown-btn:hover {
-  background-color: #f1f1f1
-}
-
-
-
-
-/* Dropdown container (hidden by default). Optional: add a lighter background color and some left padding to change the design of the dropdown content */
-.dropdown-container {
-  display: none;
-
- 
-}
-
-/* Optional: Style the caret down icon */
-.fa-caret-down {
-  float: right;
-  padding-left: 8px;
-}
-
-
 
 
 /* Links inside the dropdown */
@@ -173,6 +137,51 @@ text-decoration: overline;
   box-sizing: border-box;
 }
 
+.dropdown-btn {
+  color: black;
+  font-weight: normal;
+  font-size: 16px;
+  padding: 12px 16px;
+  text-decoration: none;
+  z-index: 1;
+  background: none;
+  border: none;
+  font-family: Luminari;
+  font-variant: small-caps; 
+
+}
+
+.dropdown2{
+display: inline-block;
+}
+
+/* On mouse-over */
+.dropdown-btn:hover {
+  background-color: #f1f1f1;
+
+}
+
+
+
+
+/* Dropdown container (hidden by default). Optional: add a lighter background color and some left padding to change the design of the dropdown content */
+.dropdown-container {
+  display: none;
+
+ 
+}
+
+
+/* Optional: Style the caret down icon */
+.fa-caret-down {
+  float: right;
+  padding-left: 8px;
+}
+
+.dropdown2:hover .dropdown-container {
+ display: block;
+
+}
 
 
 
