@@ -1,8 +1,5 @@
 
 
-
-
-
 .textformat{
 position:relative;
 top: 70px;
@@ -180,6 +177,107 @@ display: inline-block;
 
 .dropdown2:hover .dropdown-container {
  display: block;
+
+}
+
+
+/*hide the inputs/checkmarks and submenu*/
+.villains{
+  
+  
+  
+}
+
+.villains input,
+.villains .submenu {
+  display: none;
+}
+
+/*position the label*/
+label {
+
+  display: inline-block;
+  cursor: pointer;
+}
+
+/*show the submenu when input is checked*/
+.villains input:checked ~ .submenu {
+  display: block;
+
+}
+/*hide the inputs/checkmarks and submenu*/
+.guild{
+  
+  
+  
+}
+
+.guild input,
+.guild .submenu {
+  display: none;
+}
+
+/*position the label*/
+label {
+
+  display: inline-block;
+  cursor: pointer;
+}
+
+/*show the submenu when input is checked*/
+.guild input:checked ~ .submenu {
+  display: block;
+
+}
+
+/*hide the inputs/checkmarks and submenu*/
+.leader{
+  
+  
+  
+}
+
+.leader input,
+.leader .submenu {
+  display: none;
+}
+
+/*position the label*/
+label {
+
+  display: inline-block;
+  cursor: pointer;
+}
+
+/*show the submenu when input is checked*/
+.leader input:checked ~ .submenu {
+  display: block;
+
+}
+
+
+/*hide the inputs/checkmarks and submenu*/
+.cult{
+  
+  
+  
+}
+
+.cult input,
+.cult .submenu {
+  display: none;
+}
+
+/*position the label*/
+label {
+
+  display: inline-block;
+  cursor: pointer;
+}
+
+/*show the submenu when input is checked*/
+.cult input:checked ~ .submenu {
+  display: block;
 
 }
 
