@@ -1,0 +1,289 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<title>
+Blisy RNG Guides
+</title>
+<link rel="stylesheet" type="text/css" href="style.css" title="default" />
+<link rel="alternate stylesheet" type="text/css" href="nightmode.css" title="alternate"/>
+<link rel="alternate stylesheet" type="text/css" href="dnd.css" title="dnd"/>
+<script type="text/javascript" src="style.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Jirachi Timer</h1></div>
+<div w3-include-html="sidebar.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div class="javascriptformat">
+<br>
+      Target ID
+        <br><input type="number" id="ID" value="0">
+        <br>
+<br>
+      ID Frame
+        <br><input type="number" id="idframe" value="0">
+        <br>
+        <br>              
+        Select your Console: 
+<br> <select name="console" id="console" onchange="consolechange()">
+    <option value="59.7275">GBA</option>
+    <option value="59.6555">NDS</option>
+
+  </select>
+  <br><br>
+
+Intro in MS
+        <br><input type="number" id="introtimer" value="5000">
+        <br>
+        <br>        
+        Minutes<br>
+        <input type="number" id="minutes" value="8">
+        <br>
+        <br>
+Seconds<br>
+        <input type="number" id="seconds" value="0">
+        <br>
+        <br>
+Frames <br><input type="number" id="frames" value="30">
+        <br>
+        <br>
+
+Starter Frame<br>
+        <input type="number" id="starterbox" value="0">
+        <br>
+        <br>
+        Jirachi Offset<br>
+        <input type="number" id="delaybox" value="-20">
+        <br>
+        <br>
+<button type="button" onclick="farts()">
+    Calculate
+        </button>
+<br>
+Frames in Total: <br><input type="number" id="totalframes">
+<br>
+Total MS: <br><input type="number" id="totalms">
+<br>
+ID MS: <br><input type="number" id="idms">
+<br>
+Starter MS: <br><input id="starterms">
+<br>
+Flowtimer Output: <br><input id="flowtimerout">
+
+        <br>
+<br>
+  <b><i>ID Frame hit</b></i>
+        <br>
+<input type="number" id="idframehit"><br><br>
+  <b><i>Starter Frame hit</b></i>
+        <br>
+<input type="number" id="starterframehit"><br><br>
+  <b><i>Jirachi Frame difference</b></i>
+        <br>
+<input type="number" id="jirachiframehit"><br><br>
+        <button type="button" onclick="update()">
+            Calculate
+        </button>
+        <br>
+        <br>
+        Adjust ID by:<br>  
+        <input type="number" id="adjustidby">
+        <br>
+        <br>
+Adjust Starter by: <br><input type="number" id="adjuststarterby">
+<br>
+<br>
+
+New Flowtimer Total: <br><input id="updatedflowtimertotal">        
+<script>
+
+    
+  
+    var console;
+    var fps;
+    var introtimer;
+    var delaybox;
+    var methodboxvalue;
+    var minutes;
+    var minutesecondstoframe;
+    var seconds;
+    var frames;
+    var idframe;
+    var battlelag;
+    var idms;
+    var idoffset;
+    var battlelag;
+    var msnoid;
+    var totalms;
+    var jirachilag;
+    var starterframe;
+    var starterms;
+    var idintrotimer;
+    var startermsintrotimer;
+    
+    function settings()
+    
+    {  
+    //this pulls all the settings for jirachi timer
+     idframe = document.getElementById('idframe').value; //this pulls the frame of the ID
+     console = document.getElementById('console'); //This sets the value of fps
+     starterframe = document.getElementById('starterbox').value; //this gets the starter frame
+     fps = console.options[console.selectedIndex].value; 
+     introtimer = document.getElementById('introtimer').value; //this sets the introtimer value
+     delaybox = document.getElementById('delaybox').value; //this sets the delaybox value(lag before generation)
+     consoletext = console.options[console.selectedIndex].text;
+     minutes = document.getElementById('minutes').value; //this pulls the minutes
+     seconds = document.getElementById('seconds').value; //this pulls the seconds
+     frames = document.getElementById('frames').value; //this pulls the frames
+     
+    }
+
+    
+        function farts(){
+            settings(); //calls settings 
+    //this excecutes when you hit the calculate button 
+   starterms = 1 / Number(fps) * 1000 * Number(starterframe);
+   battlelag = Number(9726);
+   jirachilag = 1 / Number(fps) * 1000 * Number(delaybox);
+   minutesecondstoframe = (((Number(minutes) * 60) + Number(seconds)) * Number(60)) + Number(frames);
+   idoffset = 1 / Number(fps) * 1000 * 75;
+   startermsintrotimer = Number(starterms) + Number(introtimer);
+   idms = (1 / Number(fps) * 1000 * Number(idframe)) - Number(idoffset);
+   idintrotimer = Number(idms) + Number(introtimer);
+   msnoid = 1 / Number(fps) * 1000 * Number(minutesecondstoframe);
+   totalms = Number(msnoid) + Number(idms) + Number(battlelag) + Number(jirachilag) + Number(introtimer);
+
+
+    document.getElementById("totalframes").value = Math.floor(minutesecondstoframe);
+    document.getElementById("totalms").value = Math.floor(totalms);
+    document.getElementById("idms").value = Math.floor(idintrotimer);
+    document.getElementById("starterms").value = Math.floor(starterms);
+    
+    if(starterframe == "0" && introtimer != 0){
+    document.getElementById("flowtimerout").value = totalms.toFixed(0) + "/" + introtimer + "/" + idintrotimer.toFixed(0);
+
+}else if(starterframe != 0 && introtimer == "0"){
+    document.getElementById("flowtimerout").value = totalms.toFixed(0) + "/" + idintrotimer.toFixed(0) + "/" + starterms.toFixed(0) ;
+
+}else{
+document.getElementById("flowtimerout").value = totalms.toFixed(0) + "/" + introtimer + "/" + idintrotimer.toFixed(0) + "/" + startermsintrotimer.toFixed(0)
+
+}
+    
+
+}
+
+function update(){
+settings(); //calls settings function
+var targetframeadjust;
+targetframeadjust = document.getElementById('totalms').value;
+var idframehit;
+idframehit = document.getElementById('idframehit').value;
+var starterframehit;
+starterframehit = document.getElementById('starterframehit').value;
+var jirachiframehit;
+jirachiframehit = document.getElementById('jirachiframehit').value;
+var idadjust;
+idadjust = Number(idframe) - Number(idframehit);
+var starteradjust;
+starteradjust = Number(starterframe) - Number(starterframehit);
+var idadjustms;
+idadjustms = (1 / Number(fps) * 1000) * Number(idadjust);
+var starteradjustms;
+starteradjustms = (1 / Number(fps) * 1000) * Number(starteradjust);
+var jirachiadjust;
+jirachiadjust = Number(delaybox) - Number(jirachiframehit);
+var idoldms;
+idoldms = document.getElementById("idms").value;
+var starteroldms;
+starteroldms = document.getElementById("starterms").value;
+var oldtotalms;
+oldtotalms = document.getElementById("totalms").value;
+var newid;
+newid = Number(idoldms) - Number(idadjustms);
+var newstarter;
+newstarter = Number(starteroldms) - Number(starteradjustms);
+var differencems;
+differencems = (1 / Number(fps) * 1000) * Number(jirachiframehit);
+var newtotalms;
+newtotalms = Number(oldtotalms) - Number(differencems) - Number(idadjustms);
+
+ document.getElementById("adjustidby").value = Math.floor(idadjustms);
+ document.getElementById("adjuststarterby").value = Math.floor(starteradjustms);
+ document.getElementById("delaybox").value = Math.floor(jirachiadjust);
+ document.getElementById("idms").value = Math.floor(newid);
+ document.getElementById("starterms").value = Math.floor(newstarter);
+ document.getElementById("totalms").value = Math.floor(newtotalms);
+ 
+ if(starterframe == "0" && introtimer != 0){
+    document.getElementById("updatedflowtimertotal").value = newtotalms.toFixed(0) + "/" + introtimer + "/" + newid.toFixed(0);
+
+}else if(starterframe != 0 && introtimer == "0"){
+    document.getElementById("updatedflowtimertotal").value = newtotalms.toFixed(0) + "/" + newid.toFixed(0) + "/" + newstarter.toFixed(0) ;
+
+}else{
+document.getElementById("updatedflowtimertotal").value = newtotalms.toFixed(0) + "/" + introtimer + "/" + newid.toFixed(0) + "/" + newstarter.toFixed(0)
+
+}
+
+
+}
+
+
+
+    
+    
+
+</script>
+
+</body>
+
+
+
+</html>
