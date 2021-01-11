@@ -246,13 +246,13 @@ starteroldms = document.getElementById("starterms").value;
 var oldtotalms;
 oldtotalms = document.getElementById("totalms").value;
 var newid;
-newid = Number(idoldms) - Number(idadjustms);
+newid = Number(idoldms) + Number(idadjustms);
 var newstarter;
-newstarter = Number(starteroldms) - Number(starteradjustms);
+newstarter = Number(starteroldms) + Number(starteradjustms);
 var differencems;
 differencems = (1 / Number(fps) * 1000) * Number(jirachiframehit);
 var newtotalms;
-newtotalms = Number(oldtotalms) - Number(differencems) - Number(idadjustms);
+newtotalms = Number(oldtotalms) + Number(differencems) + Number(idadjustms);
 
  document.getElementById("adjustidby").value = Math.floor(idadjustms);
  document.getElementById("adjuststarterby").value = Math.floor(starteradjustms);
