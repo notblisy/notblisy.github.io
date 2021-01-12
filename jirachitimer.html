@@ -204,7 +204,12 @@ New Flowtimer Total: <br><input id="updatedflowtimertotal">
     document.getElementById("totalms").value = Math.floor(totalms);
     document.getElementById("idms").value = Math.floor(idintrotimer);
     document.getElementById("starterms").value = Math.floor(starterms);
-    
+    document.getElementById("idframehit").value = 0;
+document.getElementById("starterframehit").value = 0;
+document.getElementById("jirachiframehit").value = 0;
+document.getElementById("adjustidby").value = 0;
+document.getElementById("adjuststarterby").value = 0;
+document.getElementById("updatedflowtimertotal").value = 0;
     if(starterframe == "0" && introtimer != 0){
     document.getElementById("flowtimerout").value = totalms.toFixed(0) + "/" + introtimer + "/" + idintrotimer.toFixed(0);
 
