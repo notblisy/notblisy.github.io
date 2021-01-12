@@ -250,9 +250,13 @@ newid = Number(idoldms) + Number(idadjustms);
 var newstarter;
 newstarter = Number(starteroldms) + Number(starteradjustms);
 var differencems;
-differencems = (1 / Number(fps) * 1000) * Number(jirachiframehit);
+differencems = (1 / Number(fps) * 1000) * Number(jirachiadjust);
+var framesintototal;
+framesintotal = document.getElementById('totalframes').value;
+var framestotaltoms;
+framestotaltoms = (1 / Number(fps) * 1000) * Number(framesintotal);
 var newtotalms;
-newtotalms = Number(oldtotalms) + Number(differencems) + Number(idadjustms);
+newtotalms = Number(framestotaltoms) + Number(differencems) + Number(newid) + Number(battlelag);
 
  document.getElementById("adjustidby").value = Math.floor(idadjustms);
  document.getElementById("adjuststarterby").value = Math.floor(starteradjustms);
