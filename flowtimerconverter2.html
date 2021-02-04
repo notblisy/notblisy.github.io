@@ -1,4 +1,4 @@
-
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -54,35 +54,40 @@ function includeHTML() {
 includeHTML();
 </script>
 <div id="header-img">
-<div id="header"><h1>BlisyTV</h1></div>
+<div id="header"><h1>Frames to MS</h1></div>
 <div w3-include-html="sidebar.html"></div> 
 
 <script>
 includeHTML();
 </script>
 <div class="javascriptformat">
-Select your Game:
-<br>
-      <select name="game" id="game" onchange="introchange()">
+
+       Select your Game: <br><select name="game" id="game" onchange="introchange()">
     <option value="121">Fire Red 1.0</option>
     <option value="120">Fire Red 1.1</option>
     <option value="114">Leaf Green</option>
+    <option value="0">Ruby / Sapphire</option>
+            <option value="0">Emerald</option>
+            <option value="0">SM/USUM</option>
+
+<option value="0">Colosseum</option>
 
   </select>
   <br><br>
-        Select your Console: 
-<br> <select name="console" id="console" onchange="consolechange()">
+       Select your Console: <br> <select name="console" id="console" onchange="consolechange()">
     <option value="59.7275">GBA</option>
     <option value="59.6555">NDS</option>
-
+    <option value="59.8261">New 3DS/2DS</option>
+    <option value="59.8261">Old 3DS/2DS</option>
+
+    <option value="60">GC</option>
   </select>
   <br><br>
-           Method: 
-<br><select name="method" id="method" onchange="delaychange()">
+           Method:  <br><select name="method" id="method" onchange="delaychange()">
     <option value="20">Method 1/2/4</option>
     <option value="261">Sweet Scent(Outdoors)</option>
     <option value="268">Sweet Scent(Indoors)</option>
-
+    <option value="0">ID RNG</option>
             
 
   </select>
@@ -99,51 +104,33 @@ Intro in MS
         <input type="number" id="delaybox" value="-20">
         <br>
         <br>
-Target frame <br><input type="number" id="targetframe">
+Target frame: <br><input type="number" id="targetframe">
         <br>
         <br>
-Frames to spend out of TV <br> <input type="number" id="outsideoftv">
-        <br>
-        <br>
+
 <button type="button" onclick="blisytv()">
     Calculate
         </button>
 <br>
-  Frames in TV: <br><input type="number" id="tvframes">
-<br>
-Frames in Total: <br><input type="number" id="totalframes">
-<br>
-MS in TV: <br><input type="number" id="tvms">
-<br>
-MS in Total: <br><input type="number" id="totalms">
-<br>
-Flowtimer MS Total: <br><input id="flowtimerout">
 
-        <br>
+Flat MS: <br><input type="number" id="totalms">
 <br>
-  <b><i>Frame hit</b></i>
-        <br>
+Flowtimer MS Total:<br> <input id="flowtimerout">
+
+        <br><br>
+            <b>Frame hit</b><br>
 <input type="number" id="framehit"><br><br>
         <button type="button" onclick="blisytvupdate()">
             Calculate
         </button>
         <br>
         <br>
-        Adjust TeachyTV Frames by:<br>  
+        Frame Adjusted By: <br>
         <input type="number" id="adjusttvby">
         <br>
         <br>
-        Adjust Total Frames by: <br> 
+        MS Adjusted By: <br>  
         <input type="number" id="adjustotalby">
-<br>
-<br>
-Adjust TeachyTV ms by: <br><input type="number" id="adjusttvmsby">
-<br>
-<br>
-Adjust Total ms by: <br><input type="number" id="adjusttotalmsby">
-<br>
-<br>
-New Flowtimer TeachyTV: <br><input type="number" id="updatedtvflowtimer">
 <br>
 <br>
 New Flowtimer Total: <br><input id="updatedflowtimertotal">        
@@ -172,7 +159,6 @@ New Flowtimer Total: <br><input id="updatedflowtimertotal">
     //this pulls all the settings for ttv calculator
      methodboxvalue = document.getElementById('method').value;
      targetframe = document.getElementById('targetframe').value; //this is the target frame
-     outoftvframe = document.getElementById('outsideoftv').value; // this is how long you spend outside ttv
      console = document.getElementById('console'); //This sets the value of fps
      fps = console.options[console.selectedIndex].value; 
      game = document.getElementById('game'); //this sets the seed lag value for frlg
@@ -243,32 +229,25 @@ document.getElementById('introtimer').value = "2500";
     }
     
         function blisytv(){
-            settings(); //calls settings 
+            settings();
     //this excecutes when you hit the calculate button 
-    var introtimerframes = Number(introtimerms) / 1000 * Number(fps); //converts intro timer into frames
-    var insidetv = (Number(targetframe) - Number(outoftvframe)) / 313 + 33; //this figures out how long you spend in teachytv. it's 313 frames per second, adding 33 to compensate for the 34 frame startup and 1 frame end lag.
-    var tvprint = Math.floor(insidetv); //this sets the value of inside ttv
-    var remainder = (Number(targetframe) - Number(outoftvframe)) % 313; //this is the remainder of frames you can spend out of ttv
-    var outsidetv = (Number(remainder) + Number(outoftvframe)) - 33; //this adds the remainder to the outside of tv frames value to figure out how long the player will spend out of the tv
-    var totalframes = Number(tvprint) + Number(outsidetv) + Number(delaybox);
-    var tvprintms = 1 / Number(fps) * 1000 * Number(tvprint);
-    var totalframesms = (1 / Number(fps) * 1000) * Math.floor(totalframes);
-    var totalms = Math.floor(totalframesms) + Number(introtimerms);
-    var abraframems = ((1 / Number(fps) * 1000) * (Number(abraframe) - 20 + Number(introtimerms);
+    var targetframewithoutintro;
+    var targetframems;
+    targetframewithoutintro = (1 / Number(fps) * 1000) * (Number(targetframe) + Number(delaybox));
+    targetframems = Number(targetframewithoutintro) + Number(introtimerms);
+    var abraframems = ((1 / Number(fps) * 1000) * (Number(abraframe) - 20 + Number(seedlag))) + Number(introtimer);
     
-    document.getElementById("tvframes").value = tvprint;
-    document.getElementById("totalframes").value = Math.floor(totalframes);
-    document.getElementById("tvms").value = Math.floor(tvprintms);
-    document.getElementById("totalms").value = totalms.toFixed(0);
+
+    document.getElementById("totalms").value = targetframewithoutintro.toFixed(0);
     if(abraframe == "0" && methodboxvalue != 0){
-    document.getElementById("flowtimerout").value = totalms.toFixed(0) + "/" + introtimer;
+    document.getElementById("flowtimerout").value = targetframems.toFixed(0) + "/" + introtimer;
         
         
     }else if(methodboxvalue == 0){
-        document.getElementById("flowtimerout").value = totalms.toFixed(0);
+        document.getElementById("flowtimerout").value = targetframems.toFixed(0);
         
     }  else{
-    document.getElementById("flowtimerout").value = totalms.toFixed(0) + "/" + abraframems.toFixed(0) + "/" +introtimer;
+    document.getElementById("flowtimerout").value = targetframems.toFixed(0) + "/" + abraframems.toFixed(0) + "/" +introtimer;
 
         
     }
@@ -281,74 +260,34 @@ document.getElementById('introtimer').value = "2500";
    
 }
  function blisytvupdate(){
-     settings();
-     var framehit;
-     var adjusttv;
-     var adjusttv2;
-     var adjustout;
-     framehit = document.getElementById('framehit').value;
-     adjusttv = Number(targetframe) - Number(framehit);
-     adjusttv2 = Number(adjusttv) / 313;
-     adjustout = Number(adjusttv) % 313;
-     if(adjustout >= 156){
-         adjustout = -313 + Number(adjustout);
-         adjusttv2++;
-         
-     }else if(adjustout < -156){
-         adjustout = 313 + Number(adjustout);
-         adjusttv2--;
-         
-         
-     }var adjusttotal = Number(adjustout) + Number(adjusttv2);
-    if(adjusttv2 >= 0){
-    document.getElementById('adjusttvby').value = Math.floor(adjusttv2);
-
-}else{
-    document.getElementById('adjusttvby').value = Math.ceil(adjusttv2);
-}
-
-     var adjusttvms;
-     adjusttvms = document.getElementById('adjusttvby').value;
-     
-     var adjustoutcombined;
-     adjustoutcombined = Number(adjustout) + Number(adjusttvms);
-
-
-     
-     document.getElementById('adjustotalby').value = adjustoutcombined;
-    var adjusttotalms;
-    adjusttotalms = document.getElementById('adjustotalby').value;
-  
-     var msout;
-     var tvmsout;
-     msout = 1 / Number(fps) * 1000 * Number(adjusttotalms);
-     tvmsout = 1 / Number(fps) * 1000 * Number(adjusttvms);
-     document.getElementById('adjusttvmsby').value = tvmsout.toFixed(0);
-     document.getElementById('adjusttotalmsby').value = msout.toFixed(0) ;
-     
-     var tvmsget;
-     tvmsget = document.getElementById('tvms').value;
-     var totalmsget;
-     totalmsget = document.getElementById('totalms').value;
-     var adjustedtvms;
-     var adjustedtotalms;
-     adjustedtvms = Number(tvmsout) + Number(tvmsget);
-     adjustedtotalms = Number(msout) + Number(totalmsget);
-     document.getElementById('tvms').value = adjustedtvms.toFixed(0);
-     document.getElementById('totalms').value = adjustedtotalms.toFixed(0);
-     document.getElementById('updatedtvflowtimer').value = adjustedtvms.toFixed(0);
-       if(abraframe == "0" && methodboxvalue != 0){
-    document.getElementById("updatedflowtimertotal").value = adjustedtotalms.toFixed(0) + "/" + introtimer;
+     settings();
+ var targetframeadjust;
+ targetframeadjust = document.getElementById('totalms').value;
+ var framehit;
+ framehit = document.getElementById('framehit').value;
+ var adjustby;
+ adjustby = Number(targetframe) - Number(framehit);
+ var adjustbyms;
+ adjustbyms = 1 / Number(fps) * 1000 * Number(adjustby);
+ document.getElementById('adjusttvby').value = adjustby;  
+ document.getElementById('adjustotalby').value = adjustbyms.toFixed(0); 
+ var purems;  
+purems = document.getElementById("totalms").value;  
+ var adjustedpurems;
+ adjustedpurems = Number(purems) + Number(adjustbyms.toFixed(0));
+ document.getElementById('totalms').value = adjustedpurems;     var intropurems;
+ intropurems = Number(adjustedpurems) + Number(introtimerms);
+
+ if(abraframe == "0" && methodboxvalue != 0){
+    document.getElementById("updatedflowtimertotal").value = intropurems.toFixed(0) + "/" + introtimer;
         
         
     }else if(methodboxvalue == 0){
-        document.getElementById("updatedflowtimertotal").value = adjustedtotalms.toFixed(0);
+        document.getElementById("updatedflowtimertotal").value = intropurems.toFixed(0);
         
     }  else{
-    document.getElementById("updatedflowtimertotal").value = adjustedtotalms.toFixed(0) + "/" + abraframems.toFixed(0) + "/" +introtimer;
-
-        }
-     
+    document.getElementById("updatedflowtimertotal").value = intropurems.toFixed(0) + "/" + abraframems.toFixed(0) + "/" +introtimer;
+ }   
  }   
     
     

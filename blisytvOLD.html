@@ -254,7 +254,7 @@ document.getElementById('introtimer').value = "2500";
     var tvprintms = 1 / Number(fps) * 1000 * Number(tvprint);
     var totalframesms = (1 / Number(fps) * 1000) * Math.floor(totalframes);
     var totalms = Math.floor(totalframesms) + Number(introtimerms);
-    var abraframems = ((1 / Number(fps) * 1000) * (Number(abraframe) - 20 + Number(introtimerms);
+    var abraframems = ((1 / Number(fps) * 1000) * (Number(abraframe) - 20 + Number(seedlag))) + Number(introtimerms);
     
     document.getElementById("tvframes").value = tvprint;
     document.getElementById("totalframes").value = Math.floor(totalframes);
