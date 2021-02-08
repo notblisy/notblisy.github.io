@@ -183,7 +183,6 @@ New Flowtimer Total: <br><input id="updatedflowtimertotal">
      delaybox = document.getElementById('delaybox').value; //this sets the delaybox value(lag before generation)
      seedlagms = 1 / Number(fps) * 1000 * seedlag; // this convers seedlag into ms
      introtimerms = Number(introtimer) + Number(seedlagms); //this adds seedlag to introtimer to compensate 
-     abraframems = ((1 / Number(fps) * 1000) * Number(abraframe) )+ Number(introtimerms); //makes abraframe an ms value and then adds introtimer to it for eventual flowtimer output
      consoletext = console.options[console.selectedIndex].text;
     }
     function introchange(){
@@ -285,7 +284,7 @@ document.getElementById('introtimer').value = "2500";
      var framehit;
      var adjusttv;
      var adjusttv2;
-     var adjustout;
+     var adjustout;          var abraframems = (1 / Number(fps) * 1000) * (Number(abraframe) - 20) + Number(introtimerms);
      framehit = document.getElementById('framehit').value;
      adjusttv = Number(targetframe) - Number(framehit);
      adjusttv2 = Number(adjusttv) / 313;
