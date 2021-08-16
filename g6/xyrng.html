@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>
+Blisy RNG Guides
+</title>
+<link rel="stylesheet" type="text/css" href="../style.css" title="default" />
+<link rel="alternate stylesheet" type="text/css" href="../nightmode.css" title="alternate"/>
+<link rel="alternate stylesheet" type="text/css" href="../dnd.css" title="dnd"/>
+<script type="text/javascript" src="../style.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>X/Y Main RNG Guide</h1></div>
+<div class="butts">
+
+<ul>
+  <p>Guide Navigation</p>
+  
+<li><a href="#prereq">Prerequisits</a></li>
+  
+<li><a href="#initseed">Initial Seed</a></li>
+  
+<li><a href="#shinyframe">Shiny Starter</a></li>
+
+<li><a href="#end">Notes and Conclusions</a></li>
+</ul>
+
+
+</div>
+<div class="textformat">
+<h2>Text Guide</h2>
+<p>
+This guide will cover the main RNG of Gen 6. This includes Wild(and Horde), Stationary, Event, Wondercard, and Egg. They all function extremely similarly, but each type of RNG will have its own section to cover its nuances.
+</p>
+<h2><a name="prereq">Prerequisits</a></h2>
+<p><strong>Pokemon X or Y:</strong> This guide will focus specifically on Pokemon X and Y, and while it can be used to RNG in Pokemon Omega Ruby and Alpha Sapphire, it is reccomended to just read the guide for those games instead.</p>
+<p><strong>Two Old Ambers: </strong>You must farm two Old Ambers from the final section in Glittering Cave. Aerodactyl is the Pokemon that takes the least amount of rare candies to find its exact stats for.</p>
+<p><strong>20-50 Rare Candies</strong>There's no two ways about this-- You just need a lot of Rare Candies. I get mine by transferring the Battle Points you gain passively from Pokemom Bank. I think Pickup Grinding is the best way to do this otherwise, though.</p>
+<p><strong>TSV:</strong> You can get shinies using wild or egg RNG, but to do so you'll need to know your TSV. The only way to do this without hacking is to RNG it at the start of the game.</p>
+<p><strong>Tools:</strong></p>
+
+<li><a href="https://github.com/wwwwwwzx/3DSRNGTool/releases/tag/1.0.5">3DSRNGTool by wzx </a></li>
+<li><a href="https://drive.google.com/drive/folders/1GEm4bzJ_1-TK_aFtTh9mhBxO8xmb2WEK">6genSeedSearch by Bonziri16</a></li>
+<li><a href="http://gunnermaniac.com/ft">Flowtimer by Stringflow</a></li>
+<li><a href="https://www.metalkid.info/Pokemon/Calculators/IV.aspx">IV Calculator by MetalKid</a></li>
+
+<h2><a name="initseed">Finding your Initial Seed</a></h2>
+<p>There's two types of initial seed searching in Gen 6. Full search, and Quick search. A Full search can take a really long time to complete, and once it does, you can then do Quick Searches until you save the game. This is because a portion of the seed is determined by various factors when you last saved the game, and the rest is controlled by when you reset the game.</p>
+<p>So, to find our seed, we need to first do a Full Search, and then when we have the seed, we can do Quick Searches repeatedly until we catch the Pokemon we want. </p>
+<h2>Full Search</h2>
+<p>To do a Full Search, you're going to need to have two Old Ambers and be saved right here, in front of the person who revives fossils. I would also reccomend getting rid of any other Fossil you may have by reviving it before doing this RNG, or selling it at a shop. This is so you do not have to navigate a menu to pick the Old Amber.</p>
+<img src="images/fossilman.png" alt "fossilman" style="width: 100%;">
+<p>Once here, soft reset the game. Wait at the title screen and open Flowtimer. Use the variable offset section of flowtimer, and set the FPS to 59.8261. Once this is done, hit A on the title screen of the game.</p>
+<img src="images/flowtimervariable.png" alt "fossilman" style="width: 100%;">
+<p>Flowtimers' variable section and correct FPS value.</p>
+<img src="images/ytitle.png" alt "ytitle" style="width: 100%;">
+<p>Pokemon Y's title screen</p>
+<p>After you hit A on the title screen, load into the gameworld and revive both fossils as fast as possible. Make sure to hit B to not nickname the Aerodactyls. Once you have received both, start calculating their IVs. It can take anywhere from 5-25 rare candies to figure out their exact IVs.</p>
+<img src="images/metalkidivs.png" alt "ivkid" style="width: 100%;">
+<p>Here is an example of what my IV calculator looked like after figuring out the IVs of one of my Aerodactyls while inputting it. </p>
+<p>Once you have both Aerodactyls exact IVs, input them into 6genSeedSearch on the first tab.</p>
+<img src="images/fullsearchinfo.png" alt "fullsearch" style="width: 100%;">
+<p>This entire program is in Japanese, but it's very simple to understand and use. The top 6 boxes next to the "1" are the IVs of your first Aerodactyl. The two longer boxes underneath those 6 are your frame range that you received that Aerodactyl. The stuff next to the "2" is a repeat of all the same info for your second Aerodactyl.</p>
+<p>The frame range setting on your very first search ever should be set from 0-1000 for the first Aerodactyl, and 1001-2000 for your second one. This search will take an extremely long time to complete. The length depends on both your frame range and how good your computer is. A search this long takes my computer about an hour and it's using so much processing power during the search that I basically cannot use my computer during that time. As for your 3DS, you can either power it off or put it into sleep mode. But make sure that you do not save after receiving the Aerodactyl.</p>
+<img src="images/finishedfullsearch.png" alt "fullsearch" style="width: 100%;">
+<p>Once the search is complete, you'll see a seed and the frames your received each Aerodactyl at. Take note of those, as now you can shrink your frame range on subsequent searches to be about +-100 of those frames. In addition, in my screenshot there's two of the same exact same seeds. This can happen sometimes, pay no mind to it. Lastly, I think once you find one single result, it's fine to immediately cancel your search.</p>
+<p>Now that you have finished a full search, you can copy your seed and go into the right tab of of 6genSeedSearch. Paste your seed there, get back to the title screen of Pokemon X or Y, and we can move onto doing a Quick Search!</p>
+<p>Some things to note about Full Search. You only have to do these after you save the game, AKA, after a succesful RNG where you catch or receive the exact Pokemon you wanted. In addition, with Bonziris tool, a small enough frame range, and a good enough computer, they do not take nearly as long as the first one you ever do might. My first one using this tool took about an hour and a half, but once I narrowed my frame range, they take about 20 minutes to find a seed now, which is really not so bad.</p>
+<h2>Quick Search</h2>
+<p>A Quick Search is the type of search you usually are doing when you're actually doing the RNG Manip. This section will just cover how to use the Quick Search, and not how to use it in tandem with Flowtimer. I'll cover that in the various RNG sections themselves.</p>
+<p>In a Quick Search, you just need to use 1 Aerodactyl, however, if you succeed in the RNG, you're going to both keep the Aerodactyl and permanently lose all of the rare candies you used on it. </p>
+<p>Instead, 6genSeedSearch will do the work itself. In the right most tab, make sure to click the right most radial button. Then, set the frame range to what you usually would for your first Aerodactyl during a full search, and pick Aerodactyl from the drop down. In addition, you have to pick its Nature. Now, both its Nature and Name are in Japanese. The nature can be found on this <a href="https://bulbapedia.bulbagarden.net/wiki/Nature#List_of_Natures">nature table on Bulbapedia</a>, and since we are always using the same Pokemon, Aerodactyl, we always select "プテラ" from the dropdown. The Pokemon dropdown is directly next to the Lv box, which has a 20 in it, and the nature Box is directly below that.</p>
+<p>In the seed box, we paste the seed we have most previously found. This is either found from a Full Search, or a previous Quick Search.</p>
+<img src="images/quicksearchsetup.png" alt "fullsearch" style="width: 100%;">
+<p>Here is an example picture of a Quick Search setup.</p>
+<p>Now that you are all set up, you can actually do a Quick Search. The way do this starts the same as a Full Search. Hit A on the title screen and mash to receive an Aerodactyl as fast as you can. However, at this point we do not need a separate IV Calculator. What do you do is first input the current stats of the Aerodactyl in the boxes on the left, along with selecting the nature. Once this is done, you begin leveling Aerodactyl up, but instead of inputting its new stats, you put the amount they were increased by in the big box in the middle. You see these amounts upon level up, before they show you the new stats to you.</p>
+<img src="images/aerostats1.png" alt "aerostat1" style="width: 100%;">
+<p>Here are where the initial stats I input for Aerodactyl are located.</p>
+<img src="images/aerostats2.png" alt "fullsearch" style="width: 100%;">
+<p>Here are what the stat increases I was talking about look like.</p>
+<img src="images/finishedquicksearch.png" alt "fullsearch" style="width: 100%;">
+<p>Finally, here is what a finished Quick Search looks like. Every single line of numbers in the big box in the middle represents a level up I have done. Generally, I tend to level up about 9 times, but I feel that less is safer. Probably around 6 is fine. After you input as many stat increases as you feel, begin the search. This will finish very quickly, ranging from a few minutes to a few seconds depending on how long after your previous seed search this is taking place.</p>
+<p>Now you know how to use the both the Full Search and the Quick Search in 6genSeedSearch, and you are ready to move on to RNG Manips!</p>
+<h2><a name="initseed">Wild RNG</a></h2>
+<p>Wild RNG in XY is very interesting because you cannot pick which Pokemon spawns. In the case of a single wild Pokemon or a Horde, you can manipulate everything about a Pokemon except what species it is. Wild RNG and Horde RNG work the same, and they are both fairly simple. In this example I will use Horde RNG. First, check if the route you're RNGing on has a horde spawn. If it does, these are the only possible Pokemon you can RNG here, as Sweet Scent and Honey both will only ever spawn Hordes. With that being said, you will need either a Pokemon with Sweet Scent or the item "Honey". In addition to this, if there is any weather on the route you're going to be RNGing in, Sweet Scent and Honey will both fail, meaning you can't RNG during that attempt.</p>
+<p>To start, you're going to want to have completed a Full Search and a Quick Search, and immediately after the Quick Search we will do our RNG.</p>
+<img src="images/flowtimervariable.png" alt "fossilman" style="width: 100%;">
+<p>Paste your seed in the Quick Search section, and get setup to do another Quick Search like usual, but this time, we will incorporate flowtimer. Open Flowtimer and set it to the variable offset tab, and set it to 59.8261 as the framerate. Then, start Flowtimer at the same time as you hit A on the title screen. Try to get to the overworld as fast as possible, and preform your Quick Search as normal. While the Quick Search is going on, you'll notice Flowtimer is constantly counting up.</p>
+<img src="images/3Dsseed.png" alt "fossilman" style="width: 100%;">
+<p>Once you've found your seed, you're going to open 3DSRNGTool and select the proper game, in my case, it's Y. Then, paste your seed found during this Quick Search in the "Seed" Box, as shown here. In addition, if you want a shiny, you'll type your TSV into the "TSV" box as well.</p>
+<p>Then, once you have all that info in, set it up as follows: Click the Wild Tab, and if you are on a route without Hordes, select normal and your Sync nature if you're using it. It should be noted that Sync isn't guaranteed to work, it's still a 50/50 shot even during an RNG Manip. Once that is done, filter by IVs, Nature, Gender, and Shinyness, if you want it. This is to search for a specific type of Pokemon. So if you want good stats, or a specific nature or gender, fill the form out accordingly. In addition, the checkbox next to the "shiny only" box is to limit the selection even further to just square shinies. If you are using Horde RNG, everything in the latter half is the same, except you have a route to pick from. Don't select any Pokemon just yet, you'll only need that dropdown if you miss your target. While I am doing all of this selecting, I set a repel on, then I am running to my destination route in-game while typing this info in. I usually fly there, but if it's close enough like in this attempt(route 8), I just bike there.</p>
+<img src="images/firstaimed.png" alt "fossilman" style="width: 100%;">
+<p>Here is a picture of my setup using the Horde RNG method. I'll be aiming for this cluster of frames. Since it's a Horde, we have a 5 frame selection. They are all always 11 frames apart, so which one you pick does matter. Remember, you can only hit the same type of frame(even or odd) that you hit when you found your seed! So be sure to select one that matches. Once you have selected a suitable frame, see how many minutes / seconds it is into the game. Make sure you didn't pass that timeframe already by comparing it to the seconds counting upwards in flowtimer. It's handy to remember that 1 minute is 60 seconds, 2 is 120, 3 is 180, 4 is 240, and 5 is 300. It can be annoying to compare since flowtimer uses only seconds, whereas 3DSRNGTool uses minutes+seconds, but I'm sure you'll get by. If you haven't passed your time window yet, and you're at your location, then put your selected frame into the "Frame" box in Flowtimer, and hit submit. Then, go into the Pokemon or item menu, and sit on the Sweet Scent screen.</p>
+<img src="images/firstaimed.png" alt "fossilman" style="width: 100%;">
+<p>When the timer finishes, hit A to use Sweet Scent. Now, if you're going for a Shiny, you'll know if your target appeared right away or not. So, catch any random Pokemon if there's no shiny so we can calculate how many frames to adjust by. If your target isn't shiny, and the 
+
+
+
+
+
+<h2><a name="end">Notes and Conclusions</a></h2>
+
+<p>This RNG may seem complicated at first, but it's really very simple. The difficult part is how tediuous and time consuming it is. You usually have to hit your target frame at least 3-5 times if you're lucky and precise with your SID frame.</p>
+
+<p>Thank you for reading, I hope you succeed in getting your Pokemon. If you have any questions feel free to ask me on Twitter @im_a_blisy or join my discord. <a href="https://www.google.com/url?q=https%3A%2F%2Fdiscord.gg%2FQchhXQv&amp;sa=D&amp;sntz=1&amp;usg=AFQjCNGa0ml1VToT2Fz03xxVN5PUNkTLWg" target="_blank" rel="noopener">https://discord.gg/QchhXQv</a> If you speak another language other than English fluently, and would like to translate this guide, please, contact me and I'd love to help :D</p>
+
+</div>
+</body>
+
+
+
+</html>

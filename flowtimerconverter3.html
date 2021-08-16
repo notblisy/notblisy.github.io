@@ -68,7 +68,9 @@ includeHTML();
     <option value="114">Leaf Green</option>
     <option value="0">Ruby / Sapphire</option>
             <option value="0">Emerald</option>
-            <option value="0">SM/USUM</option>
+            <option value="0">SM/USUM</option>
+
+   <option value="0">Colosseum</option>
 
   </select>
   <br><br>
@@ -78,7 +80,8 @@ includeHTML();
     <option value="59.8261">New 3DS/2DS</option>
     <option value="59.8261">Old 3DS/2DS</option>
 
-    <option value="60">60FPS</option>
+    <option value="60">GameCube</option>
+
   </select>
   <br><br>
            Method:  <br><select name="method" id="method" onchange="delaychange()">
@@ -191,7 +194,14 @@ document.getElementById('introtimer').value = "2500";
         }else if(consoletext == "Old 3DS/2DS"){
             document.getElementById('introtimer').value = "3500";
             
-        }
+        }else if(consoletext == "GameCube"){
+
+            document.getElementById('introtimer').value = "966";
+
+            
+
+        }
+
         
         
     }
@@ -220,7 +230,12 @@ document.getElementById('introtimer').value = "2500";
          document.getElementById('delaybox').value = "-249";
         }else if(methodboxvalue == 0 && gametext == "Leaf Green"){
          document.getElementById('delaybox').value = "-249";
-        }
+        }else if(methodboxvalue == 0 && gametext == "Colosseum"){
+
+         document.getElementById('delaybox').value = "0";
+
+        }
+
         
         
         
