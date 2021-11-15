@@ -76,10 +76,9 @@ includeHTML();
     <option value="59.7275">GBA</option>
     <option value="59.6555">NDS</option>
     <option value="59.8261">New 3DS/2DS</option>
-    <option value="59.8261">Old 3DS/2DS</option>    
-	
-	<option value="60">60FPS</option>
-
+    <option value="59.8261">Old 3DS/2DS</option>
+
+    <option value="60">60FPS</option>
   </select>
   <br><br>
            Method:  <br><select name="method" id="method" onchange="delaychange()">
@@ -95,9 +94,8 @@ Intro in MS
         <br><input type="number" id="introtimer" value="35000">
         <br>
         <br>        
-        First Frame<br>
-        <input type="number" id="abraframe" value="0">
-		<input type="checkbox" id="abracheck" value="Abra"> Abra
+        Abra Frame<br>
+        <input type="number" id="abraframe" value="0">
         <br>
         <br>
         Delay Box<br>
@@ -152,7 +150,6 @@ New Flowtimer Total: <br><input id="updatedflowtimertotal">
     var consoletext;
     var gametext;
     var methodboxvalue;
-	var abracheckbox;
     
     function settings()
     
@@ -170,14 +167,7 @@ New Flowtimer Total: <br><input id="updatedflowtimertotal">
      delaybox = document.getElementById('delaybox').value; //this sets the delaybox value(lag before generation)
      seedlagms = 1 / Number(fps) * 1000 * seedlag; // this convers seedlag into ms
      introtimerms = Number(introtimer) + Number(seedlagms); //this adds seedlag to introtimer to compensate 
-	 abracheckbox = document.getElementById('abracheck');
-	 
-	 if(abracheckbox.checked){
-
-     abraframems = ((1 / Number(fps) * 1000) * (Number(abraframe)- 20) )+ Number(introtimerms); //makes abraframe an ms value and then adds introtimer to it for eventual flowtimer output
-	 }else {
-	  abraframems = ((1 / Number(fps) * 1000) * Number(abraframe) )+ Number(introtimerms);
-	 }
+     abraframems = ((1 / Number(fps) * 1000) * Number(abraframe) )+ Number(introtimerms); //makes abraframe an ms value and then adds introtimer to it for eventual flowtimer output
      consoletext = console.options[console.selectedIndex].text;
     }
     function introchange(){
@@ -243,7 +233,7 @@ document.getElementById('introtimer').value = "2500";
     var targetframems;
     targetframewithoutintro = (1 / Number(fps) * 1000) * (Number(targetframe) + Number(delaybox));
     targetframems = Number(targetframewithoutintro) + Number(introtimerms);
-
+    var abraframems = ((1 / Number(fps) * 1000) * (Number(abraframe) - 20 + Number(seedlag))) + Number(introtimer);
     
 
     document.getElementById("totalms").value = targetframewithoutintro.toFixed(0);
