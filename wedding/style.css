@@ -77,14 +77,14 @@ font-family: Dancing Script;
 .farts a:link{
 	
 	text-decoration: none;
-	color: White;
-	text-shadow: -1px -1px 5px #000, 1px -1px 5px #000, -1px 1px 5px #000, 1px 1px 5px #000;
+	color: #800020;
+
 
 	
 }
 
 .farts a:visited{
-	color:white;
+	color:#800020;
 	
 }
 
@@ -202,13 +202,13 @@ background-color: #FCF5E5;
 position:relative;
 text-align:center;
 font-family: Dancing Script;
-color: white;
+color: #800020;
 font-size: 46px;  
 font-variant: small-caps; 
 font-weight: 700; line-height: 54px; 
 text-decoration: underline;
 text-align:center;
-text-shadow: -1px -1px 5px #000, 1px -1px 5px #000, -1px 1px 5px #000, 1px 1px 5px #000;
+
 
 }
 
@@ -254,13 +254,13 @@ left:20px;
 
 h2{
 
-color: white;
+color: #800020;
 border-bottom: 5px solid white;
 font-family: Dancing Script;
 overflow: hidden;
 text-align:center;
 font-size:36px;
-text-shadow: -1px -1px 5px #000, 1px -1px 5px #000, -1px 1px 5px #000, 1px 1px 5px #000;
+
 }
 
 table {
