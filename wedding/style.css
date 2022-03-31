@@ -25,6 +25,13 @@ font-weight: 525;
 margin-bottom:100px;
 }
 
+.imgbg{
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    width: 100%;
+}
+
 .dropdown {
 
   display: inline-block;
@@ -254,7 +261,6 @@ left:20px;
 h2{
 
 color: #800020;
-border-bottom: 5px solid white;
 font-family: Dancing Script;
 overflow: hidden;
 text-align:center;
