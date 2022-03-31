@@ -52,11 +52,9 @@ top: 0;
 width: 99.2%;
 position: fixed;
 z-index: +2;
-
-
-background-color: #800020;
+background-color: #FCF5E5;
 color: #FAF9F6;
-  font-color: #FFFFFF;
+
   font-size: 32px;
   cursor: pointer;
   font-family: Luminari;
