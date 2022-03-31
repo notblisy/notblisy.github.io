@@ -40,7 +40,7 @@ margin-bottom:100px;
   
 }
 .farts{
-
+text-align:center;
 
 }
  .farts ul{
@@ -57,7 +57,7 @@ border-style:solid;
 
 background-color: #FAF9F6;
 color: #FAF9F6;
- 
+  font-color: #FFFFFF;
   font-size: 32px;
   cursor: pointer;
   font-family: Luminari;
