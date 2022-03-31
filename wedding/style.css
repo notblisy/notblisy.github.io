@@ -33,6 +33,7 @@ margin-bottom:100px;
   
 }
 .farts{
+text-align:center;
 
 }
  .farts ul{
@@ -62,16 +63,38 @@ color: #FAF9F6;
 
 .farts a{
 
-color: #FFFFFF;
+color: #grey;
   font-size: 32px;
   cursor: pointer;
   font-family: Luminari;
   font-variant: small-caps; 
   font-weight: bold;
   text-decoration:none;
+  
 
 }
 
+.farts a:link{
+	
+	text-decoration: none;
+	color: White;
+	text-shadow: -1px -1px 5px #000, 1px -1px 5px #000, -1px 1px 5px #000, 1px 1px 5px #000;
+
+	
+}
+
+.farts a:visited{
+	color:white;
+	
+}
+
+.farts a:hover {
+  text-decoration: underline;
+}
+
+.farts a:active {
+  text-decoration: underline;
+}
 
 
 /* Style The Dropdown Button */
@@ -168,6 +191,7 @@ background-color: #ffe6ea;
 
 body {
 background-color: #FAF9F6;
+
 }
 
 
