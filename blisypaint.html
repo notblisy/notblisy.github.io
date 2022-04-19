@@ -1,0 +1,349 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<title>
+Blisy RNG Guides
+</title>
+<link rel="stylesheet" type="text/css" href="style.css" title="default" />
+<link rel="alternate stylesheet" type="text/css" href="nightmode.css" title="alternate"/>
+<link rel="alternate stylesheet" type="text/css" href="dnd.css" title="dnd"/>
+<script type="text/javascript" src="style.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Paint Seed Flowtimer Converter</h1></div>
+<div w3-include-html="sidebar.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div class="javascriptformat">
+
+       Select your Game: <br><select name="game" id="game" onchange="introchange()">
+            <option value="0">Ruby / Sapphire</option>
+            <option value="0">Emerald</option>
+
+  </select>
+  <br><br>
+       Select your Console: <br> <select name="console" id="console" onchange="consolechange()">
+    <option value="59.7275">GBA</option>
+    <option value="59.6555">NDS</option>
+	
+	<option value="60">60FPS</option>
+
+  </select>
+  <br><br>
+           Method:  <br><select name="method" id="method" onchange="delaychange()">
+    <option value="20">Method 1/2/4</option>
+    <option value="261">Sweet Scent(Outdoors)</option>
+    <option value="268">Sweet Scent(Indoors)</option>
+            
+
+  </select>
+  <br><br>
+Intro in MS
+        <br><input type="number" id="introtimer" value="5000">
+        <br>
+        <br>        
+        Seed Advances<br>
+        <input type="number" id="abraframe" value="0">
+        <br>
+        <br>
+        Delay Box<br>
+        <input type="number" id="delaybox" value="-20">
+        <br>
+        <br>
+Pokemon Advances: <br><input type="number" id="targetframe">
+        <br>
+        <br>
+
+<button type="button" onclick="blisytv()">
+    Calculate
+        </button>
+<br>
+
+Flat MS: <br><input type="number" id="totalms">
+<br>
+Flowtimer MS Total:<br> <input id="flowtimerout">
+
+        <br><br>
+            <b>Seed Hit</b><br>
+<input type="number" id="seedhit"><br><br>
+       
+		 <b>Frame hit</b>
+<br>
+
+<input type="number" id="framehit"><br><br>
+
+        <button type="button" onclick="blisytvupdate()">
+
+            Calculate
+
+        </button>
+		
+<br>
+
+<br>
+   
+       Seed Adjusted By: <br>
+
+        <input type="number" id="adjustseedby">
+
+        <br>
+
+        <br>
+
+        Seed MS Adjusted By: <br>  
+
+        <input type="number" id="adjustseedms">
+
+<br>
+
+<br>
+        Pokemon Adjusted By: <br>
+        <input type="number" id="adjusttvby">
+        <br>
+        <br>
+        Pokemon MS Adjusted By: <br>  
+        <input type="number" id="adjustotalby">
+
+<br>
+
+<br>
+   
+ 
+New Flowtimer Total: <br><input id="updatedflowtimertotal">        
+<script>
+
+    
+    var targetframe;
+    var outoftvframe;
+    var console;
+    var fps;
+    var game;
+    var seedlag;
+    var introtimer;
+    var abraframe;
+    var delaybox;
+    var seedlagms;
+    var introtimerms;
+    var abraframems;
+    var consoletext;
+    var gametext;
+    var methodboxvalue;
+	var abracheckbox;
+    
+	var abraframenointrotimer
+    function settings()
+    
+    {  
+    //this pulls all the settings for ttv calculator
+     methodboxvalue = document.getElementById('method').value;
+     targetframe = document.getElementById('targetframe').value; //this is the target frame
+     console = document.getElementById('console'); //This sets the value of fps
+     fps = console.options[console.selectedIndex].value; 
+     game = document.getElementById('game'); //this sets the seed lag value for frlg
+     seedlag = game.options[game.selectedIndex].value;
+     gametext = game.options[game.selectedIndex].text;
+     introtimer = document.getElementById('introtimer').value; //this sets the introtimer value
+  
+     delaybox = document.getElementById('delaybox').value; //this sets the delaybox value(lag before generation)
+     seedlagms = 1 / Number(fps) * 1000 * seedlag; // this convers seedlag into ms
+     introtimerms = Number(introtimer) + Number(seedlagms); //this adds seedlag to introtimer to compensate 	 
+	
+	 
+
+     consoletext = console.options[console.selectedIndex].text;
+    }
+    function introchange(){
+        
+        settings();
+        
+        if(seedlag == 0){
+            document.getElementById('introtimer').value = "5000";
+            
+        }else {
+            document.getElementById('introtimer').value = "35000";
+           
+        }
+        
+    }
+    function consolechange(){
+        settings(); //calls settings function
+        if(consoletext == "New 3DS/2DS"){
+document.getElementById('introtimer').value = "2500";            
+            
+        }else if(consoletext == "Old 3DS/2DS"){
+            document.getElementById('introtimer').value = "3500";
+            
+        }
+        
+        
+    }
+    function delaychange(){
+        settings();
+        if(methodboxvalue == 20){
+            document.getElementById('delaybox').value = "-20";
+            
+        }else if(methodboxvalue == 261){
+            document.getElementById('delaybox').value = "-261";
+            
+            
+        }else if(methodboxvalue == 268){
+         document.getElementById('delaybox').value = "-268";
+
+            
+        }else if(methodboxvalue == 0 && gametext == "Ruby / Sapphire"){
+                        document.getElementById('delaybox').value = "-75";
+
+            
+        }else if(methodboxvalue == 0 && gametext == "Emerald"){
+         document.getElementById('delaybox').value = "-50";
+        }else if(methodboxvalue == 0 && gametext == "Fire Red 1.0"){
+         document.getElementById('delaybox').value = "-249";
+        }else if(methodboxvalue == 0 && gametext == "Fire Red 1.1"){
+         document.getElementById('delaybox').value = "-249";
+        }else if(methodboxvalue == 0 && gametext == "Leaf Green"){
+         document.getElementById('delaybox').value = "-249";
+        }
+        
+        
+        
+    }
+    
+        function blisytv(){
+            settings();
+    //this excecutes when you hit the calculate button 
+	   abraframe = document.getElementById('abraframe').value; //this sets the abra frame value    abraframems = ((1 / Number(fps) * 1000) * Number(abraframe)) + Number(introtimerms);
+	abraframenointrotimer = (1 / Number(fps) * 1000) * Number(abraframe);
+    var targetframewithoutintro;
+    var targetframems;
+	var totalframems;
+    targetframewithoutintro = (1 / Number(fps) * 1000) * (Number(targetframe) + Number(delaybox));
+    targetframems = Number(targetframewithoutintro) + Number(introtimerms) + Number(abraframenointrotimer);    totalframems =  Number(targetframewithoutintro) + Number(abraframems);
+
+    
+
+    document.getElementById("totalms").value = totalframems.toFixed(0);
+    if(abraframe == "0" && methodboxvalue != 0 && introtimer !=0){
+    document.getElementById("flowtimerout").value = targetframems.toFixed(0) + "/" + introtimer;
+        
+        
+    }else if(methodboxvalue == 0){
+        document.getElementById("flowtimerout").value = targetframems.toFixed(0);
+        
+    }  else{
+    document.getElementById("flowtimerout").value = targetframems.toFixed(0) + "/" + abraframems.toFixed(0) + "/" +introtimer;
+
+        
+    }
+      document.getElementById('adjusttvby').value = 0;
+      document.getElementById('adjustotalby').value = 0
+	  
+      document.getElementById('adjustseedby').value = 0;
+
+      document.getElementById('adjustseedms').value = 0;
+	  
+	  document.getElementById("updatedflowtimertotal").value = 0;
+   
+}
+ function blisytvupdate(){
+     settings();
+	
+	
+	
+ var targetframeadjust;
+ targetframeadjust = document.getElementById('totalms').value;
+ var framehit;
+ framehit = document.getElementById('framehit').value;
+ var adjustby;
+ adjustby = Number(targetframe) - Number(framehit);
+ var adjustbyms;
+ adjustbyms = 1 / Number(fps) * 1000 * Number(adjustby);
+ document.getElementById('adjusttvby').value = adjustby;  
+ document.getElementById('adjustotalby').value = adjustbyms.toFixed(0); 
+ var seedhit;
+ seedhit = document.getElementById('seedhit').value;
+ var adjustseedby;
+ adjustseedby = Number(abraframe) - Number(seedhit);
+ var adjustseedms;
+ adjustseedms = 1 / Number(fps) * 1000 * Number(adjustseedby);
+  document.getElementById('adjustseedby').value = adjustseedby;  
+ document.getElementById('adjustseedms').value = adjustseedms.toFixed(0); 
+ 
+ 
+ var purems;  
+purems = document.getElementById("totalms").value;  
+ var adjustedpurems;
+ adjustedpurems = Number(purems) + Number(adjustbyms.toFixed(0)) + Number(adjustseedms.toFixed(0));
+ document.getElementById('totalms').value = adjustedpurems;     var intropurems;
+ intropurems = Number(adjustedpurems) + Number(introtimerms);
+abraframems = Number(abraframems) + Number(adjustseedms);
+
+
+
+ if(abraframe == "0" && methodboxvalue != 0){
+    document.getElementById("updatedflowtimertotal").value = intropurems.toFixed(0) + "/" + introtimer;
+        
+        
+    }else if(methodboxvalue == 0){
+        document.getElementById("updatedflowtimertotal").value = intropurems.toFixed(0);
+        
+    }  else{
+    document.getElementById("updatedflowtimertotal").value = intropurems.toFixed(0) + "/" + abraframems.toFixed(0) + "/" +introtimer;
+ }   
+ }   
+    
+    
+    
+
+</script>
+
+</body>
+
+
+
+</html>
