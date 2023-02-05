@@ -1,0 +1,324 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>
+Blisy RNG Guides
+</title>
+<link rel="stylesheet" type="text/css" href="../style.css" title="default" />
+<link rel="alternate stylesheet" type="text/css" href="../nightmode.css" title="alternate"/>
+<link rel="alternate stylesheet" type="text/css" href="../dnd.css" title="dnd"/>
+<script type="text/javascript" src="../style.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>Aprijuice SID FINDING</h1></div>
+<div class="butts">
+
+<ul>
+  <p>Guide Navigation</p>
+  
+<li><a href="#prereq">Prerequisits</a></li>
+  
+<li><a href="#intro">Introduction & Preface</a></li>
+  
+<li><a href="#part1">Pokewalker Mini TSV Calculation</a></li>
+
+<li><a href="#part2">Chained Shiny PID and TSV Calculation</a></li>
+
+<li><a href="#part3">Headbutt Trees, Honey Trees, and Extras</a></li>
+
+<li><a href="#conclusion">Notes and Conclusions</a></li>
+</ul>
+
+
+</div>
+<div class="textformat">
+<h2><a name="prereq">Prerequisits</a></h2>
+<p><strong>Note:</strong> Due to the scarcity of pokewalkers, Part 1 is optional. You do NOT need a pokewalker pokemon to find your SID with this process, but it helps.</p>
+<ul><li><strong>For Part 1:</strong> Only for HGSS </li>
+<li><a href="https://docs.google.com/spreadsheets/d/1gF316qlC042q1NkPxt3_MU2FDkL8Dca0g10fMI_XYl4/edit">Aprijuice to SID Sheet</a></li>
+<li>A Pokemon caught in a pokewalker with your OT OR a spiky-eared pichu with your OT</li>
+<li>Apricorns</li>
+<li>Patience</li>
+</ul>
+<ul><li><strong>For Part 2:</strong> Ability to trade to a copy of HGSS</li>
+<li><a href="https://docs.google.com/spreadsheets/d/1gF316qlC042q1NkPxt3_MU2FDkL8Dca0g10fMI_XYl4/edit">Aprijuice to SID Sheet</a></li>
+<li>A “Chained Shiny Pokemon” such as Red Gyarados, or a Pokeradar shiny. </li>
+<li>An IV calculator of some kind</li>
+<li>Apricorns</li>
+<li>Patience</li>
+</ul>
+<ul><li><strong>For Part 3:</strong> Headbutt Trees to exact SID
+           <ul>
+		   <li>Only for HGSS</li>
+            <li>Pokemon with the move Headbutt</li>
+			<li><a href="https://docs.google.com/spreadsheets/d/1gF316qlC042q1NkPxt3_MU2FDkL8Dca0g10fMI_XYl4/edit">Aprijuice to SID Sheet</a></li>
+		   </ul>
+		   <li>Honey Trees to Exact SID
+		   <ul>
+		   <li>Only for DPPt</li>
+		   <li>Honey to lather on trees</li>
+           <li>Honey Tree RNG Knowledge</li>
+           <li><a href="https://docs.google.com/spreadsheets/d/1gF316qlC042q1NkPxt3_MU2FDkL8Dca0g10fMI_XYl4/edit">Aprijuice to SID Sheet</a></li>
+		   </ul>
+		   </li>
+		   <li>Square Shinies to exact SID
+           <ul>
+		   <li>Ability to RNG abuse shinies</li>
+		   <li>Ability to transfer pokemon into Sword and Shield</li>
+		   </ul>
+		   </li>
+		   <li>Gen4IDs & More
+		   <ul>
+		   <li>Real96’s Gen4IDs <a href="https://github.com/Real96/Gen4IDs/releases/tag/2.1">dev</a> build</li>
+		   </ul>
+		   </li>
+		    </li>
+		   </ul>
+</p>
+
+
+
+
+
+
+
+
+
+<h2><a name="intro">Introduction & Preface</a></h2>
+<p>So, you’re here to obtain your Secret ID (SID), are ineligible for the group seed method, don’t have a self obtained wild-caught shiny, and are unable or unwilling to consult third party tools? Luckily, there may still be a chance for your save file. The general process is to obtain a chained or forced shiny pokemon (HGSS gyarados or a pokeradar shiny in DPPt, same method) and if possible a Pokewalker pokemon (either a pokemon directly from the Pokewalker, or spiky-eared pichu, which is generated through the same means as a Pokewalker pokemon), feed them specific blends of apricorn juice, and obtain an SID in otherwise impossible circumstances. Well, finding the PID of a shiny Pokemon is nearly equivalent to finding the SID of the original trainer. </p>
+<p>To be more specific (feel free to skim through this if you don’t care), shiny pokemon generate when the Pokemon Shiny Value (PSV) of pokemon’s PID is equivalent to a trainer’s Trainer Shiny Value (TSV). The TSV of a save file can be represented by the following equation.
+</p>
+<p><center>TSV = (TID ^SID) >> 3</center></p>
+<p>Now ^ isn’t exactly important here, bitxor checks for differences in binary bits (and is pretty similar to subtraction), but the >> in this equation represents “bitrshift”, in which the bits of the number, or the digits of the number in binary, are shifted to the right by the following number. As a result, the last 3 bits are lost in the process. In other words, no matter what those 3 bits were, the TSV will be the same, meaning essentially that there are 8 SID values that, when combined with your TID, will yield the same TSV. Interestingly, the Pokewalker uses a similar calculation with the TID and SID to prevent the PSV from matching the TSV, by creating a PID using the TID and SID. 
+</p>
+<p><center>MTSV = (TID ^ SID) >> 8</center></p>
+<p>This value, which I dub the “Mini TSV” (MTSV), is simply a TSV with 8 lost bits instead of 3. This MTSV will then be input to create a basis for all Pokewalker PIDs with the formula below. 
+</p>
+<p><center>PID1(Walker) = (MTSV ^ 0xFF) << 24
+</center></p>
+<p>So by finding the PID of the pokemon you catch in the Pokewalker, you can reverse engineer your “Mini TSV”, and even get a good guess as to where your SID is, though you won’t be able to determine the last 8 bits with a MTSV alone. For each MTSV, there are 32 unique TSVs, and 256 unique SIDs. Most methods for finding “SID” in DPPt/HGSS only find the TSV, and provide one of the 8 valid SIDs for that TSV, but having the exact SID is essential for determining Square Shininess when transferring pokemon forward to Sword and Shield. To be any more exact than a MTSV, you actually need a shiny of some kind, and obtain either the full PID, or the PSV of that shiny. The easiest type of shiny to obtain is a chained shiny, either the HGSS always-shiny gyarados, or any Pokeradar chained-shiny in DPPt. Chained shinies are created in a manner that “forces” them to become shiny, using the formula below. 
+</p>
+<p><center>PID(Chained) = [(TSV ^ LID) >> 3] << 19 + [(LID >> 3) << 3] + (PIDmethod 1 & 0x80008)
+</center></p>
+<p>In this formula, “LID” refers to the joining of the least significant bit from each of the 13 LCRNG calls between the PID and the IVs. PIDmethod 1 is the initial PID selected before those 13 calls. Anything that does not directly involve the TSV is easy to reverse, as almost the entire LCRNG state can be recovered from the IVs alone. This might seem complicated, but the chained PID formula essentially boils down to known and unknown bits, shown in the below visualization.
+</p>
+<img src="images/binaryconversion.png" alt "binary" style="width: 100%;">
+<p>For traditional methods of finding SID, a chained shiny cannot be used because the PID is altered by the TSV directly. However, if through some means you could obtain the remaining red bits of a chained shiny PID, or narrow down the number of possibilities significantly, the save file’s TSV could be calculated, which could be used to reverse possible SID values. 
+</p>
+<p>The current method for finding the relevant/unknown bits of the PID of both Pokewalker Pokemon and Chained Shinies is through aprijuice. For each pokemon, the process requires 2-5 specific aprijuice recipes, depending on species, nature, and hidden PID digits. You will need roughly 10-40 apricorns per pokemon. The sheet will attempt to minimize the number of apricorns you end up needing, but should you run out of an apricorn type you need, this link can be used to find out which trees you can obtain more at. After collecting an apricorn type at all available trees, you can boot up the game by setting the DS clock to 23:59, (this way you have 1 minute to boot up the game, and wait for midnight to hit) then let the clock roll over to regenerate apricorn trees. This method of being ingame while midnight happens is a way to circumvent the game taking countermeasures for foul play with date/time, and it works for nearly everything in gen 4. 
+</p>
+<p>So, what *is* Apricorn Juice, and what could it possibly have to do with finding PIDs of pokemon? According to <a href="https://bulbapedia.bulbagarden.net/wiki/Apriblender#Details">Bulbapedia</a>, Aprijuice can be created by blending apricorns in an Apriblender, and when consumed by Pokemon, boost Pokeathlon “Performance” stats dependent on the types of Apricorns in the blend. However, Aprijuice is not the only contributing factor to a Pokemon’s Performance stats. As stated by <a href="https://bulbapedia.bulbagarden.net/wiki/Personality_value#Performance_changes">Bulbapedia</a>, a Pokemon’s nature has a pronounced effect on it’s Performance stats, but the last 5 decimal digits of the Pokemon’s Personality Value (More commonly referred to as a “PID”) apply a more subtle effect that fluctuates depending on the numerical day of the month. 
+</p>
+<p>While it would be all too convenient to analyze Performance stats to reverse these digits of the PID, much in a similar manner that one would analyze the stats of a pokemon to determine it’s IVs, Performance stats are not displayed numerically. Rather, these modifiers are expressed by a number of stars, with a min, base, and max value for each species of pokemon. 
+</p>
+<img src="images/stars.png" alt "stars" style="width: 100%;">
+<p>So, to properly match the minute day-of-month fluctuations in a Pokemon’s performance to a digit of that pokemon’s PID, extremely specific aprijuice modifiers must be applied, so that a difference in stars can be observed and tracked. Upon the conclusion of this “Aprijuice Analysis,” we know the following about a PID.
+</p>
+<p><center>K = (PID % 100000)
+</center></p>
+<p>K is a value from 0 to 99999, and “%” (modulo) means “find the remainder when dividing by ___”. So we can obtain a list of possible PIDs by adding increments of 100000 to this K value,  and filter that list of PIDs using other PID-dependent traits such as gender/ability, as well as known bits from the generation method of chained-shiny PIDs or Pokewalker PIDs. 
+</p>
+
+
+<h2><a name="part1">Part 1: Pokewalker Mini TSV Calculation</a></h2>
+<p>An optional part of this process is obtaining the “Mini TSV” of your save file. Completing this step will save time in the long run, saving up to 5 wild RNGs of effort. However, if you do not have a pokemon from a Pokewalker connected to your save file, and do not have a self-obtained spiky-eared pichu, skip to Part 2, as you are unable to complete this component of the process. If you have a Pokewalker and can still catch pokemon using it, you should carefully consider which pokemon you use. This choice of pokemon is extremely important, as some pokemon have pokeathlon stats that make finding digits of their PID impossible. You can find the full Pokeathlon Stats of a pokemon using psypokes, <a href="http://www.psypokes.com/hgss/pokeathlon_stats.php">this</a> site. Below are the stats for Kangaskhan.
+</p>
+<img src="images/kangapokeathelon.png" alt "kanga" style="width: 100%;">
+<p>Kangaskhan would be a poor choice for this process because of its Jump Stat. It has a Min Jump of 2, a Base Jump of 2, and a Max Jump of 2. Because it cannot be raised nor lowered, no information about its PID can be extracted from it, making it a terrible choice for Mini TSV Calculation. Now let’s take a look at Duskull’s Pokeathlon Stats. 
+</p>
+<img src="images/duskullpokeathelon.png" alt "duskull" style="width: 100%;">
+<p>As you can see, Duskull starts with 4 Speed, and cannot have more than 4 Speed. It can have less than 4 Speed though, so the speed PID digit can be found, though it will require more apricorns and aprijuice to do so. I will be using duskull in this example for demonstrational purposes, as some segments of this guide are only applicable in rare circumstances, but this duskull will check every box. You should consider using a pokemon like Sentret instead, which is much less likely to run into the issues Duskull will have. These are Sentret’s Pokeathlon Stats.
+</p>
+<img src="images/sentretpokeathelon.png" alt "sentret" style="width: 100%;">
+<p>As you can see, there is an upper and lower range for all 5 pokeathlon stats. This allows for cheaper recipes, and less aprijuices, to get the data needed to find PID. Anyway, once you have selected your pokemon (your pokemon is Spiky-Eared Pichu if you are using Spiky-Eared Pichu), open up my google sheets tool, and navigate to <strong>Aprijuice Species Data</strong>. Luckily for you, <em>thegreenkacheek </em>already completed this process for all pokemon in the base gen 4 games, but if you are doing this on a ROM hack of some kind, you might need to input the Min, Base, and Max Pokeathlon stats of your pokemon, as well as its gender ratio.&nbsp;</p>
+<img src="images/pokeathelonstatlist.png" alt "statlist" style="width: 100%;">
+<p>This should be done in the format &ldquo;Min|Base|Max&rdquo;, and the gender ratio should be in the chance of being Male. You may need to find these base star values experimentally if psypokes does not have them listed. With that out of the way, it&rsquo;s time to start this process.&nbsp;</p>
+<h3>No Juice</h3>
+<p>Now then, navigate to the <strong>Aprijuice to SID User Input </strong>sheet, and scroll to the far left. Make sure you keep track of which table you are at. While they may look similar, the top left corner of each table displays which segment of the guide it relates to, and is color coded. On the far left, beneath <strong>Pokewalker Pokemon</strong>, input the nature, gender, and species of the Pokemon you caught. It should look something like this.</p>
+<img src="images/aprijuicesidinput.png" alt "aprijuicesidinput" style="width: 100%;">
+
+<p>My pokemon is a Male Duskull, with a Lonely Nature. Now that the sheet knows this, we can start plugging in star values. Pokeathlon stats fluctuate based on the day of the month. While these fluctuations are not strong enough to change star values on their own, they can make the difference between 2 or 3 stars when factors such as nature and aprijuice are applied. So the next step will be to set your DS clock to January 1st of any year (or February 1st, March 1st, April 1st, etc. The month does not matter), and boot up the game.</p>
+<img src="images/nojuice59.png" alt "nojuice59" style="width: 100%;">
+<p>Ensure you are on the Pokewalker Pokemon Aprijuice row, and that the top left corner says <strong>No Juice 5 to 9, -5 to -9</strong>. View the summary of your caught pokemon, and input the number of Speed, Power, Skill, Stamina, and Jump stars for your pokemon in the sheet. If the third page of the pokemon&rsquo;s summary has no stars, you must visit the pokeathlon dome for the first time. Once you have correctly input these stats, power off your game, change the date to January 2nd, and input the stats for day 2. Continue this process all the way to January 10th. Odds are, you&rsquo;re seeing some numbers highlighted in green or red, which are fluctuations in star counts. If this is the case, you should read this for info on how to blend aprijuice, but you may not need to make any juice until <strong>Juice B</strong>. However, if you chose a pokemon like duskull and/or got unlucky with nature, you might see something like this instead.</p>
+<img src="images/unluckynature.png" alt "unluckynature" style="width: 100%;">
+
+<p>Unfortunately, because Lonely raises power by 2 stars (above Duskull&rsquo;s maximum) and lowers Stamina by 2 (below Duskull&rsquo;s minimum), the fluctuations are not displayed in game. Sentret is less likely to have this issue, though it is technically possible for any pokemon without a neutral nature. When this occurs, an aprijuice needs to raise/lower the affected stats back above the minimum, or below the maximum, so fluctuations can be seen. Once you input all 10 days, an optimal recipe will be selected in above the <strong>Juice A </strong>table to the right, which uses as few apricorns as possible.&nbsp;</p>
+<h3>Juice A</h3>
+<img src="images/juicea.png" alt "juicea" style="width: 100%;">
+
+<p>The recipe displays the number of apricorns required, the order they need to be put into the blender, and their &ldquo;Mildness&rdquo;. If you do not have enough apricorns to complete the recipe, do not start until you have gathered the ones you are missing. This recipe requires 1 Black, 6 Pink, 4 Yellow, and 1 White Apricorn. The <strong>Apricorn Sequence Required</strong> displays the order that these apricorns need to be added, which is important to getting the right stats. The &ldquo;|&rdquo; throughout the sequence represents where the blender will require the player to walk 100 steps before adding more apricorns. It does this each time you add 5 apricorns, so make sure you keep track of how far you&rsquo;ve gotten. A list of all recipes the sheet can pull from is included in <strong>Aprijuice Recipes</strong>. &ldquo;Mildness&rdquo; is increased by 1 for every 100 steps the player walks, and only affects the juice in increments of 25. The game will explicitly tell you how mild your juice is whenever you scroll over the apriblender itself. Under certain circumstances, Mildness does not matter for a recipe, and obviously it would be a waste of time to walk all those steps if it isn&rsquo;t necessary. When Mildness is not needed for a recipe, you will see a mildness range of <strong>0-255</strong>, which means any mildness is acceptable. According to the sheet, I need a <strong>Mildness </strong>of 100-124 for this recipe, meaning I need to walk ~100,000 steps to blend the juice, after putting all the apricorns in. You may need to walk more or less for other recipes. While this is a lot of steps, there are a few good ways of tackling it. Cycling road is nice and long, if you don&rsquo;t mind holding up periodically. However, there is a way to walk infinitely in HGSS. By entering the Ecruteak Gym and holding the up arrow (or using a coin of some sort for a 3ds) you can fall into the void infinitely, respawn, and walk back up endlessly. This is slower than just riding your bike, but it is infinite. Just make sure you don&rsquo;t walk for too long, this will ruin your juice. You can check it at any time by opening your apricorn box and scrolling over the juice. Once you&rsquo;ve finished biking a marathon or repeatedly falling into the abyss to get the right mildness, feed the juice to your pokemon, and save the game. On your sheet, scroll over to the next table, which should be labeled <strong>Juice A</strong>. If you didn&rsquo;t need to make aprijuice yet, simply copy over the stats from <strong>No Juice</strong>, but if you had to blend an aprijuice, you&rsquo;ll have to input the stats for days 1-10 again, this time with the aprijuice modifier. These are my duskull&rsquo;s stars.</p>
+<img src="images/duskullstars.png" alt "duskullstars" style="width: 100%;">
+
+
+<p>Now you should have two digits displaying, but if you don&rsquo;t by this point, it means you either made a mistake inputting Stars, or you have a rare case where your Juice A doesn&rsquo;t have a recipe yet. Either way, you&rsquo;ll need to start over, potentially with a different pokemon. Anyway, assuming you get here, you should have two PID digits already. In the above example, my last two digits are 5 and 1 respectively. You may have 3 digits known at this point, as power can be found using stamina and nature. Anyway, your next step is to blend the aprijuice displayed above <strong>Juice B</strong>.&nbsp;</p>
+<h3>Juice B</h3>
+<p>Like before, you need to ensure that you have enough apricorns before you begin, follow the sequence exactly, and reach the correct mildness if required.&nbsp;</p>
+<img src="images/juiceb.png" alt "juiceb" style="width: 100%;">
+<p>In this case, I need 1 black, 4 blue, and one Yellow, as well as 150k steps. Before you start blending, make sure you get rid of your last blend by feeding what&rsquo;s left of it to other pokemon. A pokemon can only be influenced by 1 juice at a time, (and will lose the effect of any juice if deposited into the PC) but the new and old juices will combine in the blender if you aren&rsquo;t careful. This may be the last (and only) apriblend, if you got an easy PID. Add the apricorns in the correct order, bike the needed steps, feed the juice to your pokemon, save, then punch your star data for days 1 to 10 like before into the sheet under Juice B. You are very likely to see a variation in at least one of the unknown stats, but this Duskull has an intentionally difficult PID to deduce for the sake of example.</p>
+<img src="images/juicebvariations.png" alt "juicebvariations" style="width: 100%;">
+<p>You may be wondering what that &ldquo;7 to 9&rdquo; is about on the top left. Essentially, the hidden stat value for each stat fluctuates between -9 and 9, and this juice will cause a star increase on &ldquo;7 to 9&rdquo; for stats that increase, and will cause a star decrease on &ldquo;-7 to -9&rdquo; on the stat that decreases. A &ldquo;5-9&rdquo; would be optimal in distinguishing PID digits from each-other, but that type of juice is either extremely expensive, or impractical for other reasons. Both &ldquo;7 to 9&rdquo; and &ldquo;3 to 9&rdquo; juices can potentially create &ldquo;lookalike digits&rdquo;, which have identical star patterns to each other, despite being different values. This happened to my Duskull, as an unchanging star value for an increased stat is indicative of either 1 or 6, as shown above.&nbsp;</p>
+<p>At this point, you may have &ldquo;Half Known&rdquo; digits, or know all 5 digits already. If all 5 digits are known, you don&rsquo;t need to do any more work. Scroll ahead to <strong>Juice E</strong> in this guide, you already found your PID and Mini TSV. That said, if you have a half known digit, or worse a &ldquo;?&rdquo; like I do, you will need to complete the next recipe, just like you did before.</p>
+<h3>Juice C</h3>
+<img src="images/juicec.png" alt "juicec" style="width: 100%;">
+
+<p>So, collect missing Apricorns, empty the old juice, follow the prescribed order, then take enough steps for the correct mildness, if necessary. Once you do, feed it to your pokemon, and save your game. Like before, copy the star counts in for days 1-10 with the new juice. You should see at least one star count fluctuate this time, if you did everything correctly.</p>
+<img src="images/juicecvariations.png" alt "juicecvariations" style="width: 100%;">
+<p>At this point, you are highly likely to find all 5 digits, because there is no overlap between lookalike digits for 3-9 and 7-9. If you have, skip to <strong>Juice E</strong> to claim your Mini TSV. However, if you had a ? as one of your digits, like I did for this extremely improbable duskull, you may need to make more juice.</p>
+<h3>Juice D</h3>
+<img src="images/juiced.png" alt "juiced" style="width: 100%;">
+<p>Once again, go through the motions of collecting the necessary apricorns, emptying out residual juice, blending your concoction, and walking the necessary steps, if mildness is not 0-255. Unfortunately, my duskull needs the minimum speed from this juice, but you are much more likely to not need mildness on this blend, if you need it at all. Once you have the proper mildness, feed the completed juice to your pokemon, and save the game. Then, input your pokemon&rsquo;s performance stats for days 1-10 of the month into the sheet. You are highly likely to see a variation in your missing stat, however...</p>
+<img src="images/juicedvariations.png" alt "juicedvariations" style="width: 100%;">
+
+<p>Because this is another 7 to 9 juice, there is a chance for lookalike digits, and this duskull has one of them. My Speed digit is either a 2 or a 7, as shown above. If you happened to get all 5 digits, you don&rsquo;t need to blend anything else. Head over to <strong>Juice E </strong>in the guide to find your Mini-TSV. However, because I still have a half-known digit, I have one more recipe to do.&nbsp;</p>
+<h3>Juice E &amp; Application</h3>
+<img src="images/juicee.png" alt "juicee" style="width: 100%;">
+<p>For the final time, empty your residual aprijuice, collect any missing apricorns, complete the recipe in the order given, and if needed, walk enough steps for the desired mildness. Once you do, give the juice to your pokemon, and save the game. Finally, input stats for days 1-10, just as you did for all other juices so far.</p>
+<img src="images/juiceevariations.png" alt "juiceevariations" style="width: 100%;">
+<p>Feel free to leave this blank if you have all 5 digits already. Anyway, by this point, you should have all 5 digits. If not, you made a mistake somewhere along the line, and will need to start over. After that final juice, I have 5 known digits of my Duskull&rsquo;s PID, which means the sheet now has enough info to calculate Duskull&rsquo;s PID on the far left of the sheet.</p>
+<img src="images/duskullpid.png" alt "duskullpid" style="width: 100%;">
+<p>Your Mini-TSV is highlighted in green, and in this case mine is 120. For the next step, scroll down to the chained shiny segment of the user sheet, where you will be repeating this process near-exactly for your chained shiny! woohoo!</p>
+
+<h2><a name="part2">Part 2: Chained Shiny PID and TSV Calculation</a></h2>
+<p>The Chained Shiny part of this process is extremely similar to the previous part, with a few key differences. The first of which is that you will need to find the exact IVs of your chained shiny. This guide will not cover the process of obtaining the IVs of a pokemon, though many guides and tools exist for this exact purpose. If your chained shiny has gained EVs, you will need to obtain EV reducing berries to find accurate IVs. 4 of the 6 berries can be obtained from the <a href="https://www.serebii.net/heartgoldsoulsilver/shards.shtml" target="_blank" rel="noopener">Shard de Berry</a> juggler in Fuchsia City, and all 6 can be obtained from <a href="https://bulbapedia.bulbagarden.net/wiki/Battle_Frontier_(Generation_IV)#Pok.C3.A9mon_Scratch-Off_Corner" target="_blank" rel="noopener">scratch-off tickets</a>in the battle frontier. Navigate to the <strong>Aprijuice to SID User Input </strong>Sheet, and input your pokemon&rsquo;s nature, gender, species, HP IV, Attack IV, Defense IV, Special Attack IV, Special Defense IV, and Speed IV. For the sake of example, I will be using a lonely female &ldquo;Red Gyarados&rdquo;, with the IVs 0/1/15/25/5/3.</p>
+<img src="images/chainedshinyselector.png" alt "chainedshinyselector" style="width: 100%;">
+
+<h3>No Juice</h3>
+<p>Regardless, once you input this information, you can begin finding your Chained Shiny&rsquo;s PID in the <strong>Chained Shiny Pokemon Aprijuice </strong>Table. Next, set your DS clock to January 1st of any year (or February 1st, March 1st, April 1st, etc. The month does not matter), and boot up the game.&nbsp;</p>
+<img src="images/chainedshinyaprijuice.png" alt "chainedshinyaprijuice" style="width: 100%;">
+
+<p>You will then view your chained shiny pokemon&rsquo;s summary, and count the number of stars in each of its pokeathlon stats. If the third page of the pokemon&rsquo;s summary has no stars, you must visit the pokeathlon dome for the first time. Once you complete your first row, power off the game, set the date to January 2nd, and obtain the star counts for January 2nd to 10th. Once you finish, you should see some of your stats fluctuate. If you see fluctuations in two stats, you should keep reading for info on how to blend aprijuice, but you may not need to make any juice until <strong>Juice B</strong> in the guide. However, if you got unlucky with nature, you might see something like this instead.</p>
+<img src="images/chainedshinyaprijuice2.png" alt "chainedshinyaprijuice2" style="width: 100%;">
+
+<p>Unfortunately, because Lonely raises power by 2 stars (above Gyarados&rsquo; maximum) and lowers Stamina by 2 (below Gyarados&rsquo; minimum), the fluctuations are not displayed in game.&nbsp; When this occurs, an aprijuice needs to raise/lower the affected stats back above the minimum, or below the maximum, so fluctuations can be seen. Once you input all 10 days, an optimal recipe will be selected in above the <strong>Juice A </strong>table to the right, which uses as few apricorns as possible</p>
+<h3>Juice A</h3>
+<img src="images/juicea2.png" alt "juicea2" style="width: 100%;">
+<p>The recipe displays the number of apricorns required, the order they need to be put into the blender, and their &ldquo;Mildness&rdquo;. If you do not have enough apricorns to complete the recipe, do not start until you have gathered the ones you are missing. This recipe requires 1 Black, 7 Pink, 4 Yellow, and 1 White Apricorn. The <strong>Apricorn Sequence Required</strong> displays the order that these apricorns need to be added, which is important to getting the right stats. The &ldquo;|&rdquo; throughout the sequence represents where the blender will require the player to walk 100 steps before adding more apricorns. It does this each time you add 5 apricorns, so make sure you keep track of how far you&rsquo;ve gotten. A list of all recipes the sheet can pull from is included in <strong>Aprijuice Recipes</strong>. &ldquo;Mildness&rdquo; is increased by 1 for every 100 steps the player walks, and only affects the juice in increments of 25. The game will explicitly tell you how mild your juice is whenever you scroll over the apriblender itself. Under certain circumstances, Mildness does not matter for a recipe, and obviously it would be a waste of time to walk all those steps if it isn&rsquo;t necessary. When Mildness is not needed for a recipe, you will see a mildness range of <strong>0-255</strong>, which means any mildness is acceptable. According to the sheet, I need a <strong>Mildness </strong>of 0-24 for this recipe, meaning I don&rsquo;t need to walk far for this particular recipe, anything below 2400 steps will do, as long as all the apricorns are in the blend. You may need to walk more for other recipes. While this isn&rsquo;t a lot of steps, some recipes may require 100k+ steps, and there are a few good ways of tackling those. Cycling road is nice and long, if you don&rsquo;t mind holding up periodically. However, there is a way to walk infinitely in HGSS. By entering the Ecruteak Gym and holding the up arrow (or using a coin of some sort for a 3ds) you can fall into the void infinitely, respawn, and walk back up endlessly. This is slower than just riding your bike, but it is infinite. Just make sure you don&rsquo;t walk for too long, this will ruin your juice. You can check it at any time by opening your apricorn box and scrolling over the juice.&nbsp;</p>
+<p>Once you&rsquo;ve finished biking a marathon or repeatedly falling into the abyss to get the right mildness, feed the juice to your pokemon, and save the game. On your sheet, begin entering stars into your next table. If you didn&rsquo;t need to make aprijuice yet, simply copy over the stats from <strong>No Juice</strong>, but if you had to blend an aprijuice, you&rsquo;ll have to input the stats for days 1-10 again, this time with the aprijuice modifier. These are my Gyarados&rsquo; stars.</p>
+<img src="images/juiceachainedshiny.png" alt "juiceachainedshiny" style="width: 100%;">
+<p>Now you should have two digits displaying, but if you don&rsquo;t by this point, it means you either made a mistake inputting Stars, or you have a rare case where your Juice A doesn&rsquo;t have a recipe yet. Either way, you&rsquo;ll need to start over, potentially with a different pokemon. Anyway, assuming you get here, you should have two PID digits already. In the above example, my last two digits are 5 and 1 respectively. You may have 3 digits known at this point, as power can be found using stamina and nature. Anyway, your next step is to blend the aprijuice displayed above <strong>Juice B</strong>.</p>
+<h3>Juice B</h3>
+<p>Like before, you need to ensure that you have enough apricorns before you begin, follow the sequence exactly, and reach the correct mildness if required.&nbsp;</p>
+<img src="images/juiceb2.png" alt "juiceb2" style="width: 100%;">
+
+<p>In this case, I need 1 black, 1 blue, and 2 Yellow, as well as 100k steps. Before you start blending, make sure you get rid of your last blend by feeding what&rsquo;s left of it to other pokemon. A pokemon can only be influenced by 1 juice at a time, (and will lose the effect of any juice if deposited into the PC) but the new and old juices will combine in the blender if you aren&rsquo;t careful. This may be the last (and only) apriblend, if you got an easy PID. Add the apricorns in the correct order, bike the needed steps, feed the juice to your pokemon, save, then punch your star data for days 1 to 10 like before into the sheet under Juice B. You are very likely to see a variation in at least one of the unknown stats, but this Gyarados has an intentionally difficult PID to deduce for the sake of example.</p>
+<img src="images/juicebchainedshiny.png" alt "juicebchainedshiny" style="width: 100%;">
+
+<p>You may be wondering what that &ldquo;7 to 9&rdquo; is about on the top left. Essentially, the hidden stat value for each stat fluctuates between -9 and 9, and this juice will cause a star increase on &ldquo;7 to 9&rdquo; for stats that increase, and will cause a star decrease on &ldquo;-7 to -9&rdquo; on the stat that decreases. A &ldquo;5-9&rdquo; would be optimal in distinguishing PID digits from each-other, but that type of juice is either extremely expensive, or impractical for other reasons. Both &ldquo;7 to 9&rdquo; and &ldquo;3 to 9&rdquo; juices can potentially create &ldquo;lookalike digits&rdquo;, which have identical star patterns to each other, despite being different values. This happened to my Gyarados, as an unchanging star value for an increased stat is indicative of either 1 or 6, as shown above.&nbsp;</p>
+<p>At this point, you may have &ldquo;Half Known&rdquo; digits, or know all 5 digits already. If all 5 digits are known, you don&rsquo;t need to do any more work. Scroll ahead to <strong>Juice E</strong> in this guide, you already found your PID and Mini TSV. That said, if you have a half known digit, or worse a &ldquo;?&rdquo; like I do, you will need to complete the next recipe, just like you did before.</p>
+<h3>Juice C</h3>
+<img src="images/juicec2.png" alt "juicec2" style="width: 100%;">
+
+<p>So, collect missing Apricorns, empty the old juice, follow the prescribed order, then take enough steps for the correct mildness, if necessary. Once you do, feed it to your pokemon, and save your game. Like before, copy the star counts in for days 1-10 with the new juice. You should see at least one star count fluctuate this time, if you did everything correctly.</p>
+<img src="images/juicecchainedshiny.png" alt "juicecchainedshiny" style="width: 100%;">
+
+<p>At this point, you are highly likely to find all 5 digits, because there is no overlap between lookalike digits for 3-9 and 7-9. If you have, skip to <strong>Juice E</strong> to claim your Mini TSV. However, if you had a ? as one of your digits, like I did for this extremely improbable Gyarados, you may need to make more juice.</p>
+<h3>Juice D</h3>
+<img src="images/juiced2.png" alt "juiced2" style="width: 100%;">
+
+<p>Once again, go through the motions of collecting the necessary apricorns, emptying out residual juice, blending your concoction, and walking the necessary steps, if mildness is not 0-255. Unfortunately, my Gyarados needs the minimum speed from this juice, but you are much more likely to not need mildness on this blend, if you need it at all. Once you have the proper mildness, feed the completed juice to your pokemon, and save the game. Then, input your pokemon&rsquo;s performance stats for days 1-10 of the month into the sheet. You are highly likely to see a variation in your missing stat, however...</p>
+<img src="images/juicedchainedshiny.png" alt "juicedchainedshiny" style="width: 100%;">
+
+<p>Because this is another 7 to 9 juice, there is a chance for lookalike digits, and this Gyarados has one of them. My Digit 5 is either a 2 or a 7, as shown above. If you happened to get all 5 digits, you don&rsquo;t need to blend anything else. Head over to <strong>Juice E </strong>in the guide to find your Mini-TSV. However, because I still have a half-known digit, I have one more recipe to do.&nbsp;</p>
+<h3>Juice E &amp; Application</h3>
+<img src="images/juicee2.png" alt "juicee2" style="width: 100%;">
+
+<p>For the final time, empty your residual aprijuice, collect any missing apricorns, complete the recipe in the order given, and if needed, walk enough steps for the desired mildness. Once you do, give the juice to your pokemon, and save the game. Finally, input stats for days 1-10, just as you did for all other juices so far.&nbsp;</p>
+<img src="images/juiceechainedshiny.png" alt "juiceechainedshiny" style="width: 100%;">
+
+<p>Feel free to leave this blank if you have all 5 digits already. Anyway, by this point, you should have all 5 digits. If not, you made a mistake somewhere along the line, and will need to start over. After that final juice, I have 5 known digits of my Gyarados&rsquo; PID, which gives the sheet enough information to calculate PIDs on the far left of the sheet.</p>
+<img src="images/chainedshinyresults.png" alt "chainedshinyresults" style="width: 100%;">
+
+<p>As you can see, my Gyarados either has a PID of 42883A65, or A4303A65. However, If you completed the Pokewalker step of this guide, one of these 2-6 PIDs will be highlighted in lime green, since it matches the calculated Mini-TSV. My TSV for this file is 3869, though if I didn&rsquo;t have a pokewalker pokemon (or Spiky-Eared Pichu) from my save file, 3869 or 5066 could be my TSV. I would then need to test each TSV value with a wild pokemon RNG, which will be covered in <strong>Part 3.</strong> Additionally, <strong>Part 3</strong> will cover finding the individual SID value from a TSV.&nbsp;</p>
+<h2><a name="part3">Part 3: Headbutt Trees, Honey Trees, and Extras</a></h2>
+<p>This segment of the guide is broken down into segments that may or may not apply to you and your save file. <strong>Headbutt Trees To Exact SIDs </strong>is intended to be used for a HGSS save file which the player has access to, and with which the player has completed <strong>Part 1</strong>,<strong> Part 2</strong>, or both. <strong>Honey Trees to Exact SIDs</strong> is intended to be used for a DPPt save file which the player has access to, and has completed <strong>Part 2</strong> with using a copy of HGSS. <strong>Square Shinies to Exact SIDs</strong> is intended to be used with any gen 4 game capable of transferring Pokemon to Sword and Shield, that has completed <strong>Part 1</strong>,<strong> Part 2</strong>, or both. Finally, <strong>Gen 4 IDs &amp; More</strong> can be utilized to narrow down results further through the lens of finding which SIDs are likely and unlikely to have been obtained through casual play.&nbsp;</p>
+<h3>Headbutt Trees To Exact SIDs</h3>
+<p>If you have not done so already, the first step of this process is to input your Trainer ID (TID), in the box beneath the chained shiny results on the User sheet.</p>
+<img src="images/headbutt1.png" alt "headbutt" style="width: 100%;">
+
+<p>If you completed <strong>Part 1</strong>, check the &ldquo;Apply MTSV&rdquo; box, and if you completed <strong>Part 2</strong>, check the &ldquo;Apply TSVs&rdquo; box. There is also an &ldquo;Empty Tree #&rdquo; box: The headbutt trees which contain pokemon can be utilized to find the SID of a player. Simply fly to Azalea Town, head right, and headbutt these 4 trees on Route 33. At least 3 of them will contain pokemon, but keep track of any trees that don&rsquo;t.&nbsp;</p>
+<img src="images/treestars.png" alt "treestars" style="width: 100%;">
+
+<p>It is possible that all 4 trees contain pokemon, but in my case, Tree 2 shown above was empty. And so, you should input which tree, if any (type &ldquo;None&rdquo; if all 4 trees have pokemon), is empty.&nbsp;</p>
+<img src="images/headbutt2.png" alt "headbutt2" style="width: 100%;">
+
+<p>Once you do, the box below, <strong>Headbutt Tree Results</strong>, will filter only the SIDs that match your tree results.&nbsp;</p>
+<img src="images/headbuttresults.png" alt "headbuttresults" style="width: 100%;">
+
+<p>Now, I can be certain that my SID is either 35378 or 35383, and that my TSV is 3869. Assuming you completed <strong>Part 1 </strong>and <strong>Part 2</strong>, you will be left with at most 2 possible SIDs in the same TSV. If multiple SIDs are still remaining, <strong>Square Shinies to Exact SIDs</strong> or <strong>Gen 4 IDs &amp; More</strong> may help.&nbsp;</p>
+<h3>Honey Trees To Exact SIDs</h3>
+<p><span style="color: #ff0000;">DISCLAIMER: This segment may not function perfectly: It is not extremely clear what happens when honey trees overlap, and how much they can overlap. This tool currently operates under the assumption that the range of possible trees is 1 to 4, though information on Bulbapedia and Cave of the Dragonflies contradicts this. These sources also contradict each other, so finding a clear answer has been difficult. That said, assuming no overlap happens, this tool should work as intended.</span></p>
+<p>To the right of &ldquo;Headbutt Tree TSV to SID&rdquo; is a box for &ldquo;Honey Tree TSV to SID&rdquo;, which will be used for this process. If you have not done so already, the first step of this process is to input your Trainer ID (TID), in the TID box. Enable &ldquo;Apply TSVs&rdquo;, assuming you completed <strong>Part 2</strong> of this process. A sinnoh game is unable to complete <strong>Part 1</strong>.</p>
+<img src="images/honeytreeexact.png" alt "honeytree" style="width: 100%;">
+
+<p>After completing these steps, a numerical list of honey trees will be generated in the box directly below. These numbers correspond to honey trees around the region which based on your possible SIDs, likely contain munchlax. <a href="https://www.dragonflycave.com/sinnoh/honey-trees" target="_blank" rel="noopener">Cave of Dragonflies</a> has a list of honey trees, index numbers, and instructions on how to reach said honey trees. To correctly identify SID in sinnoh, you must check each of these trees for munchlax, which at a 1% chance, would be a herculean task through normal means. I will not be covering the process of checking muchlax trees in detail, but <a href="https://www.youtube.com/watch?v=X9JKOZnIr4s" target="_blank" rel="noopener">Imablisy</a> has a guide that can be used to RNG a munchlax in a tree. If you complete the process successfully and do not get munchlax, that tree is not a munchlax tree. Anyway, search every tree listed until you check every tree, or you locate two that contain munchlax.&nbsp;</p>
+<img src="images/honeytreeexact2.png" alt "honeytree2" style="width: 100%;">
+
+<p>I was able to find munchlax in tree 8 and 12, and input that information with a comma and space. If you could only locate one tree, only input the number of the tree you found. If you found three trees, my tool is broken. Anyway, after inputting the trees, you should see the remaining possible SIDs in the <strong>Honey Tree Results</strong> segment below.&nbsp;</p>
+<img src="images/honeytreeresults.png" alt "honeytree3" style="width: 100%;">
+
+<p>My SID for this file MUST be 35378, though it is possible to have more than one match after this process. If multiple SIDs are still remaining, <strong>Square Shinies to Exact SIDs</strong> or <strong>Gen 4 IDs &amp; More</strong> may help.&nbsp;</p>
+<h3>Square Shinies To Exact SIDs</h3>
+<p>A detailed guide for this process is not yet written, but the premise is simple. Attempt to RNG a square shiny, transfer it to SWSH, and see if the Pokemon is actually a square shiny. If it is, you found your SID correctly. If it isn&rsquo;t, your SID is incorrect. Complete this process with all remaining SIDs until you get a match. Might even be smartest to transfer all the unique &ldquo;square shinies&rdquo; at the same time to save time.&nbsp;</p>
+<h3>Gen 4 IDs &amp; More</h3>
+<p>A detailed guide for this process is not yet written, but the premise is simple. Search for the remaining TID/SID pairs as if you were aiming to RNG them. Some TID/SID are more or less difficult to obtain than others (some even being impossible), and would require waiting obscene periods of time in the pregame dialogue to obtain. Pokefinder only permits searching one TID and SID at a time, but a dev version of a program known as &ldquo;Gen4IDs&rdquo; allows for searching multiple TIDs and SIDs at a time. This version, linked <a href="https://github.com/Real96/Gen4IDs/releases/tag/2.1" target="_blank" rel="noopener">here</a>, is only available for windows. Pokefinder is the next best option for any other OS. Simply search for your remaining possible combos, and conclude based on the relative delays of the results. (below 5,000 is near-impossible, above 35,000 is improbable unless you waited ~10 min on the pregame sequence. Above 65535 is unrealistic unless you started on hour 23, and waited 19+ min on the pregame sequence).</p>
+<h2><a name="conclusion">Notes &amp; Conclusion</a></h2>
+<p>Thank you for reading my guide! Be sure to check out the various other gen 4 RNG guides, so you can actually make use of this SID finding process. RNG Abuse takes time to learn, but if you&rsquo;re reading this, you&rsquo;ve probably spent a few hours grinding juice already, and are motivated to actually RNG some shinies!</p>
+
+
+<h2><a name="prereq">Credits</a></h2>
+<p>happylappy (Me)</p>
+<p>thegreenkacheek (quality assurance)</p>
+<p>Real.96 (researched headbutt trees, and explained the findings to me for this guide. Also, created a build of Gen4IDs capable of accepting multiple TIDs and SIDs) <a href="https://github.com/Real96/Gen4IDs/releases/tag/2.1" target="_blank" rel="noopener">https://github.com/Real96/Gen4IDs/releases/tag/2.1</a></p>
+<p>Psypokes (source for Pokeathlon species stats)</p>
+<p>The Cave of the Dragonflies (Source for Honey Tree related info)</p>
+<p>Imablisy (Created a video guide that can be used to locate munchlax trees)</p>
+<p>AdmiralFish (created Pokefinder, Gen4IDs, and so much more)</p>
+<p><a href="https://docs.google.com/spreadsheets/d/1gF316qlC042q1NkPxt3_MU2FDkL8Dca0g10fMI_XYl4/edit#gid=2109183345" target="_blank" rel="noopener">Aprijuice to SID Sheet</a> (Happylappy, Me)</p>
+
+
+
+
+<p>Thank you for reading, I hope you succeed in getting your SID. If you have any questions feel free to ask me on Twitter @im_a_blisy or join my discord. <a href="https://www.google.com/url?q=https%3A%2F%2Fdiscord.gg%2FQchhXQv&amp;sa=D&amp;sntz=1&amp;usg=AFQjCNGa0ml1VToT2Fz03xxVN5PUNkTLWg" target="_blank" rel="noopener">https://discord.gg/QchhXQv</a> If you speak another language other than English fluently, and would like to translate this guide, please, contact me and I'd love to help :D</p>
+
+</div>
+</body>
+
+
+
+</html>

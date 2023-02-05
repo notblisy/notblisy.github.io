@@ -254,10 +254,10 @@ tr:nth-child(even) {background: white}
 
 h3{
 text-align: center;
-border-bottom: 3px solid #b2a970;
+border-bottom: 3px solid;
 overflow: hidden;
-
-color: #58170d;
+font-size:24px;
+color: white;
 }
 
 object{
