@@ -344,6 +344,7 @@ New Flowtimer Total: <br><input id="updatedflowtimertotal">
 
      seedlagms = 1 / Number(fps) * 1000 * seedlag; // this convers seedlag into ms
 
+     introtimerms = Number(introtimer) + Number(seedlagms); //this adds seedlag to introtimer to compensate 
 
 	 abracheckbox = document.getElementById('abracheck');
 	 
@@ -476,8 +477,6 @@ document.getElementById('introtimer').value = "2500";
 
     //this excecutes when you hit the calculate button 
 
-     introtimerms = Number(introtimer) + Number(seedlagms); //this adds seedlag to introtimer to compensate 
-
     var targetframewithoutintro;
     var targetframems;
     targetframewithoutintro = (1 / Number(fps) * 1000) * (Number(targetframe) + Number(delaybox));
@@ -553,28 +552,14 @@ document.getElementById('introtimer').value = "2500";
  seedhit = document.getElementById('seedhit').value;
  var seedhitlag;
  seedhitlag = Number(seedhit) + Number(seedlagms);
- var introtimer2;
- introtimer2 = document.getElementById('introtimer').value;
- 
- var introtimer3;
- introtimer3 = Number(introtimer2) + Number(seedlagms);
- 
  var adjustseedby;
- adjustseedby = Number(introtimer3) - Number(seedhitlag);
- 
+ adjustseedby = Number(introtimerms) - Number(seedhitlag);
  document.getElementById('introadjust').value = adjustseedby;
  
  
  
- var purems;  
- introtimerms = Number(introtimerms) + Number(adjustseedby.toFixed(0));
  
-var intortimernolag;
-introtimernolag = Number(introtimerms);
-
-var introtimerfinal;
-introtimerfinal = Number(introtimernolag) - Number(seedlagms);
-
+ var purems;  
 
 purems = document.getElementById("totalms").value;  
  var adjustedpurems;
@@ -582,13 +567,10 @@ purems = document.getElementById("totalms").value;
  document.getElementById('totalms').value = adjustedpurems;    
  var intropurems;
  intropurems = Number(adjustedpurems) + Number(introtimerms);
- 
-
-
 
  if(abraframe == "0" && methodboxvalue != 0){
 
-    document.getElementById("updatedflowtimertotal").value = intropurems.toFixed(0) + "/" + introtimerfinal;
+    document.getElementById("updatedflowtimertotal").value = intropurems.toFixed(0) + "/" + introtimer;
 
         
 
@@ -602,7 +584,7 @@ purems = document.getElementById("totalms").value;
 
     }  else{
 
-    document.getElementById("updatedflowtimertotal").value = intropurems.toFixed(0) + "/" + abraframems.toFixed(0) + "/" +introtimerfinal;
+    document.getElementById("updatedflowtimertotal").value = intropurems.toFixed(0) + "/" + abraframems.toFixed(0) + "/" +introtimer;
  }   
 
  }   
