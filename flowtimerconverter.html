@@ -180,7 +180,7 @@ includeHTML();
 
   <br><br>
 
-Intro in MS
+Intro Timer in MS
 
         <br><input type="number" id="introtimer" value="35000">
 
@@ -205,7 +205,7 @@ Intro in MS
 
         <br>
 
-Target Advances: <br><input type="number" id="targetframe">
+Encounter Advances: <br><input type="number" id="targetframe">
 
         <br>
 
@@ -230,18 +230,18 @@ Flat MS: <br><input type="number" id="totalms">
 Flowtimer MS Total:<br> <input id="flowtimerout">
 
 <br><br>
-            <b>Seed Hit</b>
+            <b>Intro Press Hit</b>
 <br>
 
 <input type="number" id="seedhit"><br><br>
 
   
-            <b>Advance hit</b>
+            <b>Encounter Press Hit</b>
 <br>
 
-<input type="number" id="framehit"><br><br>
+<input type="number" id="framehit" ><br><br>
 
-        <button type="button" onclick="blisytvupdate()">
+        <button type="button" id="update" disabled="disabled" onclick="blisytvupdate()">
 
             Calculate
 
@@ -265,13 +265,13 @@ Flowtimer MS Total:<br> <input id="flowtimerout">
 
         <br>
 
-        MS Adjusted By: <br>  
+      <!--  MS Adjusted By: <br>  
 
         <input type="number" id="adjustotalby">
 
 <br>
 
-<br>
+<br> -->
 
 New Flowtimer Total: <br><input id="updatedflowtimertotal">        
 
@@ -313,7 +313,6 @@ New Flowtimer Total: <br><input id="updatedflowtimertotal">
 
 	var abracheckbox;
     
-
     function settings()
 
     
@@ -477,7 +476,7 @@ document.getElementById('introtimer').value = "2500";
     //this excecutes when you hit the calculate button 
 
      introtimerms = Number(introtimer) + Number(seedlagms); //this adds seedlag to introtimer to compensate 
-
+ document.getElementById("update").disabled = false;
     var targetframewithoutintro;
     var targetframems;
     targetframewithoutintro = (1 / Number(fps) * 1000) * (Number(targetframe) + Number(delaybox));
@@ -548,7 +547,7 @@ document.getElementById('introtimer').value = "2500";
  var adjustbyms;
  adjustbyms = 1 / Number(fps) * 1000 * Number(adjustby);
  document.getElementById('adjusttvby').value = adjustby;  
- document.getElementById('adjustotalby').value = adjustbyms.toFixed(0); 
+ //document.getElementById('adjustotalby').value = adjustbyms.toFixed(0); 
  var seedhit;
  seedhit = document.getElementById('seedhit').value;
  var seedhitlag;
@@ -582,7 +581,7 @@ purems = document.getElementById("totalms").value;
  document.getElementById('totalms').value = adjustedpurems;    
  var intropurems;
  intropurems = Number(adjustedpurems) + Number(introtimerms);
- 
+
 
 
 
