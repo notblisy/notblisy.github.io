@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>
+Blisy RNG Guides
+</title>
+<link rel="stylesheet" type="text/css" href="../style.css" title="default" />
+<link rel="alternate stylesheet" type="text/css" href="../nightmode.css" title="alternate"/>
+<link rel="alternate stylesheet" type="text/css" href="../dnd.css" title="dnd"/>
+<script type="text/javascript" src="../style.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>RSE Wild RNG Guide</h1></div>
+<div class="butts">
+
+<ul>
+  <p>Guide Navigation</p>
+  
+<li><a href="#prereq">Prerequisits</a></li>
+  
+<li><a href="#target">Finding a Target</a></li>
+  
+<li><a href="#attempt">Attempt a Target</a></li>
+
+<li><a href="#calibrate">Calibration</a></li>
+
+<li><a href="#end">Notes and Conclusions</a></li>
+</ul>
+
+
+</div>
+<div class="textformat">
+<h3>Text Guide</h3>
+<p>This guide will cover RNG manipulation of wild Pok&eacute;mon using Sweet Scent in Pok&eacute;mon Ruby, Sapphire, and Emerald versions. This is a fairly easy way to obtain shiny Pok&eacute;mon or Pok&eacute;mon with relatively good IVs. For this guide, I will assume that you are not using glitches.</p>
+<p>While you can use the Painting and Battle Video methods alongside this to get better nature and IV spreads, those are covered in separate guides. You can also encounter Latios or Latias while using Sweet Scent, however, they can not be manipulated using this method, and are also covered in a separate guide.</p>
+<h3><a name="prereq">Prerequisites</a></h3>
+<p><em>Guides:</em></p>
+<p>Pok&eacute;Finder Guide: This will help you set up and use Pok&eacute;Finder.</p>
+<p>EonTimer Guide: This will help you determine what EonTimer settings you should use.</p>
+<p>TID/SID Guide (Optional): You will need to know your TID and SID in order to RNG shiny Pok&eacute;mon, and the TID/SID guide will help you determine your SID if you are either starting a new game or already have a shiny Pok&eacute;mon.</p>
+<p><em>Tools:</em></p>
+<ul>
+<li><a href="https://github.com/Admiral-Fish/PokeFinder/releases" target="_blank" rel="noopener">Pok&eacute;Finder by Admiral Fish</a> </li>
+<li><a href="https://github.com/dylmeadows/EonTimer/releases" target="_blank" rel="noopener">EonTimer by DasAmpharos</a> </li>
+</ul>
+<em>In-game:&nbsp;</em></p>
+<ul>
+<li>A Pok&eacute;mon with the move Sweet Scent:
+<ul><li>Surskit is the first Pok&eacute;mon that can learn Sweet Scent you can obtain in Ruby and Sapphire, but is unobtainable in Emerald</li>
+<li>Oddish is the easiest to obtain in general, as it will know Sweet Scent when you catch it on Route 110 or Route 117</li>
+</ul>
+</li>
+
+<li>Rare Candies: These will help you determine the IVs of the Pokemon you catch if you miss your target.</li>
+<li>(For Ruby and Sapphire) Your internal battery needs to be dry. This method will not work if the internal battery is still working. This does not affect Emerald, which is consistent regardless of the functionality of the internal battery.</li>
+</ul>
+<h3><a name="target">Finding a target</a></h3>
+<p>The first thing you should do is determine what you want to catch. For the sake of this guide I will be attempting to catch a Shiny Swablu in Emerald. Open up Pok&eacute;Finder, and under the &ldquo;Gen 3&rdquo; tab, select &ldquo;Wild&rdquo;. It should pull up a window that looks like this:</p>
+<img src="rsewildimages/gen3wild.png" alt "PokeFinder Gen 3 Wild Window" style="width: 100%;">
+
+<p>Don&rsquo;t worry if your Pok&eacute;Finder looks slightly different from mine, I&rsquo;m using the redesign branch and I will point out any differences during the guide.</p>
+<p>Now, let&rsquo;s look at the RNG Info. Start by selecting the profile for your game. Next, under &ldquo;Method&rdquo; you will want to select Method Wild 1 if you are playing on Ruby or Sapphire, Method Wild 2 if you are playing in Emerald, or Method Wild 4 if you are playing on Pok&eacute;mon Box RS (These are Method H1, H2 and H4 in the main branch)&nbsp; While it is possible to hit any of the Methods on any game, these are the most common. For &ldquo;Seed&rdquo; put in 5A0 for Ruby and Sapphire, or leave it blank (0) for Emerald. Leave the &ldquo;Lead&rdquo;, &ldquo;Initial Advances&rdquo;, &ldquo;Max Advances&rdquo;, and &ldquo;Delay&rdquo; fields alone for now. Since I&rsquo;m playing on Emerald, I will select Method H2 and seed 0.</p>
+<img src="rsewildimages/generator.png" alt "PokeFinder Gen 3 Wild Generator" style="width: 100%;">
+
+<p>Now in the &ldquo;Settings&rdquo; box, under &ldquo;Encounter&rdquo; select either &ldquo;Grass&rdquo; or &ldquo;Surfing&rdquo;, then select your location and target Pok&eacute;mon. In my case I will be looking in the Grass on Route 114 for Swablu.</p>
+<img src="rsewildimages/filters1.png" alt "PokeFinder Gen 3 Wild Filters 1" style="width: 100%;">
+<p>Now you can start selecting filters. For IVs, the left column is the minimum IV you want in that stat, and the right column is the maximum. For Abilities, if you are using the main branch of Pok&eacute;Finder and you need to know which is Ability 0 or Ability 1, go to Serebii or Bulbapedia, and whichever Ability is listed first should be Ability 0, and the second Ability is Ability 1. If you want to select a Gender in the main branch, make sure to also specify the Gender Ratio, which should also be listed on Bulbapedia. Under &ldquo;Shiny&rdquo;, the only difference between &ldquo;Star&rdquo; and &ldquo;Square&rdquo; is how the sparkles will appear if the Pok&eacute;mon is transferred to Sword and Shield or beyond, so if you want a shiny Pok&eacute;mon and you don&rsquo;t care about transferring, just select &ldquo;Star/Square&rdquo;. The Encounter Slot section was filled out when you selected your target Pok&eacute;mon, so leave it alone. Hidden Power and Nature should be self-explanatory.</p>
+<p>For now, all I care about is any Shiny, so I&rsquo;m selecting Star/Square.</p>
+
+<img src="rsewildimages/shinybox.png" alt "PokeFinder Gen 3 Wild Filters 2" style="width: 100%;">
+
+<p>Keep in mind that if you select too many filters you won&rsquo;t get any results. For IVs, you should only search for 1-2 perfect stats (30-31) and a few good natures, or above average (16-31) in several stats and one preferred nature. Also note that Hidden Power is dependent on IVs. Also, the rarer your target Pok&eacute;mon, the fewer results will be available. Finally, searching for a shiny Pok&eacute;mon with good stats is nearly impossible with this method.</p>
+<p>Now hit the Generate button. You should see several results show up like this:</p>
+
+<img src="rsewildimages/results.png" alt "PokeFinder Gen 3 Wild Filters Results" style="width: 100%;">
+
+<p>If you do not see any results, you can try removing some of the filters you had set up, or maybe increasing the Max Advances. Now you can choose any of these results as your target. It doesn&rsquo;t necessarily have to be the first one listed, and if you see one that you like better, feel free to go for it. Keep in mind, though, that the higher the advances, the longer you will have to wait for it. I&rsquo;m going to aim for Advance 14179.</p>
+<p>Now let&rsquo;s take a look at the &ldquo;Lead&rdquo; selection. If you didn&rsquo;t know, in Pok&eacute;mon Emerald, several abilities were given new out of battle effects when placed in the front of your party. Synchronize and Cute Charm got a 50% chance to make wild Pok&eacute;mon have the same Nature or the opposite Gender, respectively. They do this by jumping to the nearest matching Advance. This can be used to make your target appear more often, or have a spread appear for a different encounter slot. Since there are more Natures than Genders, I recommend using Synchronize over Cute Charm. I didn&rsquo;t end up using this, but if I did, because my target was a Bashful nature, I would select Synchronize: Bashful as my lead in Pok&eacute;Finder, and press Generate again.</p>
+
+<img src="rsewildimages/leadadded.png" alt "PokeFinder Gen 3 Wild Filters Lead" style="width: 100%;">
+
+<p>You can now choose to target any of these new results, but I recommend choosing one in the middle of a cluster, if possible.</p>
+<p>Now, open up EonTimer, and go to the Gen 3 tab. It should look like this:</p>
+
+<img src="rsewildimages/eontimer.png" alt "Eontimer G3 Window" style="width: 100%;">
+
+<p>Click the settings cog in the lower left corner, and in the "Timer" Tab, make sure to select the console you're playing on. If it's a GBA, GBA-Sp, GameboyPlayer, or Gameboy Micro, pick GBA. If it's a DS, DSLite, or 3DS VC, select NDS-GBA:</p>
+
+<img src="rsewildimages/eontimerpref.png" alt "Eontimer G3 Window" style="width: 100%;">
+
+
+<p>Put the advances for your target in the &ldquo;Target Frame&rdquo; box. Leave everything else alone for the time being.&nbsp;</p>
+
+<img src="rsewildimages/eontimer2.png" alt "Eontimer G3 Window 2" style="width: 100%;">
+
+<p>Now all you need to do is get set up in-game. Start by putting your Sweet Scent Pok&eacute;mon into your party, then head to your target&rsquo;s location. If you&rsquo;re in a cave, move away from the entrance tile, otherwise Sweet Scent will fail and you will be very sad. If you&rsquo;re playing in Emerald and are using a Synchronize or Cute Charm Pok&eacute;mon, keep it out of the lead slot for your first few attempts to make calibration easier. Also ensure that your lead Pok&eacute;mon does not have Magnet Pull, Static, Hustle, or Pressure. Now save your game.</p>
+<h3><a name="attempt">Attempt a target</a></h3>
+<p>In EonTimer, hit the Start button. This will start the timer counting down. By default, as it approaches zero, it will beep six times, with the sixth beep being zero. You want to Soft Reset your game (A+B+START+SELECT) when the first timer hits zero. The best way to do this is by holding three of the buttons (all of them except A, for example) and then tapping the last button when the timer reaches zero. Now in-game, load your save file as soon as possible, select your Sweet Scent Pok&eacute;mon, and hover over the Sweet Scent option. When the second timer hits zero, press A to select Sweet Scent.</p>
+
+<img src="rsewildimages/sweetscentpic.jpeg" alt "Sweet Scent Menu" style="width: 100%;">
+
+
+<h3><a name="calibrate">Calibration</a></h3>
+<p>I went through the previous steps and here was my result:</p>
+
+<img src="rsewildimages/missedlombre.jpeg" alt "Calib1" style="width: 100%;">
+
+
+<p>Well, that definitely isn&rsquo;t a Shiny Swablu. Don&rsquo;t worry though, you&rsquo;re not expected to get your target on the first try. What you need to do now is determine what advance you <em>did </em>hit. Start by catching the Pok&eacute;mon you encountered, in my case this Lombre:</p>
+
+<img src="rsewildimages/lombreivs.jpeg" alt "LombreIV" style="width: 100%;">
+
+
+<p>Now, in Pok&eacute;Finder, under the IV filters, click the IV calculator button, and it will open up another new window like this:</p>
+
+<img src="rsewildimages/pokefinderivcalc.png" alt "PokeFinder IV Calc" style="width: 100%;">
+
+
+<p>Select the game you&rsquo;re playing, the Pok&eacute;mon you caught, and it&rsquo;s nature, then put in its stats at the bottom. Characteristic and Hidden Power can be left alone. Now press &ldquo;Find IVs&rdquo;. It should calculate and display the Pok&eacute;mon&rsquo;s IV ranges in the bottom right like so:</p>
+
+<img src="rsewildimages/ivcalc2.png" alt "PokeFinder IV Calc 2" style="width: 100%;">
+
+
+<p>If it displays any stats as &ldquo;Invalid&rdquo;, double check the nature and species you put in, then the stats, and try again.</p>
+<p>Now go back to the Gen 3 Wild window. The IV ranges that you calculated should already be in the filters. Select the Pok&eacute;mon you caught and its Nature. Make sure you remove any other filters you were using, such as the Shiny filter. Now press Generate.</p>
+
+<img src="rsewildimages/resultswindow.png" alt "PokeFinder Results" style="width: 100%;">
+
+
+<p>You may get more than one result when you do this. If you do, first look at the IVs. If they&rsquo;re different, give your Pok&eacute;mon a Rare Candy, then press the &ldquo;Add Row&rdquo; button in the IV Calculator, and input the new stats in the new row. Press Find IVs again, then go back to Gen 3 Wild and hit Generate again. Do this until you either have one result or you&rsquo;ve run out of Rare Candies (don&rsquo;t worry, you&rsquo;re going to reset without saving, so you won&rsquo;t lose them). If the IVs for different advances are the same, try and differentiate them by level. If in either case you still have more than one valid result, try and make an educated guess and pick an advance.</p>
+<p>If you don&rsquo;t get any results, first double check your filters. If they all look good, then check the other Methods. The Methods that I told you to use are the ones these games most commonly use and what you should be targeting, but it isn&rsquo;t impossible that the game generates an encounter on one of the other Methods.</p>
+<p>In my case, I hit advance 14448, but the advance I wanted was 14179. These games advance the RNG every video frame, and these games run at 60 frames per second. Since I was 269 advances away from my target, that would mean I was over 4 seconds late! Did I do something wrong? Not quite! There is a delay between pressing A to use Sweet Scent and the encounter generating. I didn&rsquo;t include that in my original target for three reasons: there are multiple different values depending on your game version and location (which I don&rsquo;t have memorized), I was probably going to miss my target anyway, and EonTimer can take care of that for me anyway.</p>
+<p>What you need to do now is put the advance you hit into the &ldquo;Frame Hit&rdquo; box on EonTimer, then press the Update button. This should change what&rsquo;s in the Calibration box at the top, like so:</p>
+
+<img src="rsewildimages/eomtimerupdate.png" alt "Eontimerupdate" style="width: 100%;">
+
+
+<p>Now, all that&rsquo;s left is to start again from <em>Attempting to hit your target </em>and continue trying until you hit your target. Once you start consistently hitting around 2 advances from your target, your calibration is probably good and you can stop updating EonTimer. And here's the shiny!</p>
+
+<img src="rsewildimages/shinyget.jpeg" alt "PokeFinder IV Calc" style="width: 100%;">
+
+
+<h3><a name="end">Notes and Conclusion</a></h3>
+<p>Wild RNG is among the simplest manipulations you can do in RSE, and I recommend that you do it at least once before moving onto more difficult targets. Most of the techniques used here are used for a lot of the other manipulations in these games, and this is a great way to learn how to use them. If you have any questions, feel free to hop on the Discord and ask! Happy hunting!</p>
+
+<h3>Credits:</h3>
+<li>Writer: Rubik the Great</li>
+<li>Editor: HappyLappy, Shao, Blisy</li>
+
+<p>Thank you for reading, I hope you succeed in getting your Pokemon. If you have any questions feel free to ask me on Twitter @im_a_blisy or join my discord. <a href="https://www.google.com/url?q=https%3A%2F%2Fdiscord.gg%2FQchhXQv&amp;sa=D&amp;sntz=1&amp;usg=AFQjCNGa0ml1VToT2Fz03xxVN5PUNkTLWg" target="_blank" rel="noopener">https://discord.gg/QchhXQv</a> If you speak another language other than English fluently, and would like to translate this guide, please, contact me and I'd love to help :D</p>
+
+</div>
+</body>
+
+
+
+</html>
