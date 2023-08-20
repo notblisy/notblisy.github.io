@@ -1,0 +1,310 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>
+Blisy RNG Guides
+</title>
+<link rel="stylesheet" type="text/css" href="../style.css" title="default" />
+<link rel="alternate stylesheet" type="text/css" href="../nightmode.css" title="alternate"/>
+<link rel="alternate stylesheet" type="text/css" href="../dnd.css" title="dnd"/>
+<script type="text/javascript" src="../style.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>DPPt Egg RNG</h1></div>
+<div class="butts">
+
+<ul>
+  <p>Guide Navigation</p>
+  
+<li><a href="#prereq">Prerequisites </a></li>
+  
+<li><a href="#intro">Introduction & Preface</a></li>
+  
+<li><a href="#part1">Pokewalker Mini TSV Calculation</a></li>
+
+<li><a href="#part2">Chained Shiny PID and TSV Calculation</a></li>
+
+<li><a href="#part3">Headbutt Trees, Honey Trees, and Extras</a></li>
+
+<li><a href="#conclusion">Notes and Conclusions</a></li>
+</ul>
+
+
+</div>
+<div class="textformat">
+    <h2>Introduction</h2>
+    <p>In generation 4, not every PID and IV spread combination is obtainable in the wild. However, Pok&eacute;mon hatched from eggs do not have such a restriction. Although the PID is determined as soon as the egg is generated, the IVs are not fixed until the player picks up the egg. As a result, it is possible to RNG the PID and IVs independently and obtain any combination desired.</p>
+    <p>There are 3 main steps to RNG the perfect egg.</p>
+    <ol>
+        <li>Obtain suitable breeding partners</li>
+        <li>PID RNG (determines gender, nature, shininess, and ability)</li>
+        <li>IV RNG (determines IVs and Hidden Power)</li>
+    </ol>
+    <p>Although egg RNG in DPPt is very similar to HGSS, there are a few key differences. IV RNG is harder to do consistently in DPPt, but PID RNG is a bit easier in return.</p>
+    <p>If you only seek shinies and don't care about IVs, then you will only have to do PID RNG. Everything else will be optional.</p>
+    <h2>Prerequisites</h2>
+    <p>You will need to know how to hit initial seeds in Pok&eacute;mon DPPt. Additionally, you may also need to know how to RNG wild Pok&eacute;mon if you are catching parents from scratch.</p>
+    <p>Required reading</p>
+    <ul>
+        <li>Initial seeds in DPPt</li>
+        <li>How to use Pok&eacute;Finder</li>
+        <li>Wild RNG (if catching new breeding partners)</li>
+    </ul>
+    <p>In game requirements</p>
+    <ul>
+        <li>The coin flip app on the Pok&eacute;tch</li>
+        <li>At least one Chatot with a recorded chatter (the move is learned at level 21 and can be used a field move to record a custom cry)</li>
+        <li>Your SID (link on how to find it)</li>
+        <li>A few rare candies or some way to deduce IVs</li>
+        <li>A Pok&eacute;mon with the ability Flame Body or Magma Armor (not necessary but makes hatching eggs faster)</li>
+    </ul>
+    <p>Out of game requirements</p>
+    <ul>
+        <li>Pok&eacute;Finder by Admiral Fish</li>
+        <li>EonTimer by DasAmpharos</li>
+    </ul>
+    <p>If you are aiming for a shiny, make sure you have a profile of your game in Pok&eacute;Finder with your TID and SID.</p>
+    <h2>Part 1: Finding Suitable Parents</h2>
+    <p>In this example I will be going for a 5 IV shiny Sneasel. In Pok&eacute;Finder, go to Gen 4 &gt; Egg. Then go to the Searcher tab.</p>
+    <h3>RNG Info</h3>
+    <p>Make sure the method is set to IVs and that minimum IV advances are at least 20. Feel free to increase the minimum if you are less confident in your Chatot advances.</p>
+    <h3>Settings</h3>
+    <p>Make sure "Show Inheritance" is checked. This will show us which IVs are inherited from which parent. Also make sure that the parents have compatible genders. If you are using Pok&eacute;mon you already caught, you can deduce their IVs and put them in. If not, just assume they are the same as your target spread.</p>
+    <h3>Filters</h3>
+    <p>Enter your filters for IVs and Hidden Power only, everything else is determined by PID and will not matter.</p>
+    <p>After selecting your seed, save it for later, because we will need to use this window to search PIDs. Also make note of the required number of advances.</p>
+    <p>If you are catching new parents you have two options: you can either RNG both parents or just one of them. If you RNG both, you will know the exact IVs of both parents, but we can get away with only one RNG if we choose our seed carefully. Some seeds will result in offspring that only inherit IVs from a single parent, meaning we don't have to know the IVs of the other parent. Here is a table for illustration.</p>
+    <div>
+        <table>
+            <tbody>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>HP</td>
+                    <td>Atk</td>
+                    <td>Def</td>
+                    <td>SpA</td>
+                    <td>SpD</td>
+                    <td>Spe</td>
+                </tr>
+                <tr>
+                    <td>Target</td>
+                    <td>B (31)</td>
+                    <td>31</td>
+                    <td>31</td>
+                    <td>19</td>
+                    <td>B (31)</td>
+                    <td>B (31)</td>
+                </tr>
+                <tr>
+                    <td>Parent A ♀</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>Parent B ♂</td>
+                    <td>31</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>31</td>
+                    <td>31</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <p>The shaded cells indicate IVs that don't get inherited. As you can see, none of the IVs from Parent A get passed on so we don't care what they actually are.</p>
+    <p>The last thing to do is to find these parents! The only things you need to keep in mind is the mother's species must match your target and the father must share an egg group. I will be catching a Bidoof because they are easy to catch and are in the field egg group.</p>
+    <h2>Part 2: Breeding Phase (PID RNG)</h2>
+    <p>Here are the parents we have prepared for breeding.</p>
+    <div>
+        <table>
+            <tbody>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>Parent ASneasel (F)??/??/??/??/??</td>
+                    <td>Parent BBidoof (M)31/11/4/10/31/31</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <p>Drop off your Pok&eacute;mon in the daycare. Make sure you select Parent A first or else the inheritance will be backwards! Save and quit the game.</p>
+    <p>Go back to the Searcher tab in Pok&eacute;Finder.</p>
+    <h2>RNG Info</h2>
+    <p>Set the method to PID and the minimum PID advance is 10. If you somehow can't find an acceptable PID you can increase the maximum, but try not to set it too high. The RNG that determines egg PIDs is different from the main RNG used for wild and static Pok&eacute;mon, so the normal method of advancement does not work. Instead we will be flipping coins to advance the PID frame.</p>
+    <h2>Settings</h2>
+    <p>You can leave these settings as they were from last time.</p>
+    <h2>Filters</h2>
+    <p>Enter your filters for gender, ability, shininess, and nature. You can find gender ratios and ability slots on Serebii.</p>
+    <p>From here all you need to do is to get your PID seed. <strong>Make sure the old man does not have an egg already before continuing</strong>. When verifying your seed, keep note of how many coin flips it takes. After you confirm your seed, do the remaining number of flips. You need to do the same number of flips as the number of advances Pok&eacute;Finder gives you. In this example, to get to advance 21, I need 21 flips total.</p>
+    <p>After you have made enough advances, walk around until the old man has an egg. As mentioned before, the main RNG does not affect the PID RNG so there is no need to worry about the frame advancing without your input. If you plan to RNG IVs, save the game while standing in front of the man. If you are only RNGing the PID, you should not save, as you can reset if you get the wrong PID. Now we can pick up the egg and hatch it to verify we got the right PID.</p>
+    <p>If all you want is a shiny, congrats, you're done! Feel free to stop here. If you want to RNG the IVs, turn off the game without saving. Don't worry, the PID is preserved at this point and will always be the same when you pick up the egg.</p>
+    <p>If you didn't get the correct PID, you can deduce what went wrong using the Generator tab. Paste your seed and set the method to PID. Then you can either manually search for the gender, nature, and ability combination you got or filter it out in the filters section.</p>
+    <p>Let&rsquo;s say hypothetically I got a non shiny male bold Sneasel with the ability Keen Eye. Sneasel&rsquo;s page on Serebii lists its abilities as Inner Focus first then Keen Eye, which is slot 0 and 1 respectively. The gender ratio is 50% ♂ / 50% ♀. With this information I can deduce that I landed on advance 20.</p>
+    <h2>Part 3: Hatching Phase (IV RNG)</h2>
+    <p>Remember that IV seed you saved earlier? We will be using it now to RNG the IVs. Switch to the Generator tab in the Pok&eacute;Finder egg window and paste your seed. If it isn't already, set the method to IVs.</p>
+    <p>Make sure there are no filters. We need all advances listed so we can keep track of where we are after we land on our seed.</p>
+    <p>Alright, here comes the hard part. Once we are on seed, there is no easy way to verify it with coin flips. That is because there are wandering NPCs in the area that advance the frame. We can still verify our seed with Chatot pitches, but we won't know what seed we land on if we miss our seed. An alternative option is to use coin flips to confirm/identify the seed, but pausing immediately after starting each flip to minimize unwanted advances. The flipping animation will finish while the game is paused, but NPCs can&rsquo;t move.</p>
+    <p>As soon as you gain control of the game, open your menu and go to Pok&eacute;mon. Once you confirm you are on seed, start advancing with Chatot until you are one advance away from your target. Now, exit the menu and talk to the old man <strong>immediately</strong>. It is possible for advances to occur between unpausing and talking to the old man even if you are frame perfect, but don&rsquo;t worry, we will account for it later.</p>
+    <h2>Confirming Your Target</h2>
+    <p>After you pick up the egg, you can verify your seed with coin flips to be sure you hit it correctly. After confirming my seed, I hatched the egg, and used a few rare candies and recorded the stat changes as the Sneasel levels up.</p>
+    <p>After a few rare candies, we have some ranges for possible IVs. We can double check using the Generator tab in Pok&eacute;Finder, making sure the parent IVs are put in. Because we don't know the IVs of the mother, we will ignore any stats inherited from them. If you know the IVs of both parents, put them in instead.</p>
+    <p>Assuming you were on seed and you stopped at the right delay, you'll never be too far off your target. Manually check at least 5 advances ahead to see if they match what you see in game. If an advance has inherited unknown IVs, just ignore it and check the other stats with known values.</p>
+    <div>
+        <table>
+            <tbody>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>HP</td>
+                    <td>Atk</td>
+                    <td>Def</td>
+                    <td>SpA</td>
+                    <td>SpD</td>
+                    <td>Spe</td>
+                </tr>
+                <tr>
+                    <td>Parent B</td>
+                    <td>31</td>
+                    <td>11</td>
+                    <td>4</td>
+                    <td>10</td>
+                    <td>31</td>
+                    <td>31</td>
+                </tr>
+                <tr>
+                    <td>Measured</td>
+                    <td>31</td>
+                    <td>30-31</td>
+                    <td>30-31</td>
+                    <td>10-29</td>
+                    <td>30-31</td>
+                    <td>30-31</td>
+                </tr>
+                <tr>
+                    <td>Advance 19</td>
+                    <td>11</td>
+                    <td>B</td>
+                    <td>8</td>
+                    <td>B</td>
+                    <td>B</td>
+                    <td>10</td>
+                </tr>
+                <tr>
+                    <td>Target</td>
+                    <td>B</td>
+                    <td>31</td>
+                    <td>31</td>
+                    <td>19</td>
+                    <td>B</td>
+                    <td>B</td>
+                </tr>
+                <tr>
+                    <td>Advance 21</td>
+                    <td>5</td>
+                    <td>19</td>
+                    <td>B</td>
+                    <td>B</td>
+                    <td>A</td>
+                    <td>4</td>
+                </tr>
+                <tr>
+                    <td>Advance 22</td>
+                    <td>4</td>
+                    <td>B</td>
+                    <td>8</td>
+                    <td>26</td>
+                    <td>30</td>
+                    <td>B</td>
+                </tr>
+                <tr>
+                    <td>Advance 23</td>
+                    <td>2</td>
+                    <td>A</td>
+                    <td>30</td>
+                    <td>11</td>
+                    <td>A</td>
+                    <td>B</td>
+                </tr>
+                <tr>
+                    <td>Advance 24</td>
+                    <td>31</td>
+                    <td>A</td>
+                    <td>3</td>
+                    <td>14</td>
+                    <td>B</td>
+                    <td>A</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <table>
+            <tbody>
+                <tr>
+                    <td>Match</td>
+                    <td>Not a Match</td>
+                    <td>Unknown</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <p>You can rule out advances if any IVs don't match what is measured. If all known values match, then it is possible you landed there. If you have multiple candidates after doing this, then you may need to level up some more to narrow down the IV ranges. If you don&rsquo;t find any, keep looking forwards and backwards until you find a match.</p>
+    <p>If you went past your target advance, try compensating for the difference by stopping your Chatot calls early by however advances you were over.</p>
+    <h2>Notes and Conclusion</h2>
+    <p>This technique also works for RNGing square shinies, just filter for "square only" when searching PIDs. It doesn&rsquo;t actually change anything unless you transfer it to gen 8 where you get the alternate sparkle pattern. If you&rsquo;re one of those people that like to match shinies with their Pok&eacute; Balls, this method might not be for you. Ball inheritance doesn&rsquo;t exist in generation 4, which means all bred Pok&eacute;mon will be in a standard Pok&eacute; Ball. You&rsquo;d be better off going for wild RNG so you can catch your shinies in whatever Pok&eacute; Ball you want. Egg RNG is an alternative to wild RNG if you want perfect shiny Pok&eacute;mon and do not want to start a new save to RNG your TID/SID.</p>
+    <h2>Credits and Thanks</h2>
+    <p>lactose (that's me!) - Author</p>
+    <p>Blisy and happylappy - Editors</p>
+    <p>antoine. - Author of the HGSS Egg RNG guide</p>
+    <p>Admiral Fish - Creator of Pok&eacute;Finder</p>
+    <p>DasAmpharos - Creator of EonTimer</p>
+    <p>Thank you for reading, I hope you succeed in getting your SID. If you have any questions feel free to ask me on Twitter @im_a_blisy or join my discord. <a href="https://www.google.com/url?q=https%3A%2F%2Fdiscord.gg%2FQchhXQv&amp;sa=D&amp;sntz=1&amp;usg=AFQjCNGa0ml1VToT2Fz03xxVN5PUNkTLWg" target="_blank" rel="noopener">https://discord.gg/QchhXQv</a> If you speak another language other than English fluently, and would like to translate this guide, please, contact me and I'd love to help :D</p>
+
+</div>
+</body>
+
+
+
+</html>
