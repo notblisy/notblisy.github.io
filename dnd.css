@@ -13,6 +13,9 @@ text-align: center;
 }
 
 
+.inline-block-child {
+  display: inline-block;
+}
 
 
 .textformat{
