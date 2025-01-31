@@ -66,6 +66,88 @@ includeHTML();
         <br>
 
         <br>   
+		Offensive Spell: <br> <select name="attackspell" id="attackspell">
+    <option value="3.9">Scorch</option>
+
+    <option value="5.3">Scorcher</option>
+
+    <option value="7.4">Giga Blaze</option>
+
+    <option value="4.5">Zap</option>
+	
+    <option value="6.3">Zapper</option>
+
+    <option value="8.9">Lectro Beam</option>
+	
+    <option value="4.2">Chill</option>
+	
+    <option value="5.8">Chiller</option>
+	
+    <option value="8.2">Ice Barage</option>
+	
+    <option value="4.9">Gust</option>
+	
+    <option value="6.4">Guster</option>
+	
+    <option value="9.5">F5 Storm</option>
+	
+    <option value="4.8">Mirror Image</option>
+	
+    <option value="6.0">Teleport</option>
+	
+    <option value="10.0">Aurora</option>
+	
+    <option value="3.2">Curse</option>
+	
+    <option value="2.2">Sleepy</option>
+	
+    <option value="2.8">Blind</option>
+	
+    <option value="5.0">Banish</option>
+	
+    <option value="3.0">Pickpocket</option>
+	
+    <option value="7.2">Rust</option>
+	</select>
+	<br>
+			Defensive Spell: <br> <select name="defensespell" id="defensespell">
+    <option value="0.2">M Guard</option>
+
+    <option value="0.6">M Guard+</option>
+
+    <option value="0.9">M Guard DX</option>
+
+    <option value="0.2">Refresh</option>
+	
+    <option value="0.35">Refresh+</option>
+
+    <option value="0.5">Refresh DX</option>
+	
+    <option value="0.5">Super Cure</option>
+	
+    <option value="0.3">Seal Magic</option>
+	
+    <option value="0.5">Seal Magic+</option>
+	
+    <option value="0.6">Shock</option>
+	
+    <option value="0.5">Mirror</option>
+	
+    <option value="0.35">MG Charge</option>
+	
+    <option value="0.35">AT Charge</option>
+	
+    <option value="0.35">DF Charge</option>
+	
+    <option value="0.35">SP Charge</option>
+	
+    <option value="0.6">Charge All</option>
+	
+    <option value="0.7">Charm</option>
+	
+    <option value="0">None</option>
+	</select>
+	<br>
 Weapon proficiency: <br> <select name="proficiency" id="proficiency">
     <option value="1.3">Yes</option>
 
@@ -106,8 +188,89 @@ Speed
 
         <br>
 
-        <br>   
+        <br>    
+		Offensive Spell: <br> <select name="enemyattackspell" id="enemyattackspell">
+    <option value="3.9">Scorch</option>
 
+    <option value="5.3">Scorcher</option>
+
+    <option value="7.4">Giga Blaze</option>
+
+    <option value="4.5">Zap</option>
+	
+    <option value="6.3">Zapper</option>
+
+    <option value="8.9">Lectro Beam</option>
+	
+    <option value="4.2">Chill</option>
+	
+    <option value="5.8">Chiller</option>
+	
+    <option value="8.2">Ice Barage</option>
+	
+    <option value="4.9">Gust</option>
+	
+    <option value="6.4">Guster</option>
+	
+    <option value="9.5">F5 Storm</option>
+	
+    <option value="4.8">Mirror Image</option>
+	
+    <option value="6.0">Teleport</option>
+	
+    <option value="10.0">Aurora</option>
+	
+    <option value="3.2">Curse</option>
+	
+    <option value="2.2">Sleepy</option>
+	
+    <option value="2.8">Blind</option>
+	
+    <option value="5.0">Banish</option>
+	
+    <option value="3.0">Pickpocket</option>
+	
+    <option value="7.2">Rust</option>
+	</select>
+	<br>
+			Defensive Spell: <br> <select name="enemydefensespell" id="enemydefensespell">
+    <option value="0.2">M Guard</option>
+
+    <option value="0.6">M Guard+</option>
+
+    <option value="0.9">M Guard DX</option>
+
+    <option value="0.2">Refresh</option>
+	
+    <option value="0.35">Refresh+</option>
+
+    <option value="0.5">Refresh DX</option>
+	
+    <option value="0.5">Super Cure</option>
+	
+    <option value="0.3">Seal Magic</option>
+	
+    <option value="0.5">Seal Magic+</option>
+	
+    <option value="0.6">Shock</option>
+	
+    <option value="0.5">Mirror</option>
+	
+    <option value="0.35">MG Charge</option>
+	
+    <option value="0.35">AT Charge</option>
+	
+    <option value="0.35">DF Charge</option>
+	
+    <option value="0.35">SP Charge</option>
+	
+    <option value="0.6">Charge All</option>
+	
+    <option value="0.7">Charm</option>
+	
+    <option value="0">None</option>
+	</select>
+	<br>
 Attack
 
         <br><input type="number" id="opattack" value="0">
@@ -151,6 +314,15 @@ Speed
 				
 	<br>	
 		<br>	
+		   		 	<div class="child inline-block-child">
+Hit Chance (Attack / Strike Only):
+<br>
+<input id="hitchance">
+
+</div>
+				
+	<br>	
+		
 		<div class="child inline-block-child">
 If Attack:
 	<br>	
@@ -190,8 +362,29 @@ Magic Defense Damage:<br> <input id="magicdamagestrike">
 		 <br>
 		 <input id="noreactdamagestrike"><br><br>
 		 </div>
-     
-      
+		 	<div class="child inline-block-child">
+If Magic:
+	<br>	
+
+Defend Damage:<br><input id="defdamagemagic">
+
+<br>
+<br>
+Magic Defense Damage:<br> <input id="magicdamagemagic">
+
+
+
+        <br><br>
+            <b>Counter Damage:</b>
+<br>
+<input id="counterdamagemagic"><br><br>
+
+       
+		 <b>Can't React Damage:</b>
+		 <br>
+		 <input id="noreactdamagemagic"><br><br>
+		 </div>     
+
 <script>
 
     var playerattack;    
@@ -225,7 +418,25 @@ Magic Defense Damage:<br> <input id="magicdamagestrike">
 
 	var magicdefenddamagestrike;
 
-	var counterdamagestrike;		
+	var counterdamagestrike;	
+
+	var basedamagespell;	
+	
+	var defenddamagemagic;
+
+	var magicdefenddamagemagic;
+
+	var counterdamagemagic;
+
+	var offensivespell;
+	
+	var defensivespell;
+	
+	var enemyoffensivespell;
+
+	var enemydefensivespell;
+	
+	var hitchance;
 
     function settings()
     {  
@@ -241,7 +452,7 @@ Magic Defense Damage:<br> <input id="magicdamagestrike">
 	 
 	 proficiencyyesno = document.getElementById('proficiency');	
 
-	 proficiency = proficiencyyesno.options[proficiencyyesno.selectedIndex].value; 
+	 proficiency = proficiencyyesno.options[proficiencyyesno.selectedIndex].value;  
 	 
 	 enemyattack = document.getElementById('opattack').value;
 	 
@@ -249,10 +460,26 @@ Magic Defense Damage:<br> <input id="magicdamagestrike">
 
 	 enemymagic = document.getElementById('opmagic').value;
 
-	 enemyspeed = document.getElementById('opspeed').value;
+	 enemyspeed = document.getElementById('opspeed').value;
+	 
+	 attackspellgrab = document.getElementById('attackspell');
+
+	 offensivespell = attackspellgrab.options[attackspellgrab.selectedIndex].value; 	 
+	 
+	 defensespellgrab = document.getElementById('defensespell');
+
+	 defensivespell = defensespellgrab.options[defensespellgrab.selectedIndex].value;
+
+	 enemyattackspellgrab = document.getElementById('enemyattackspell');
+
+	 enemyoffensivespell = enemyattackspellgrab.options[enemyattackspellgrab.selectedIndex].value; 	 
+	 
+	 enemydefensespellgrab = document.getElementById('enemydefensespell');
+
+	 enemydefensivespell = enemydefensespellgrab.options[enemydefensespellgrab.selectedIndex].value; 		
     }
     
-        function calcplayer(){
+   function calcplayer(){
             settings();
     //this excecutes when you hit the calculate button 
 
@@ -263,10 +490,13 @@ Magic Defense Damage:<br> <input id="magicdamagestrike">
 	
 	defenselow = ((Number(defenddamage) * .95) * proficiency);
 	defensehigh = ((Number(defenddamage) * 1.05) * proficiency);
+	
     magiclow = ((Number(magicdefenddamage) * .95) * proficiency);
 	magichigh = ((Number(magicdefenddamage) * 1.05) * proficiency);
+	
     counterlow = ((Number(counterdamage) * .95) * proficiency);
 	counterhigh = ((Number(counterdamage) * 1.05) * proficiency);
+	
 	baselow = ((Number(basedamage) * .95) * proficiency); 
 	basehigh = ((Number(basedamage) * 1.05) * proficiency);
 	
@@ -295,7 +525,33 @@ Magic Defense Damage:<br> <input id="magicdamagestrike">
     document.getElementById("defdamagestrike").value = defenselowstrike.toFixed(0) + " or " + defensehighstrike.toFixed(0);
 	document.getElementById("magicdamagestrike").value = magiclowstrike.toFixed(0) + " or " + magichighstrike.toFixed(0);
 	document.getElementById("counterdamagestrike").value = counterlowstrike.toFixed(0) + " or " + counterhighstrike.toFixed(0);
-	document.getElementById("noreactdamagestrike").value = baselowstrike.toFixed(0) + " or " + basehighstrike.toFixed(0);
+	document.getElementById("noreactdamagestrike").value = baselowstrike.toFixed(0) + " or " + basehighstrike.toFixed(0);
+	
+	basedamagespell = (Number(playermagic) * 2.4 - Number(enemymagic)) * Number(offensivespell) * (1 - enemydefensivespell);
+	defenddamagemagic = (Number(basedamagespell) * 0.7);
+	magicdefenddamagemagic = (Number(basedamagespell) * 0.5);
+	counterdamagemagic = Number(basedamagespell) * 0.9;
+	
+	defenselowmagic = Number(defenddamagemagic) * .95;
+	defensehighmagic = Number(defenddamagemagic) * 1.05;
+	
+	magiclowmagic = Number(magicdefenddamagemagic) * .95;
+	magichighmagic = Number(magicdefenddamagemagic) * 1.05;
+	
+	counterlowmagic = Number(counterdamagemagic) * .95;
+	counterhighmagic = Number(counterdamagemagic) * 1.05;
+	
+	baselowmagic = Number(basedamagespell) * .95;
+	basehighmagic = Number(basedamagespell) * 1.05;
+	
+	document.getElementById("defdamagemagic").value = defenselowmagic.toFixed(0) + " or " + defensehighmagic.toFixed(0);
+	document.getElementById("magicdamagemagic").value = magiclowmagic.toFixed(0) + " or " + magichighmagic.toFixed(0);
+	document.getElementById("counterdamagemagic").value = counterlowmagic.toFixed(0) + " or " + counterhighmagic.toFixed(0);
+	document.getElementById("noreactdamagemagic").value = baselowmagic.toFixed(0) + " or " + basehighmagic.toFixed(0);
+	
+	hitchance = (Number(playerspeed) / (Number(playerspeed) + Number(enemyspeed))) * 100 + 25;
+	document.getElementById("hitchance").value = hitchance.toFixed(0) + "%";
+	
 }
 
         function calcenemy(){
@@ -345,6 +601,32 @@ Magic Defense Damage:<br> <input id="magicdamagestrike">
 	document.getElementById("magicdamagestrike").value = magiclowstrike.toFixed(0) + " or " + magichighstrike.toFixed(0);
 	document.getElementById("counterdamagestrike").value = counterlowstrike.toFixed(0) + " or " + counterhighstrike.toFixed(0);
 	document.getElementById("noreactdamagestrike").value = baselowstrike.toFixed(0) + " or " + basehighstrike.toFixed(0);
+	
+	
+	basedamagespell = (Number(enemymagic) * 2.4 - Number(playermagic)) * Number(enemyoffensivespell) * (1 - defensivespell);
+	defenddamagemagic = (Number(basedamagespell) * 0.7);
+	magicdefenddamagemagic = (Number(basedamagespell) * 0.5);
+	counterdamagemagic = Number(basedamagespell) * 0.9;
+	
+	defenselowmagic = Number(defenddamagemagic) * .95;
+	defensehighmagic = Number(defenddamagemagic) * 1.05;
+	
+	magiclowmagic = Number(magicdefenddamagemagic) * .95;
+	magichighmagic = Number(magicdefenddamagemagic) * 1.05;
+	
+	counterlowmagic = Number(counterdamagemagic) * .95;
+	counterhighmagic = Number(counterdamagemagic) * 1.05;
+	
+	baselowmagic = Number(basedamagespell) * .95;
+	basehighmagic = Number(basedamagespell) * 1.05;
+	
+	document.getElementById("defdamagemagic").value = defenselowmagic.toFixed(0) + " or " + defensehighmagic.toFixed(0);
+	document.getElementById("magicdamagemagic").value = magiclowmagic.toFixed(0) + " or " + magichighmagic.toFixed(0);
+	document.getElementById("counterdamagemagic").value = counterlowmagic.toFixed(0) + " or " + counterhighmagic.toFixed(0);
+	document.getElementById("noreactdamagemagic").value = baselowmagic.toFixed(0) + " or " + basehighmagic.toFixed(0);
+
+	hitchance = (Number(enemyspeed) / (Number(enemyspeed) + Number(playerspeed))) * 100 + 25;
+	document.getElementById("hitchance").value = hitchance.toFixed(0) + "%";
 
 }
  function blisytvupdate(){
