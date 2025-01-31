@@ -504,17 +504,17 @@ function makeNegativeNumberZero(num) {
 	magicdefenddamage = (Number(basedamage) * .7);
 	counterdamage = (Number(basedamage) * .9);
 	
-	defenselow = makeNegativeNumberZero(((Number(defenddamage) * .95) * proficiencyenemy));
-	defensehigh = makeNegativeNumberZero(((Number(defenddamage) * 1.05) * proficiencyenemy));
+	defenselow = makeNegativeNumberZero(((Number(defenddamage) * .95) * proficiency));
+	defensehigh = makeNegativeNumberZero(((Number(defenddamage) * 1.05) * proficiency));
 	
-    magiclow = makeNegativeNumberZero(((Number(magicdefenddamage) * .95) * proficiencyenemy));
-	magichigh = makeNegativeNumberZero(((Number(magicdefenddamage) * 1.05) * proficiencyenemy));
+    magiclow = makeNegativeNumberZero(((Number(magicdefenddamage) * .95) * proficiency));
+	magichigh = makeNegativeNumberZero(((Number(magicdefenddamage) * 1.05) * proficiency));
 	
-    counterlow = makeNegativeNumberZero(((Number(counterdamage) * .95) * proficiencyenemy));
-	counterhigh = makeNegativeNumberZero(((Number(counterdamage) * 1.05) * proficiencyenemy));
+    counterlow = makeNegativeNumberZero(((Number(counterdamage) * .95) * proficiency));
+	counterhigh = makeNegativeNumberZero(((Number(counterdamage) * 1.05) * proficiency));
 	
-	baselow = makeNegativeNumberZero(((Number(basedamage) * .95) * proficiencyenemy)); 
-	basehigh = makeNegativeNumberZero(((Number(basedamage) * 1.05) * proficiencyenemy));
+	baselow = makeNegativeNumberZero(((Number(basedamage) * .95) * proficiency)); 
+	basehigh = makeNegativeNumberZero(((Number(basedamage) * 1.05) * proficiency));
 	
     document.getElementById("defdamage").value = defenselow.toFixed(0) + " or " + defensehigh.toFixed(0);
 	document.getElementById("magicdamage").value = magiclow.toFixed(0) + " or " + magichigh.toFixed(0);
@@ -526,17 +526,17 @@ function makeNegativeNumberZero(num) {
 	magicdefenddamagestrike = (Number(basedamagestrike) * .68);
 	counterdamagestrike = ((Number(enemyattack) + Number(enemymagic) + Number(enemyspeed)) * 4 + (Number(playerattack) - Number(playerdefense)) * 2);
 	
-	defenselowstrike = makeNegativeNumberZero(Number(defenddamagestrike) * .95 * proficiencyenemy);
-	defensehighstrike = makeNegativeNumberZero(Number(defenddamagestrike) * 1.05 * proficiencyenemy);
+	defenselowstrike = makeNegativeNumberZero(Number(defenddamagestrike) * .95 * proficiency);
+	defensehighstrike = makeNegativeNumberZero(Number(defenddamagestrike) * 1.05 * proficiency);
 	
-	magiclowstrike = makeNegativeNumberZero(Number(magicdefenddamagestrike) * .95 * proficiencyenemy);
-	magichighstrike = makeNegativeNumberZero(Number(magicdefenddamagestrike) * 1.05 * proficiencyenemy);
+	magiclowstrike = makeNegativeNumberZero(Number(magicdefenddamagestrike) * .95 * proficiency);
+	magichighstrike = makeNegativeNumberZero(Number(magicdefenddamagestrike) * 1.05 * proficiency);
 	
-	counterlowstrike = makeNegativeNumberZero(Number(counterdamagestrike) * .95 * proficiencyenemy);
-	counterhighstrike = makeNegativeNumberZero(Number(counterdamagestrike) * 1.05 * proficiencyenemy);
+	counterlowstrike = makeNegativeNumberZero(Number(counterdamagestrike) * .95 * proficiency);
+	counterhighstrike = makeNegativeNumberZero(Number(counterdamagestrike) * 1.05 * proficiency);
 	
-	baselowstrike = makeNegativeNumberZero(Number(basedamagestrike) * .95 * proficiencyenemy);
-	basehighstrike = makeNegativeNumberZero(Number(basedamagestrike) * 1.05 * proficiencyenemy);
+	baselowstrike = makeNegativeNumberZero(Number(basedamagestrike) * .95 * proficiency);
+	basehighstrike = makeNegativeNumberZero(Number(basedamagestrike) * 1.05 * proficiency);
   
     document.getElementById("defdamagestrike").value = defenselowstrike.toFixed(0) + " or " + defensehighstrike.toFixed(0);
 	document.getElementById("magicdamagestrike").value = magiclowstrike.toFixed(0) + " or " + magichighstrike.toFixed(0);
