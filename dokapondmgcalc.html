@@ -271,6 +271,14 @@ Speed
     <option value="0">None</option>
 	</select>
 	<br>
+Weapon proficiency: <br> <select name="enemyproficiency" id="enemyproficiency">
+    <option value="1.0">No</option>
+
+    <option value="1.3">Yes</option>
+
+
+	</select>
+	<br>
 Attack
 
         <br><input type="number" id="opattack" value="0">
@@ -403,6 +411,8 @@ Magic Defense Damage:<br> <input id="magicdamagemagic">
     var enemyspeed; 
 	
 	var proficiency;
+	
+	var proficiencyenemy;
 
 	var basedamage;	
 	
@@ -453,6 +463,10 @@ Magic Defense Damage:<br> <input id="magicdamagemagic">
 	 proficiencyyesno = document.getElementById('proficiency');	
 
 	 proficiency = proficiencyyesno.options[proficiencyyesno.selectedIndex].value;  
+	 
+	 enemyproficiencyyesno = document.getElementById('enemyproficiency');
+	 
+	 proficiencyenemy = enemyproficiencyyesno.options[enemyproficiencyyesno.selectedIndex].value;  
 	 
 	 enemyattack = document.getElementById('opattack').value;
 	 
@@ -550,8 +564,23 @@ Magic Defense Damage:<br> <input id="magicdamagemagic">
 	document.getElementById("noreactdamagemagic").value = baselowmagic.toFixed(0) + " or " + basehighmagic.toFixed(0);
 	
 	hitchance = (Number(playerspeed) / (Number(playerspeed) + Number(enemyspeed))) * 100 + 25;
+	
+if (Number(hitchance) < 50){
+	
+	document.getElementById("hitchance").value = 50 + "%";
+	
+	}
+	
+	else if(Number(hitchance) > 99){
+	
+	document.getElementById("hitchance").value = 99 + "%";
+	
+	}
+	
+		else {
+	
 	document.getElementById("hitchance").value = hitchance.toFixed(0) + "%";
-	
+	}
 }
 
         function calcenemy(){
@@ -565,14 +594,14 @@ Magic Defense Damage:<br> <input id="magicdamagemagic">
 	magicdefenddamage = (Number(basedamage) * .7);
 	counterdamage = (Number(basedamage) * .9);
 	
-	defenselow = ((Number(defenddamage) * .95));
-	defensehigh = ((Number(defenddamage) * 1.05));
-    magiclow = ((Number(magicdefenddamage) * .95));
-	magichigh = ((Number(magicdefenddamage) * 1.05));
-    counterlow = ((Number(counterdamage) * .95));
-	counterhigh = ((Number(counterdamage) * 1.05));
-	baselow = ((Number(basedamage) * .95)); 
-	basehigh = ((Number(basedamage) * 1.05));
+	defenselow = ((Number(defenddamage) * .95) * proficiencyenemy);
+	defensehigh = ((Number(defenddamage) * 1.05) * proficiencyenemy);
+    magiclow = ((Number(magicdefenddamage) * .95) * proficiencyenemy);
+	magichigh = ((Number(magicdefenddamage) * 1.05) * proficiencyenemy);
+    counterlow = ((Number(counterdamage) * .95) * proficiencyenemy);
+	counterhigh = ((Number(counterdamage) * 1.05) * proficiencyenemy);
+	baselow = ((Number(basedamage) * .95) * proficiencyenemy); 
+	basehigh = ((Number(basedamage) * 1.05) * proficiencyenemy);
 	
     document.getElementById("defdamage").value = defenselow.toFixed(0) + " or " + defensehigh.toFixed(0);
 	document.getElementById("magicdamage").value = magiclow.toFixed(0) + " or " + magichigh.toFixed(0);
@@ -585,17 +614,17 @@ Magic Defense Damage:<br> <input id="magicdamagemagic">
 	magicdefenddamagestrike = (Number(basedamagestrike) * .68);
 	counterdamagestrike = ((Number(playerattack) + Number(playermagic) + Number(playerspeed)) * 4 + (Number(enemyattack) - Number(enemydefense)) * 2);
 	
-	defenselowstrike = Number(defenddamagestrike) * .95;
-	defensehighstrike = Number(defenddamagestrike) * 1.05;
+	defenselowstrike = Number(defenddamagestrike) * .95 * proficiencyenemy;
+	defensehighstrike = Number(defenddamagestrike) * 1.05 * proficiencyenemy;
 	
-	magiclowstrike = Number(magicdefenddamagestrike) * .95;
-	magichighstrike = Number(magicdefenddamagestrike) * 1.05;
+	magiclowstrike = Number(magicdefenddamagestrike) * .95 * proficiencyenemy;
+	magichighstrike = Number(magicdefenddamagestrike) * 1.05 * proficiencyenemy;
 	
-	counterlowstrike = Number(counterdamagestrike) * .95;
-	counterhighstrike = Number(counterdamagestrike) * 1.05;
+	counterlowstrike = Number(counterdamagestrike) * .95 * proficiencyenemy;
+	counterhighstrike = Number(counterdamagestrike) * 1.05 * proficiencyenemy;
 	
-	baselowstrike = Number(basedamagestrike) * .95;
-	basehighstrike = Number(basedamagestrike) * 1.05;
+	baselowstrike = Number(basedamagestrike) * .95 * proficiencyenemy;
+	basehighstrike = Number(basedamagestrike) * 1.05 * proficiencyenemy;
   
     document.getElementById("defdamagestrike").value = defenselowstrike.toFixed(0) + " or " + defensehighstrike.toFixed(0);
 	document.getElementById("magicdamagestrike").value = magiclowstrike.toFixed(0) + " or " + magichighstrike.toFixed(0);
@@ -626,7 +655,23 @@ Magic Defense Damage:<br> <input id="magicdamagemagic">
 	document.getElementById("noreactdamagemagic").value = baselowmagic.toFixed(0) + " or " + basehighmagic.toFixed(0);
 
 	hitchance = (Number(enemyspeed) / (Number(enemyspeed) + Number(playerspeed))) * 100 + 25;
+	
+if (Number(hitchance) < 50){
+	
+	document.getElementById("hitchance").value = 50 + "%";
+	
+	}
+	
+	else if(Number(hitchance) > 99){
+	
+	document.getElementById("hitchance").value = 99 + "%";
+	
+	}
+	
+		else {
+	
 	document.getElementById("hitchance").value = hitchance.toFixed(0) + "%";
+	}
 
 }
  function blisytvupdate(){
