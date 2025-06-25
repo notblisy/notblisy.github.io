@@ -1,0 +1,481 @@
+{
+	"AUTOGEN_COMMAND_LINE_LENGTH_MAX" : 32000,
+	"BUILD_DIR" : "P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Model/PokeFinderModel_autogen",
+	"CMAKE_BINARY_DIR" : "P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug",
+	"CMAKE_CURRENT_BINARY_DIR" : "P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Model",
+	"CMAKE_CURRENT_SOURCE_DIR" : "P:/blisynet/PokeFinder/Source/Model",
+	"CMAKE_EXECUTABLE" : "Z:/QT6/Tools/CMake_64/bin/cmake.exe",
+	"CMAKE_LIST_FILES" : 
+	[
+		"P:/blisynet/PokeFinder/Source/Model/CMakeLists.txt",
+		"P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/.qtc/package-manager/auto-setup.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6Core/Qt6CoreConfigVersion.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6Core/Qt6CoreConfigVersionImpl.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6Core/Qt6CoreConfig.cmake",
+		"Z:/QT6/Tools/CMake_64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6Core/Qt6CoreDependencies.cmake",
+		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6CoreTools/Qt6CoreToolsConfigVersion.cmake",
+		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6CoreTools/Qt6CoreToolsConfigVersionImpl.cmake",
+		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6CoreTools/Qt6CoreToolsConfig.cmake",
+		"Z:/QT6/Tools/CMake_64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake",
+		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6CoreTools/Qt6CoreToolsDependencies.cmake",
+		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6CoreTools/Qt6CoreToolsTargets.cmake",
+		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6CoreTools/Qt6CoreToolsAdditionalTargetInfo.cmake",
+		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6CoreTools/Qt6CoreToolsVersionlessTargets.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6Core/Qt6CoreTargets.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6Core/Qt6CoreAdditionalTargetInfo.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6Core/Qt6CoreMacros.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6Core/Qt6CoreConfigExtras.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6Core/Qt6WasmMacros.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6Core/Qt6CoreVersionlessAliasTargets.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/Qt6ConfigVersion.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/Qt6ConfigVersionImpl.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/Qt6Config.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/Qt6ConfigExtras.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicCMakeVersionHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicCMakeHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtInstallPaths.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/Qt6Targets.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/Qt6VersionlessAliasTargets.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtFeature.cmake",
+		"Z:/QT6/Tools/CMake_64/share/cmake-3.30/Modules/CheckCXXCompilerFlag.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtFeatureCommon.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicAndroidHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicAppleHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicCMakeHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicCMakeVersionHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicDependencyHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicExternalProjectHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicFinalizerHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicFindPackageHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicGitHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicPluginHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicPluginHelpers_v2.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicSbomAttributionHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicSbomCpeHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicSbomDepHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicSbomFileHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicSbomGenerationHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicSbomHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicSbomLicenseHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicSbomOpsHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicSbomPurlHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicSbomPythonHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicSbomQtEntityHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicSbomSystemDepHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicTargetHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicTestHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicToolHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicWalkLibsHelpers.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/QtPublicWindowsHelpers.cmake",
+		"Z:/QT6/Tools/CMake_64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake",
+		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/Qt6Dependencies.cmake",
+		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6HostInfo/Qt6HostInfoConfigVersion.cmake",
+		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6HostInfo/Qt6HostInfoConfig.cmake"
+	],
+	"CMAKE_SOURCE_DIR" : "P:/blisynet/PokeFinder",
+	"CROSS_CONFIG" : false,
+	"DEP_FILE" : "P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Model/PokeFinderModel_autogen/deps",
+	"DEP_FILE_RULE_NAME" : "PokeFinderModel_autogen/timestamp",
+	"HEADERS" : 
+	[
+		[
+			"P:/blisynet/PokeFinder/Source/Core/External/bzip2/bzlib.h",
+			"Mu",
+			"5OEDIASMNN/moc_bzlib.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Core/External/bzip2/bzlib_private.h",
+			"Mu",
+			"5OEDIASMNN/moc_bzlib_private.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen3/EggModel3.hpp",
+			"Mu",
+			"PX2TDGPGIW/moc_EggModel3.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen3/GameCubeModel.hpp",
+			"Mu",
+			"PX2TDGPGIW/moc_GameCubeModel.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen3/IDModel3.hpp",
+			"Mu",
+			"PX2TDGPGIW/moc_IDModel3.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen3/PIDToIVModel.hpp",
+			"Mu",
+			"PX2TDGPGIW/moc_PIDToIVModel.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen3/PokeSpotModel.hpp",
+			"Mu",
+			"PX2TDGPGIW/moc_PokeSpotModel.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen3/ProfileModel3.hpp",
+			"Mu",
+			"PX2TDGPGIW/moc_ProfileModel3.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen3/SeedToTimeModel3.hpp",
+			"Mu",
+			"PX2TDGPGIW/moc_SeedToTimeModel3.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen3/StaticModel3.hpp",
+			"Mu",
+			"PX2TDGPGIW/moc_StaticModel3.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen3/WildModel3.hpp",
+			"Mu",
+			"PX2TDGPGIW/moc_WildModel3.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen4/EggModel4.hpp",
+			"Mu",
+			"XOY2WPVXGD/moc_EggModel4.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen4/EventModel4.hpp",
+			"Mu",
+			"XOY2WPVXGD/moc_EventModel4.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen4/IDModel4.hpp",
+			"Mu",
+			"XOY2WPVXGD/moc_IDModel4.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen4/ProfileModel4.hpp",
+			"Mu",
+			"XOY2WPVXGD/moc_ProfileModel4.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen4/SeedToTimeModel4.hpp",
+			"Mu",
+			"XOY2WPVXGD/moc_SeedToTimeModel4.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen4/StaticModel4.hpp",
+			"Mu",
+			"XOY2WPVXGD/moc_StaticModel4.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen4/WildModel4.hpp",
+			"Mu",
+			"XOY2WPVXGD/moc_WildModel4.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen5/DreamRadarModel.hpp",
+			"Mu",
+			"QFHE62HPLD/moc_DreamRadarModel.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen5/EggModel5.hpp",
+			"Mu",
+			"QFHE62HPLD/moc_EggModel5.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen5/EventModel5.hpp",
+			"Mu",
+			"QFHE62HPLD/moc_EventModel5.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen5/HiddenGrottoModel.hpp",
+			"Mu",
+			"QFHE62HPLD/moc_HiddenGrottoModel.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen5/IDModel5.hpp",
+			"Mu",
+			"QFHE62HPLD/moc_IDModel5.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen5/ProfileModel5.hpp",
+			"Mu",
+			"QFHE62HPLD/moc_ProfileModel5.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen5/ProfileSearcherModel5.hpp",
+			"Mu",
+			"QFHE62HPLD/moc_ProfileSearcherModel5.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen5/StaticModel5.hpp",
+			"Mu",
+			"QFHE62HPLD/moc_StaticModel5.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen5/WildModel5.hpp",
+			"Mu",
+			"QFHE62HPLD/moc_WildModel5.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen8/EggModel8.hpp",
+			"Mu",
+			"J5FEHUXVVP/moc_EggModel8.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen8/IDModel8.hpp",
+			"Mu",
+			"J5FEHUXVVP/moc_IDModel8.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen8/ProfileModel8.hpp",
+			"Mu",
+			"J5FEHUXVVP/moc_ProfileModel8.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen8/RaidModel.hpp",
+			"Mu",
+			"J5FEHUXVVP/moc_RaidModel.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen8/StaticModel8.hpp",
+			"Mu",
+			"J5FEHUXVVP/moc_StaticModel8.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen8/UndergroundModel.hpp",
+			"Mu",
+			"J5FEHUXVVP/moc_UndergroundModel.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen8/WildModel8.hpp",
+			"Mu",
+			"J5FEHUXVVP/moc_WildModel8.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/TableModel.hpp",
+			"Mu",
+			"EWIEGA46WW/moc_TableModel.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Util/IVToPIDModel.hpp",
+			"Mu",
+			"ENRGVLQ2BA/moc_IVToPIDModel.cpp",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Util/ResearcherModel.hpp",
+			"Mu",
+			"ENRGVLQ2BA/moc_ResearcherModel.cpp",
+			null
+		]
+	],
+	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
+	"INCLUDE_DIR" : "P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Model/PokeFinderModel_autogen/include",
+	"MOC_COMPILATION_FILE" : "P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Model/PokeFinderModel_autogen/mocs_compilation.cpp",
+	"MOC_DEFINITIONS" : [ "BZ2_STATICLIB", "QT_CORE_LIB" ],
+	"MOC_DEPEND_FILTERS" : 
+	[
+		[
+			"Q_PLUGIN_METADATA",
+			"[\n][ \t]*Q_PLUGIN_METADATA[ \t]*\\([^\\)]*FILE[ \t]*\"([^\"]+)\""
+		]
+	],
+	"MOC_INCLUDES" : 
+	[
+		"P:/blisynet/PokeFinder/Source",
+		"P:/blisynet/PokeFinder/Source/Core/External/fph",
+		"P:/blisynet/PokeFinder/Source/Core/External/nlohmann",
+		"P:/blisynet/PokeFinder/Source/Core/External/bzip2",
+		"Z:/QT6/6.9.1/wasm_multithread/include/QtCore",
+		"Z:/QT6/6.9.1/wasm_multithread/include",
+		"Z:/QT6/6.9.1/wasm_multithread/mkspecs/wasm-emscripten",
+		"C:/Users/jakes/OneDrive/Desktop/WASM/emsdk/upstream/emscripten/cache/sysroot/include"
+	],
+	"MOC_MACRO_NAMES" : 
+	[
+		"Q_OBJECT",
+		"Q_GADGET",
+		"Q_NAMESPACE",
+		"Q_NAMESPACE_EXPORT",
+		"Q_GADGET_EXPORT",
+		"Q_ENUM_NS"
+	],
+	"MOC_OPTIONS" : [],
+	"MOC_PATH_PREFIX" : false,
+	"MOC_PREDEFS_CMD" : 
+	[
+		"C:/Users/jakes/OneDrive/Desktop/WASM/emsdk/upstream/emscripten/em++.bat",
+		"-std=gnu++23",
+		"-dM",
+		"-E",
+		"-c",
+		"Z:/QT6/Tools/CMake_64/share/cmake-3.30/Modules/CMakeCXXCompilerABI.cpp"
+	],
+	"MOC_PREDEFS_FILE" : "P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Model/PokeFinderModel_autogen/moc_predefs.h",
+	"MOC_RELAXED_MODE" : false,
+	"MOC_SKIP" : [],
+	"MULTI_CONFIG" : false,
+	"PARALLEL" : 8,
+	"PARSE_CACHE_FILE" : "P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Model/CMakeFiles/PokeFinderModel_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "Z:/QT6/6.9.1/mingw_64/bin/moc.exe",
+	"QT_UIC_EXECUTABLE" : "",
+	"QT_VERSION_MAJOR" : 6,
+	"QT_VERSION_MINOR" : 9,
+	"SETTINGS_FILE" : "P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Model/CMakeFiles/PokeFinderModel_autogen.dir/AutogenUsed.txt",
+	"SOURCES" : 
+	[
+		[ "P:/blisynet/PokeFinder/Source/Model/Gen3/EggModel3.cpp", "Mu", null ],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen3/GameCubeModel.cpp",
+			"Mu",
+			null
+		],
+		[ "P:/blisynet/PokeFinder/Source/Model/Gen3/IDModel3.cpp", "Mu", null ],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen3/PIDToIVModel.cpp",
+			"Mu",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen3/PokeSpotModel.cpp",
+			"Mu",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen3/ProfileModel3.cpp",
+			"Mu",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen3/SeedToTimeModel3.cpp",
+			"Mu",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen3/StaticModel3.cpp",
+			"Mu",
+			null
+		],
+		[ "P:/blisynet/PokeFinder/Source/Model/Gen3/WildModel3.cpp", "Mu", null ],
+		[ "P:/blisynet/PokeFinder/Source/Model/Gen4/EggModel4.cpp", "Mu", null ],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen4/EventModel4.cpp",
+			"Mu",
+			null
+		],
+		[ "P:/blisynet/PokeFinder/Source/Model/Gen4/IDModel4.cpp", "Mu", null ],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen4/ProfileModel4.cpp",
+			"Mu",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen4/SeedToTimeModel4.cpp",
+			"Mu",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen4/StaticModel4.cpp",
+			"Mu",
+			null
+		],
+		[ "P:/blisynet/PokeFinder/Source/Model/Gen4/WildModel4.cpp", "Mu", null ],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen5/DreamRadarModel.cpp",
+			"Mu",
+			null
+		],
+		[ "P:/blisynet/PokeFinder/Source/Model/Gen5/EggModel5.cpp", "Mu", null ],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen5/EventModel5.cpp",
+			"Mu",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen5/HiddenGrottoModel.cpp",
+			"Mu",
+			null
+		],
+		[ "P:/blisynet/PokeFinder/Source/Model/Gen5/IDModel5.cpp", "Mu", null ],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen5/ProfileModel5.cpp",
+			"Mu",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen5/ProfileSearcherModel5.cpp",
+			"Mu",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen5/StaticModel5.cpp",
+			"Mu",
+			null
+		],
+		[ "P:/blisynet/PokeFinder/Source/Model/Gen5/WildModel5.cpp", "Mu", null ],
+		[ "P:/blisynet/PokeFinder/Source/Model/Gen8/EggModel8.cpp", "Mu", null ],
+		[ "P:/blisynet/PokeFinder/Source/Model/Gen8/IDModel8.cpp", "Mu", null ],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen8/ProfileModel8.cpp",
+			"Mu",
+			null
+		],
+		[ "P:/blisynet/PokeFinder/Source/Model/Gen8/RaidModel.cpp", "Mu", null ],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen8/StaticModel8.cpp",
+			"Mu",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Gen8/UndergroundModel.cpp",
+			"Mu",
+			null
+		],
+		[ "P:/blisynet/PokeFinder/Source/Model/Gen8/WildModel8.cpp", "Mu", null ],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Util/IVToPIDModel.cpp",
+			"Mu",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinder/Source/Model/Util/ResearcherModel.cpp",
+			"Mu",
+			null
+		]
+	],
+	"USE_BETTER_GRAPH" : true,
+	"VERBOSITY" : 0
+}
