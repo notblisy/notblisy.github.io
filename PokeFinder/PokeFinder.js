@@ -590,7 +590,6 @@ function preRun() {
 function initRuntime() {
   runtimeInitialized = true;
   if (ENVIRONMENT_IS_PTHREAD) return;
-  SOCKFS.root = FS.mount(SOCKFS, {}, null);
   if (!Module["noFSInit"] && !FS.initialized) FS.init();
   FS.ignorePermissions = false;
   TTY.init();
@@ -1636,35 +1635,6 @@ function ___pthread_create_js(pthread_ptr, attr, startRoutine, arg) {
   return spawnThread(threadParams);
 }
 
-var initRandomFill = () => {
-  if (typeof crypto == "object" && typeof crypto["getRandomValues"] == "function") {
-    // for modern web browsers
-    // like with most Web APIs, we can't use Web Crypto API directly on shared memory,
-    // so we need to create an intermediate buffer and copy it to the destination
-    return view => (view.set(crypto.getRandomValues(new Uint8Array(view.byteLength))), 
-    // Return the original view to match modern native implementations.
-    view);
-  } else if (ENVIRONMENT_IS_NODE) {
-    // for nodejs with or without crypto support included
-    try {
-      var crypto_module = require("crypto");
-      var randomFillSync = crypto_module["randomFillSync"];
-      if (randomFillSync) {
-        // nodejs with LTS crypto support
-        return view => crypto_module["randomFillSync"](view);
-      }
-      // very old nodejs with the original crypto API
-      var randomBytes = crypto_module["randomBytes"];
-      return view => (view.set(randomBytes(view.byteLength)), // Return the original view to match modern native implementations.
-      view);
-    } catch (e) {}
-  }
-  // we couldn't find a proper implementation, as Math.random() is not suitable for /dev/random, see emscripten-core/emscripten/pull/7096
-  abort("initRandomDevice");
-};
-
-var randomFill = view => (randomFill = initRandomFill())(view);
-
 var PATH = {
   isAbs: path => path.charAt(0) === "/",
   splitPath: filename => {
@@ -1730,6 +1700,35 @@ var PATH = {
   join: (...paths) => PATH.normalize(paths.join("/")),
   join2: (l, r) => PATH.normalize(l + "/" + r)
 };
+
+var initRandomFill = () => {
+  if (typeof crypto == "object" && typeof crypto["getRandomValues"] == "function") {
+    // for modern web browsers
+    // like with most Web APIs, we can't use Web Crypto API directly on shared memory,
+    // so we need to create an intermediate buffer and copy it to the destination
+    return view => (view.set(crypto.getRandomValues(new Uint8Array(view.byteLength))), 
+    // Return the original view to match modern native implementations.
+    view);
+  } else if (ENVIRONMENT_IS_NODE) {
+    // for nodejs with or without crypto support included
+    try {
+      var crypto_module = require("crypto");
+      var randomFillSync = crypto_module["randomFillSync"];
+      if (randomFillSync) {
+        // nodejs with LTS crypto support
+        return view => crypto_module["randomFillSync"](view);
+      }
+      // very old nodejs with the original crypto API
+      var randomBytes = crypto_module["randomBytes"];
+      return view => (view.set(randomBytes(view.byteLength)), // Return the original view to match modern native implementations.
+      view);
+    } catch (e) {}
+  }
+  // we couldn't find a proper implementation, as Math.random() is not suitable for /dev/random, see emscripten-core/emscripten/pull/7096
+  abort("initRandomDevice");
+};
+
+var randomFill = view => (randomFill = initRandomFill())(view);
 
 var PATH_FS = {
   resolve: (...args) => {
@@ -4411,911 +4410,6 @@ var FS = {
   }
 };
 
-var SOCKFS = {
-  mount(mount) {
-    // If Module['websocket'] has already been defined (e.g. for configuring
-    // the subprotocol/url) use that, if not initialise it to a new object.
-    Module["websocket"] = (Module["websocket"] && ("object" === typeof Module["websocket"])) ? Module["websocket"] : {};
-    // Add the Event registration mechanism to the exported websocket configuration
-    // object so we can register network callbacks from native JavaScript too.
-    // For more documentation see system/include/emscripten/emscripten.h
-    Module["websocket"]._callbacks = {};
-    Module["websocket"]["on"] = /** @this{Object} */ function(event, callback) {
-      if ("function" === typeof callback) {
-        this._callbacks[event] = callback;
-      }
-      return this;
-    };
-    Module["websocket"].emit = /** @this{Object} */ function(event, param) {
-      if ("function" === typeof this._callbacks[event]) {
-        this._callbacks[event].call(this, param);
-      }
-    };
-    // If debug is enabled register simple default logging callbacks for each Event.
-    return FS.createNode(null, "/", 16384 | 511, /* 0777 */ 0);
-  },
-  createSocket(family, type, protocol) {
-    type &= ~526336;
-    // Some applications may pass it; it makes no sense for a single process.
-    var streaming = type == 1;
-    if (streaming && protocol && protocol != 6) {
-      throw new FS.ErrnoError(66);
-    }
-    // create our internal socket structure
-    var sock = {
-      family,
-      type,
-      protocol,
-      server: null,
-      error: null,
-      // Used in getsockopt for SOL_SOCKET/SO_ERROR test
-      peers: {},
-      pending: [],
-      recv_queue: [],
-      sock_ops: SOCKFS.websocket_sock_ops
-    };
-    // create the filesystem node to store the socket structure
-    var name = SOCKFS.nextname();
-    var node = FS.createNode(SOCKFS.root, name, 49152, 0);
-    node.sock = sock;
-    // and the wrapping stream that enables library functions such
-    // as read and write to indirectly interact with the socket
-    var stream = FS.createStream({
-      path: name,
-      node,
-      flags: 2,
-      seekable: false,
-      stream_ops: SOCKFS.stream_ops
-    });
-    // map the new stream to the socket structure (sockets have a 1:1
-    // relationship with a stream)
-    sock.stream = stream;
-    return sock;
-  },
-  getSocket(fd) {
-    var stream = FS.getStream(fd);
-    if (!stream || !FS.isSocket(stream.node.mode)) {
-      return null;
-    }
-    return stream.node.sock;
-  },
-  stream_ops: {
-    poll(stream) {
-      var sock = stream.node.sock;
-      return sock.sock_ops.poll(sock);
-    },
-    ioctl(stream, request, varargs) {
-      var sock = stream.node.sock;
-      return sock.sock_ops.ioctl(sock, request, varargs);
-    },
-    read(stream, buffer, offset, length, position) {
-      /* ignored */ var sock = stream.node.sock;
-      var msg = sock.sock_ops.recvmsg(sock, length);
-      if (!msg) {
-        // socket is closed
-        return 0;
-      }
-      buffer.set(msg.buffer, offset);
-      return msg.buffer.length;
-    },
-    write(stream, buffer, offset, length, position) {
-      /* ignored */ var sock = stream.node.sock;
-      return sock.sock_ops.sendmsg(sock, buffer, offset, length);
-    },
-    close(stream) {
-      var sock = stream.node.sock;
-      sock.sock_ops.close(sock);
-    }
-  },
-  nextname() {
-    if (!SOCKFS.nextname.current) {
-      SOCKFS.nextname.current = 0;
-    }
-    return "socket[" + (SOCKFS.nextname.current++) + "]";
-  },
-  websocket_sock_ops: {
-    createPeer(sock, addr, port) {
-      var ws;
-      if (typeof addr == "object") {
-        ws = addr;
-        addr = null;
-        port = null;
-      }
-      if (ws) {
-        // for sockets that've already connected (e.g. we're the server)
-        // we can inspect the _socket property for the address
-        if (ws._socket) {
-          addr = ws._socket.remoteAddress;
-          port = ws._socket.remotePort;
-        } else // if we're just now initializing a connection to the remote,
-        // inspect the url property
-        {
-          var result = /ws[s]?:\/\/([^:]+):(\d+)/.exec(ws.url);
-          if (!result) {
-            throw new Error("WebSocket URL must be in the format ws(s)://address:port");
-          }
-          addr = result[1];
-          port = parseInt(result[2], 10);
-        }
-      } else {
-        // create the actual websocket object and connect
-        try {
-          // runtimeConfig gets set to true if WebSocket runtime configuration is available.
-          var runtimeConfig = (Module["websocket"] && ("object" === typeof Module["websocket"]));
-          // The default value is 'ws://' the replace is needed because the compiler replaces '//' comments with '#'
-          // comments without checking context, so we'd end up with ws:#, the replace swaps the '#' for '//' again.
-          var url = "ws:#".replace("#", "//");
-          if (runtimeConfig) {
-            if ("string" === typeof Module["websocket"]["url"]) {
-              url = Module["websocket"]["url"];
-            }
-          }
-          if (url === "ws://" || url === "wss://") {
-            // Is the supplied URL config just a prefix, if so complete it.
-            var parts = addr.split("/");
-            url = url + parts[0] + ":" + port + "/" + parts.slice(1).join("/");
-          }
-          // Make the WebSocket subprotocol (Sec-WebSocket-Protocol) default to binary if no configuration is set.
-          var subProtocols = "binary";
-          // The default value is 'binary'
-          if (runtimeConfig) {
-            if ("string" === typeof Module["websocket"]["subprotocol"]) {
-              subProtocols = Module["websocket"]["subprotocol"];
-            }
-          }
-          // The default WebSocket options
-          var opts = undefined;
-          if (subProtocols !== "null") {
-            // The regex trims the string (removes spaces at the beginning and end, then splits the string by
-            // <any space>,<any space> into an Array. Whitespace removal is important for Websockify and ws.
-            subProtocols = subProtocols.replace(/^ +| +$/g, "").split(/ *, */);
-            opts = subProtocols;
-          }
-          // some webservers (azure) does not support subprotocol header
-          if (runtimeConfig && null === Module["websocket"]["subprotocol"]) {
-            subProtocols = "null";
-            opts = undefined;
-          }
-          // If node we use the ws library.
-          var WebSocketConstructor;
-          if (ENVIRONMENT_IS_NODE) {
-            WebSocketConstructor = /** @type{(typeof WebSocket)} */ (require("ws"));
-          } else {
-            WebSocketConstructor = WebSocket;
-          }
-          ws = new WebSocketConstructor(url, opts);
-          ws.binaryType = "arraybuffer";
-        } catch (e) {
-          throw new FS.ErrnoError(23);
-        }
-      }
-      var peer = {
-        addr,
-        port,
-        socket: ws,
-        msg_send_queue: []
-      };
-      SOCKFS.websocket_sock_ops.addPeer(sock, peer);
-      SOCKFS.websocket_sock_ops.handlePeerEvents(sock, peer);
-      // if this is a bound dgram socket, send the port number first to allow
-      // us to override the ephemeral port reported to us by remotePort on the
-      // remote end.
-      if (sock.type === 2 && typeof sock.sport != "undefined") {
-        peer.msg_send_queue.push(new Uint8Array([ 255, 255, 255, 255, "p".charCodeAt(0), "o".charCodeAt(0), "r".charCodeAt(0), "t".charCodeAt(0), ((sock.sport & 65280) >> 8), (sock.sport & 255) ]));
-      }
-      return peer;
-    },
-    getPeer(sock, addr, port) {
-      return sock.peers[addr + ":" + port];
-    },
-    addPeer(sock, peer) {
-      sock.peers[peer.addr + ":" + peer.port] = peer;
-    },
-    removePeer(sock, peer) {
-      delete sock.peers[peer.addr + ":" + peer.port];
-    },
-    handlePeerEvents(sock, peer) {
-      var first = true;
-      var handleOpen = function() {
-        Module["websocket"].emit("open", sock.stream.fd);
-        try {
-          var queued = peer.msg_send_queue.shift();
-          while (queued) {
-            peer.socket.send(queued);
-            queued = peer.msg_send_queue.shift();
-          }
-        } catch (e) {
-          // not much we can do here in the way of proper error handling as we've already
-          // lied and said this data was sent. shut it down.
-          peer.socket.close();
-        }
-      };
-      function handleMessage(data) {
-        if (typeof data == "string") {
-          var encoder = new TextEncoder;
-          // should be utf-8
-          data = encoder.encode(data);
-        } else // make a typed array from the string
-        {
-          assert(data.byteLength !== undefined);
-          // must receive an ArrayBuffer
-          if (data.byteLength == 0) {
-            // An empty ArrayBuffer will emit a pseudo disconnect event
-            // as recv/recvmsg will return zero which indicates that a socket
-            // has performed a shutdown although the connection has not been disconnected yet.
-            return;
-          }
-          data = new Uint8Array(data);
-        }
-        // if this is the port message, override the peer's port with it
-        var wasfirst = first;
-        first = false;
-        if (wasfirst && data.length === 10 && data[0] === 255 && data[1] === 255 && data[2] === 255 && data[3] === 255 && data[4] === "p".charCodeAt(0) && data[5] === "o".charCodeAt(0) && data[6] === "r".charCodeAt(0) && data[7] === "t".charCodeAt(0)) {
-          // update the peer's port and it's key in the peer map
-          var newport = ((data[8] << 8) | data[9]);
-          SOCKFS.websocket_sock_ops.removePeer(sock, peer);
-          peer.port = newport;
-          SOCKFS.websocket_sock_ops.addPeer(sock, peer);
-          return;
-        }
-        sock.recv_queue.push({
-          addr: peer.addr,
-          port: peer.port,
-          data
-        });
-        Module["websocket"].emit("message", sock.stream.fd);
-      }
-      if (ENVIRONMENT_IS_NODE) {
-        peer.socket.on("open", handleOpen);
-        peer.socket.on("message", function(data, isBinary) {
-          if (!isBinary) {
-            return;
-          }
-          handleMessage((new Uint8Array(data)).buffer);
-        });
-        // copy from node Buffer -> ArrayBuffer
-        peer.socket.on("close", function() {
-          Module["websocket"].emit("close", sock.stream.fd);
-        });
-        peer.socket.on("error", function(error) {
-          // Although the ws library may pass errors that may be more descriptive than
-          // ECONNREFUSED they are not necessarily the expected error code e.g.
-          // ENOTFOUND on getaddrinfo seems to be node.js specific, so using ECONNREFUSED
-          // is still probably the most useful thing to do.
-          sock.error = 14;
-          // Used in getsockopt for SOL_SOCKET/SO_ERROR test.
-          Module["websocket"].emit("error", [ sock.stream.fd, sock.error, "ECONNREFUSED: Connection refused" ]);
-        });
-      } else {
-        peer.socket.onopen = handleOpen;
-        peer.socket.onclose = function() {
-          Module["websocket"].emit("close", sock.stream.fd);
-        };
-        peer.socket.onmessage = function peer_socket_onmessage(event) {
-          handleMessage(event.data);
-        };
-        peer.socket.onerror = function(error) {
-          // The WebSocket spec only allows a 'simple event' to be thrown on error,
-          // so we only really know as much as ECONNREFUSED.
-          sock.error = 14;
-          // Used in getsockopt for SOL_SOCKET/SO_ERROR test.
-          Module["websocket"].emit("error", [ sock.stream.fd, sock.error, "ECONNREFUSED: Connection refused" ]);
-        };
-      }
-    },
-    poll(sock) {
-      if (sock.type === 1 && sock.server) {
-        // listen sockets should only say they're available for reading
-        // if there are pending clients.
-        return sock.pending.length ? (64 | 1) : 0;
-      }
-      var mask = 0;
-      var dest = sock.type === 1 ? // we only care about the socket state for connection-based sockets
-      SOCKFS.websocket_sock_ops.getPeer(sock, sock.daddr, sock.dport) : null;
-      if (sock.recv_queue.length || !dest || // connection-less sockets are always ready to read
-      (dest && dest.socket.readyState === dest.socket.CLOSING) || (dest && dest.socket.readyState === dest.socket.CLOSED)) {
-        // let recv return 0 once closed
-        mask |= (64 | 1);
-      }
-      if (!dest || // connection-less sockets are always ready to write
-      (dest && dest.socket.readyState === dest.socket.OPEN)) {
-        mask |= 4;
-      }
-      if ((dest && dest.socket.readyState === dest.socket.CLOSING) || (dest && dest.socket.readyState === dest.socket.CLOSED)) {
-        mask |= 16;
-      }
-      return mask;
-    },
-    ioctl(sock, request, arg) {
-      switch (request) {
-       case 21531:
-        var bytes = 0;
-        if (sock.recv_queue.length) {
-          bytes = sock.recv_queue[0].data.length;
-        }
-        GROWABLE_HEAP_I32()[((arg) >>> 2) >>> 0] = bytes;
-        return 0;
-
-       default:
-        return 28;
-      }
-    },
-    close(sock) {
-      // if we've spawned a listen server, close it
-      if (sock.server) {
-        try {
-          sock.server.close();
-        } catch (e) {}
-        sock.server = null;
-      }
-      // close any peer connections
-      var peers = Object.keys(sock.peers);
-      for (var i = 0; i < peers.length; i++) {
-        var peer = sock.peers[peers[i]];
-        try {
-          peer.socket.close();
-        } catch (e) {}
-        SOCKFS.websocket_sock_ops.removePeer(sock, peer);
-      }
-      return 0;
-    },
-    bind(sock, addr, port) {
-      if (typeof sock.saddr != "undefined" || typeof sock.sport != "undefined") {
-        throw new FS.ErrnoError(28);
-      }
-      // already bound
-      sock.saddr = addr;
-      sock.sport = port;
-      // in order to emulate dgram sockets, we need to launch a listen server when
-      // binding on a connection-less socket
-      // note: this is only required on the server side
-      if (sock.type === 2) {
-        // close the existing server if it exists
-        if (sock.server) {
-          sock.server.close();
-          sock.server = null;
-        }
-        // swallow error operation not supported error that occurs when binding in the
-        // browser where this isn't supported
-        try {
-          sock.sock_ops.listen(sock, 0);
-        } catch (e) {
-          if (!(e.name === "ErrnoError")) throw e;
-          if (e.errno !== 138) throw e;
-        }
-      }
-    },
-    connect(sock, addr, port) {
-      if (sock.server) {
-        throw new FS.ErrnoError(138);
-      }
-      // TODO autobind
-      // if (!sock.addr && sock.type == 2) {
-      // }
-      // early out if we're already connected / in the middle of connecting
-      if (typeof sock.daddr != "undefined" && typeof sock.dport != "undefined") {
-        var dest = SOCKFS.websocket_sock_ops.getPeer(sock, sock.daddr, sock.dport);
-        if (dest) {
-          if (dest.socket.readyState === dest.socket.CONNECTING) {
-            throw new FS.ErrnoError(7);
-          } else {
-            throw new FS.ErrnoError(30);
-          }
-        }
-      }
-      // add the socket to our peer list and set our
-      // destination address / port to match
-      var peer = SOCKFS.websocket_sock_ops.createPeer(sock, addr, port);
-      sock.daddr = peer.addr;
-      sock.dport = peer.port;
-    },
-    // because we cannot synchronously block to wait for the WebSocket
-    // connection to complete, we return here pretending that the connection
-    // was a success.
-    listen(sock, backlog) {
-      if (!ENVIRONMENT_IS_NODE) {
-        throw new FS.ErrnoError(138);
-      }
-      if (sock.server) {
-        throw new FS.ErrnoError(28);
-      }
-      // already listening
-      var WebSocketServer = require("ws").Server;
-      var host = sock.saddr;
-      sock.server = new WebSocketServer({
-        host,
-        port: sock.sport
-      });
-      // TODO support backlog
-      Module["websocket"].emit("listen", sock.stream.fd);
-      // Send Event with listen fd.
-      sock.server.on("connection", function(ws) {
-        if (sock.type === 1) {
-          var newsock = SOCKFS.createSocket(sock.family, sock.type, sock.protocol);
-          // create a peer on the new socket
-          var peer = SOCKFS.websocket_sock_ops.createPeer(newsock, ws);
-          newsock.daddr = peer.addr;
-          newsock.dport = peer.port;
-          // push to queue for accept to pick up
-          sock.pending.push(newsock);
-          Module["websocket"].emit("connection", newsock.stream.fd);
-        } else {
-          // create a peer on the listen socket so calling sendto
-          // with the listen socket and an address will resolve
-          // to the correct client
-          SOCKFS.websocket_sock_ops.createPeer(sock, ws);
-          Module["websocket"].emit("connection", sock.stream.fd);
-        }
-      });
-      sock.server.on("close", function() {
-        Module["websocket"].emit("close", sock.stream.fd);
-        sock.server = null;
-      });
-      sock.server.on("error", function(error) {
-        // Although the ws library may pass errors that may be more descriptive than
-        // ECONNREFUSED they are not necessarily the expected error code e.g.
-        // ENOTFOUND on getaddrinfo seems to be node.js specific, so using EHOSTUNREACH
-        // is still probably the most useful thing to do. This error shouldn't
-        // occur in a well written app as errors should get trapped in the compiled
-        // app's own getaddrinfo call.
-        sock.error = 23;
-        // Used in getsockopt for SOL_SOCKET/SO_ERROR test.
-        Module["websocket"].emit("error", [ sock.stream.fd, sock.error, "EHOSTUNREACH: Host is unreachable" ]);
-      });
-    },
-    // don't throw
-    accept(listensock) {
-      if (!listensock.server || !listensock.pending.length) {
-        throw new FS.ErrnoError(28);
-      }
-      var newsock = listensock.pending.shift();
-      newsock.stream.flags = listensock.stream.flags;
-      return newsock;
-    },
-    getname(sock, peer) {
-      var addr, port;
-      if (peer) {
-        if (sock.daddr === undefined || sock.dport === undefined) {
-          throw new FS.ErrnoError(53);
-        }
-        addr = sock.daddr;
-        port = sock.dport;
-      } else {
-        // TODO saddr and sport will be set for bind()'d UDP sockets, but what
-        // should we be returning for TCP sockets that've been connect()'d?
-        addr = sock.saddr || 0;
-        port = sock.sport || 0;
-      }
-      return {
-        addr,
-        port
-      };
-    },
-    sendmsg(sock, buffer, offset, length, addr, port) {
-      if (sock.type === 2) {
-        // connection-less sockets will honor the message address,
-        // and otherwise fall back to the bound destination address
-        if (addr === undefined || port === undefined) {
-          addr = sock.daddr;
-          port = sock.dport;
-        }
-        // if there was no address to fall back to, error out
-        if (addr === undefined || port === undefined) {
-          throw new FS.ErrnoError(17);
-        }
-      } else {
-        // connection-based sockets will only use the bound
-        addr = sock.daddr;
-        port = sock.dport;
-      }
-      // find the peer for the destination address
-      var dest = SOCKFS.websocket_sock_ops.getPeer(sock, addr, port);
-      // early out if not connected with a connection-based socket
-      if (sock.type === 1) {
-        if (!dest || dest.socket.readyState === dest.socket.CLOSING || dest.socket.readyState === dest.socket.CLOSED) {
-          throw new FS.ErrnoError(53);
-        }
-      }
-      // create a copy of the incoming data to send, as the WebSocket API
-      // doesn't work entirely with an ArrayBufferView, it'll just send
-      // the entire underlying buffer
-      if (ArrayBuffer.isView(buffer)) {
-        offset += buffer.byteOffset;
-        buffer = buffer.buffer;
-      }
-      var data;
-      // WebSockets .send() does not allow passing a SharedArrayBuffer, so clone the portion of the SharedArrayBuffer as a regular
-      // ArrayBuffer that we want to send.
-      if (buffer instanceof SharedArrayBuffer) {
-        data = new Uint8Array(new Uint8Array(buffer.slice(offset, offset + length))).buffer;
-      } else {
-        data = buffer.slice(offset, offset + length);
-      }
-      // if we don't have a cached connectionless UDP datagram connection, or
-      // the TCP socket is still connecting, queue the message to be sent upon
-      // connect, and lie, saying the data was sent now.
-      if (!dest || dest.socket.readyState !== dest.socket.OPEN) {
-        // if we're not connected, open a new connection
-        if (sock.type === 2) {
-          if (!dest || dest.socket.readyState === dest.socket.CLOSING || dest.socket.readyState === dest.socket.CLOSED) {
-            dest = SOCKFS.websocket_sock_ops.createPeer(sock, addr, port);
-          }
-        }
-        dest.msg_send_queue.push(data);
-        return length;
-      }
-      try {
-        // send the actual data
-        dest.socket.send(data);
-        return length;
-      } catch (e) {
-        throw new FS.ErrnoError(28);
-      }
-    },
-    recvmsg(sock, length) {
-      // http://pubs.opengroup.org/onlinepubs/7908799/xns/recvmsg.html
-      if (sock.type === 1 && sock.server) {
-        // tcp servers should not be recv()'ing on the listen socket
-        throw new FS.ErrnoError(53);
-      }
-      var queued = sock.recv_queue.shift();
-      if (!queued) {
-        if (sock.type === 1) {
-          var dest = SOCKFS.websocket_sock_ops.getPeer(sock, sock.daddr, sock.dport);
-          if (!dest) {
-            // if we have a destination address but are not connected, error out
-            throw new FS.ErrnoError(53);
-          }
-          if (dest.socket.readyState === dest.socket.CLOSING || dest.socket.readyState === dest.socket.CLOSED) {
-            // return null if the socket has closed
-            return null;
-          }
-          // else, our socket is in a valid state but truly has nothing available
-          throw new FS.ErrnoError(6);
-        }
-        throw new FS.ErrnoError(6);
-      }
-      // queued.data will be an ArrayBuffer if it's unadulterated, but if it's
-      // requeued TCP data it'll be an ArrayBufferView
-      var queuedLength = queued.data.byteLength || queued.data.length;
-      var queuedOffset = queued.data.byteOffset || 0;
-      var queuedBuffer = queued.data.buffer || queued.data;
-      var bytesRead = Math.min(length, queuedLength);
-      var res = {
-        buffer: new Uint8Array(queuedBuffer, queuedOffset, bytesRead),
-        addr: queued.addr,
-        port: queued.port
-      };
-      // push back any unread data for TCP connections
-      if (sock.type === 1 && bytesRead < queuedLength) {
-        var bytesRemaining = queuedLength - bytesRead;
-        queued.data = new Uint8Array(queuedBuffer, queuedOffset + bytesRead, bytesRemaining);
-        sock.recv_queue.unshift(queued);
-      }
-      return res;
-    }
-  }
-};
-
-var getSocketFromFD = fd => {
-  var socket = SOCKFS.getSocket(fd);
-  if (!socket) throw new FS.ErrnoError(8);
-  return socket;
-};
-
-var Sockets = {
-  BUFFER_SIZE: 10240,
-  MAX_BUFFER_SIZE: 10485760,
-  nextFd: 1,
-  fds: {},
-  nextport: 1,
-  maxport: 65535,
-  peer: null,
-  connections: {},
-  portmap: {},
-  localAddr: 4261412874,
-  addrPool: [ 33554442, 50331658, 67108874, 83886090, 100663306, 117440522, 134217738, 150994954, 167772170, 184549386, 201326602, 218103818, 234881034 ]
-};
-
-var inetPton4 = str => {
-  var b = str.split(".");
-  for (var i = 0; i < 4; i++) {
-    var tmp = Number(b[i]);
-    if (isNaN(tmp)) return null;
-    b[i] = tmp;
-  }
-  return (b[0] | (b[1] << 8) | (b[2] << 16) | (b[3] << 24)) >>> 0;
-};
-
-/** @suppress {checkTypes} */ var jstoi_q = str => parseInt(str);
-
-var inetPton6 = str => {
-  var words;
-  var w, offset, z, i;
-  /* http://home.deds.nl/~aeron/regex/ */ var valid6regx = /^((?=.*::)(?!.*::.+::)(::)?([\dA-F]{1,4}:(:|\b)|){5}|([\dA-F]{1,4}:){6})((([\dA-F]{1,4}((?!\3)::|:\b|$))|(?!\2\3)){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4})$/i;
-  var parts = [];
-  if (!valid6regx.test(str)) {
-    return null;
-  }
-  if (str === "::") {
-    return [ 0, 0, 0, 0, 0, 0, 0, 0 ];
-  }
-  // Z placeholder to keep track of zeros when splitting the string on ":"
-  if (str.startsWith("::")) {
-    str = str.replace("::", "Z:");
-  } else // leading zeros case
-  {
-    str = str.replace("::", ":Z:");
-  }
-  if (str.indexOf(".") > 0) {
-    // parse IPv4 embedded stress
-    str = str.replace(new RegExp("[.]", "g"), ":");
-    words = str.split(":");
-    words[words.length - 4] = jstoi_q(words[words.length - 4]) + jstoi_q(words[words.length - 3]) * 256;
-    words[words.length - 3] = jstoi_q(words[words.length - 2]) + jstoi_q(words[words.length - 1]) * 256;
-    words = words.slice(0, words.length - 2);
-  } else {
-    words = str.split(":");
-  }
-  offset = 0;
-  z = 0;
-  for (w = 0; w < words.length; w++) {
-    if (typeof words[w] == "string") {
-      if (words[w] === "Z") {
-        // compressed zeros - write appropriate number of zero words
-        for (z = 0; z < (8 - words.length + 1); z++) {
-          parts[w + z] = 0;
-        }
-        offset = z - 1;
-      } else {
-        // parse hex to field to 16-bit value and write it in network byte-order
-        parts[w + offset] = _htons(parseInt(words[w], 16));
-      }
-    } else {
-      // parsed IPv4 words
-      parts[w + offset] = words[w];
-    }
-  }
-  return [ (parts[1] << 16) | parts[0], (parts[3] << 16) | parts[2], (parts[5] << 16) | parts[4], (parts[7] << 16) | parts[6] ];
-};
-
-/** @param {number=} addrlen */ var writeSockaddr = (sa, family, addr, port, addrlen) => {
-  switch (family) {
-   case 2:
-    addr = inetPton4(addr);
-    zeroMemory(sa, 16);
-    if (addrlen) {
-      GROWABLE_HEAP_I32()[((addrlen) >>> 2) >>> 0] = 16;
-    }
-    GROWABLE_HEAP_I16()[((sa) >>> 1) >>> 0] = family;
-    GROWABLE_HEAP_I32()[(((sa) + (4)) >>> 2) >>> 0] = addr;
-    GROWABLE_HEAP_I16()[(((sa) + (2)) >>> 1) >>> 0] = _htons(port);
-    break;
-
-   case 10:
-    addr = inetPton6(addr);
-    zeroMemory(sa, 28);
-    if (addrlen) {
-      GROWABLE_HEAP_I32()[((addrlen) >>> 2) >>> 0] = 28;
-    }
-    GROWABLE_HEAP_I32()[((sa) >>> 2) >>> 0] = family;
-    GROWABLE_HEAP_I32()[(((sa) + (8)) >>> 2) >>> 0] = addr[0];
-    GROWABLE_HEAP_I32()[(((sa) + (12)) >>> 2) >>> 0] = addr[1];
-    GROWABLE_HEAP_I32()[(((sa) + (16)) >>> 2) >>> 0] = addr[2];
-    GROWABLE_HEAP_I32()[(((sa) + (20)) >>> 2) >>> 0] = addr[3];
-    GROWABLE_HEAP_I16()[(((sa) + (2)) >>> 1) >>> 0] = _htons(port);
-    break;
-
-   default:
-    return 5;
-  }
-  return 0;
-};
-
-var DNS = {
-  address_map: {
-    id: 1,
-    addrs: {},
-    names: {}
-  },
-  lookup_name(name) {
-    // If the name is already a valid ipv4 / ipv6 address, don't generate a fake one.
-    var res = inetPton4(name);
-    if (res !== null) {
-      return name;
-    }
-    res = inetPton6(name);
-    if (res !== null) {
-      return name;
-    }
-    // See if this name is already mapped.
-    var addr;
-    if (DNS.address_map.addrs[name]) {
-      addr = DNS.address_map.addrs[name];
-    } else {
-      var id = DNS.address_map.id++;
-      assert(id < 65535, "exceeded max address mappings of 65535");
-      addr = "172.29." + (id & 255) + "." + (id & 65280);
-      DNS.address_map.names[addr] = name;
-      DNS.address_map.addrs[name] = addr;
-    }
-    return addr;
-  },
-  lookup_addr(addr) {
-    if (DNS.address_map.names[addr]) {
-      return DNS.address_map.names[addr];
-    }
-    return null;
-  }
-};
-
-function ___syscall_accept4(fd, addr, addrlen, flags, d1, d2) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(3, 0, 1, fd, addr, addrlen, flags, d1, d2);
-  addr >>>= 0;
-  addrlen >>>= 0;
-  try {
-    var sock = getSocketFromFD(fd);
-    var newsock = sock.sock_ops.accept(sock);
-    if (addr) {
-      var errno = writeSockaddr(addr, newsock.family, DNS.lookup_name(newsock.daddr), newsock.dport, addrlen);
-    }
-    return newsock.stream.fd;
-  } catch (e) {
-    if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
-    return -e.errno;
-  }
-}
-
-var inetNtop4 = addr => (addr & 255) + "." + ((addr >> 8) & 255) + "." + ((addr >> 16) & 255) + "." + ((addr >> 24) & 255);
-
-var inetNtop6 = ints => {
-  //  ref:  http://www.ietf.org/rfc/rfc2373.txt - section 2.5.4
-  //  Format for IPv4 compatible and mapped  128-bit IPv6 Addresses
-  //  128-bits are split into eight 16-bit words
-  //  stored in network byte order (big-endian)
-  //  |                80 bits               | 16 |      32 bits        |
-  //  +-----------------------------------------------------------------+
-  //  |               10 bytes               |  2 |      4 bytes        |
-  //  +--------------------------------------+--------------------------+
-  //  +               5 words                |  1 |      2 words        |
-  //  +--------------------------------------+--------------------------+
-  //  |0000..............................0000|0000|    IPv4 ADDRESS     | (compatible)
-  //  +--------------------------------------+----+---------------------+
-  //  |0000..............................0000|FFFF|    IPv4 ADDRESS     | (mapped)
-  //  +--------------------------------------+----+---------------------+
-  var str = "";
-  var word = 0;
-  var longest = 0;
-  var lastzero = 0;
-  var zstart = 0;
-  var len = 0;
-  var i = 0;
-  var parts = [ ints[0] & 65535, (ints[0] >> 16), ints[1] & 65535, (ints[1] >> 16), ints[2] & 65535, (ints[2] >> 16), ints[3] & 65535, (ints[3] >> 16) ];
-  // Handle IPv4-compatible, IPv4-mapped, loopback and any/unspecified addresses
-  var hasipv4 = true;
-  var v4part = "";
-  // check if the 10 high-order bytes are all zeros (first 5 words)
-  for (i = 0; i < 5; i++) {
-    if (parts[i] !== 0) {
-      hasipv4 = false;
-      break;
-    }
-  }
-  if (hasipv4) {
-    // low-order 32-bits store an IPv4 address (bytes 13 to 16) (last 2 words)
-    v4part = inetNtop4(parts[6] | (parts[7] << 16));
-    // IPv4-mapped IPv6 address if 16-bit value (bytes 11 and 12) == 0xFFFF (6th word)
-    if (parts[5] === -1) {
-      str = "::ffff:";
-      str += v4part;
-      return str;
-    }
-    // IPv4-compatible IPv6 address if 16-bit value (bytes 11 and 12) == 0x0000 (6th word)
-    if (parts[5] === 0) {
-      str = "::";
-      //special case IPv6 addresses
-      if (v4part === "0.0.0.0") v4part = "";
-      // any/unspecified address
-      if (v4part === "0.0.0.1") v4part = "1";
-      // loopback address
-      str += v4part;
-      return str;
-    }
-  }
-  // Handle all other IPv6 addresses
-  // first run to find the longest contiguous zero words
-  for (word = 0; word < 8; word++) {
-    if (parts[word] === 0) {
-      if (word - lastzero > 1) {
-        len = 0;
-      }
-      lastzero = word;
-      len++;
-    }
-    if (len > longest) {
-      longest = len;
-      zstart = word - longest + 1;
-    }
-  }
-  for (word = 0; word < 8; word++) {
-    if (longest > 1) {
-      // compress contiguous zeros - to produce "::"
-      if (parts[word] === 0 && word >= zstart && word < (zstart + longest)) {
-        if (word === zstart) {
-          str += ":";
-          if (zstart === 0) str += ":";
-        }
-        //leading zeros case
-        continue;
-      }
-    }
-    // converts 16-bit words from big-endian to little-endian before converting to hex string
-    str += Number(_ntohs(parts[word] & 65535)).toString(16);
-    str += word < 7 ? ":" : "";
-  }
-  return str;
-};
-
-var readSockaddr = (sa, salen) => {
-  // family / port offsets are common to both sockaddr_in and sockaddr_in6
-  var family = GROWABLE_HEAP_I16()[((sa) >>> 1) >>> 0];
-  var port = _ntohs(GROWABLE_HEAP_U16()[(((sa) + (2)) >>> 1) >>> 0]);
-  var addr;
-  switch (family) {
-   case 2:
-    if (salen !== 16) {
-      return {
-        errno: 28
-      };
-    }
-    addr = GROWABLE_HEAP_I32()[(((sa) + (4)) >>> 2) >>> 0];
-    addr = inetNtop4(addr);
-    break;
-
-   case 10:
-    if (salen !== 28) {
-      return {
-        errno: 28
-      };
-    }
-    addr = [ GROWABLE_HEAP_I32()[(((sa) + (8)) >>> 2) >>> 0], GROWABLE_HEAP_I32()[(((sa) + (12)) >>> 2) >>> 0], GROWABLE_HEAP_I32()[(((sa) + (16)) >>> 2) >>> 0], GROWABLE_HEAP_I32()[(((sa) + (20)) >>> 2) >>> 0] ];
-    addr = inetNtop6(addr);
-    break;
-
-   default:
-    return {
-      errno: 5
-    };
-  }
-  return {
-    family,
-    addr,
-    port
-  };
-};
-
-var getSocketAddress = (addrp, addrlen) => {
-  var info = readSockaddr(addrp, addrlen);
-  if (info.errno) throw new FS.ErrnoError(info.errno);
-  info.addr = DNS.lookup_addr(info.addr) || info.addr;
-  return info;
-};
-
-function ___syscall_bind(fd, addr, addrlen, d1, d2, d3) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(4, 0, 1, fd, addr, addrlen, d1, d2, d3);
-  addr >>>= 0;
-  addrlen >>>= 0;
-  try {
-    var sock = getSocketFromFD(fd);
-    var info = getSocketAddress(addr, addrlen);
-    sock.sock_ops.bind(sock, info.addr, info.port);
-    return 0;
-  } catch (e) {
-    if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
-    return -e.errno;
-  }
-}
-
 var SYSCALLS = {
   DEFAULT_POLLMASK: 5,
   calculateAt(dirfd, path, allowEmpty) {
@@ -5384,7 +4478,7 @@ var SYSCALLS = {
 };
 
 function ___syscall_chmod(path, mode) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(5, 0, 1, path, mode);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(3, 0, 1, path, mode);
   path >>>= 0;
   try {
     path = SYSCALLS.getStr(path);
@@ -5396,23 +4490,8 @@ function ___syscall_chmod(path, mode) {
   }
 }
 
-function ___syscall_connect(fd, addr, addrlen, d1, d2, d3) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(6, 0, 1, fd, addr, addrlen, d1, d2, d3);
-  addr >>>= 0;
-  addrlen >>>= 0;
-  try {
-    var sock = getSocketFromFD(fd);
-    var info = getSocketAddress(addr, addrlen);
-    sock.sock_ops.connect(sock, info.addr, info.port);
-    return 0;
-  } catch (e) {
-    if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
-    return -e.errno;
-  }
-}
-
 function ___syscall_faccessat(dirfd, path, amode, flags) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(7, 0, 1, dirfd, path, amode, flags);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(4, 0, 1, dirfd, path, amode, flags);
   path >>>= 0;
   try {
     path = SYSCALLS.getStr(path);
@@ -5443,7 +4522,7 @@ function ___syscall_faccessat(dirfd, path, amode, flags) {
 }
 
 function ___syscall_fchmod(fd, mode) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(8, 0, 1, fd, mode);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(5, 0, 1, fd, mode);
   try {
     FS.fchmod(fd, mode);
     return 0;
@@ -5463,7 +4542,7 @@ function ___syscall_fchmod(fd, mode) {
 var syscallGetVarargP = syscallGetVarargI;
 
 function ___syscall_fcntl64(fd, cmd, varargs) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(9, 0, 1, fd, cmd, varargs);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(6, 0, 1, fd, cmd, varargs);
   varargs >>>= 0;
   SYSCALLS.varargs = varargs;
   try {
@@ -5520,7 +4599,7 @@ function ___syscall_fcntl64(fd, cmd, varargs) {
 }
 
 function ___syscall_fstat64(fd, buf) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(10, 0, 1, fd, buf);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(7, 0, 1, fd, buf);
   buf >>>= 0;
   try {
     var stream = SYSCALLS.getStreamFromFD(fd);
@@ -5532,7 +4611,7 @@ function ___syscall_fstat64(fd, buf) {
 }
 
 function ___syscall_ftruncate64(fd, length) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(11, 0, 1, fd, length);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(8, 0, 1, fd, length);
   length = bigintToI53Checked(length);
   try {
     if (isNaN(length)) return 61;
@@ -5547,7 +4626,7 @@ function ___syscall_ftruncate64(fd, length) {
 var stringToUTF8 = (str, outPtr, maxBytesToWrite) => stringToUTF8Array(str, GROWABLE_HEAP_U8(), outPtr, maxBytesToWrite);
 
 function ___syscall_getcwd(buf, size) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(12, 0, 1, buf, size);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(9, 0, 1, buf, size);
   buf >>>= 0;
   size >>>= 0;
   try {
@@ -5564,7 +4643,7 @@ function ___syscall_getcwd(buf, size) {
 }
 
 function ___syscall_getdents64(fd, dirp, count) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(13, 0, 1, fd, dirp, count);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(10, 0, 1, fd, dirp, count);
   dirp >>>= 0;
   count >>>= 0;
   try {
@@ -5614,66 +4693,8 @@ function ___syscall_getdents64(fd, dirp, count) {
   }
 }
 
-function ___syscall_getpeername(fd, addr, addrlen, d1, d2, d3) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(14, 0, 1, fd, addr, addrlen, d1, d2, d3);
-  addr >>>= 0;
-  addrlen >>>= 0;
-  try {
-    var sock = getSocketFromFD(fd);
-    if (!sock.daddr) {
-      return -53;
-    }
-    // The socket is not connected.
-    var errno = writeSockaddr(addr, sock.family, DNS.lookup_name(sock.daddr), sock.dport, addrlen);
-    return 0;
-  } catch (e) {
-    if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
-    return -e.errno;
-  }
-}
-
-function ___syscall_getsockname(fd, addr, addrlen, d1, d2, d3) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(15, 0, 1, fd, addr, addrlen, d1, d2, d3);
-  addr >>>= 0;
-  addrlen >>>= 0;
-  try {
-    var sock = getSocketFromFD(fd);
-    // TODO: sock.saddr should never be undefined, see TODO in websocket_sock_ops.getname
-    var errno = writeSockaddr(addr, sock.family, DNS.lookup_name(sock.saddr || "0.0.0.0"), sock.sport, addrlen);
-    return 0;
-  } catch (e) {
-    if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
-    return -e.errno;
-  }
-}
-
-function ___syscall_getsockopt(fd, level, optname, optval, optlen, d1) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(16, 0, 1, fd, level, optname, optval, optlen, d1);
-  optval >>>= 0;
-  optlen >>>= 0;
-  try {
-    var sock = getSocketFromFD(fd);
-    // Minimal getsockopt aimed at resolving https://github.com/emscripten-core/emscripten/issues/2211
-    // so only supports SOL_SOCKET with SO_ERROR.
-    if (level === 1) {
-      if (optname === 4) {
-        GROWABLE_HEAP_I32()[((optval) >>> 2) >>> 0] = sock.error;
-        GROWABLE_HEAP_I32()[((optlen) >>> 2) >>> 0] = 4;
-        sock.error = null;
-        // Clear the error (The SO_ERROR option obtains and then clears this field).
-        return 0;
-      }
-    }
-    return -50;
-  } // The option is unknown at the level indicated.
-  catch (e) {
-    if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
-    return -e.errno;
-  }
-}
-
 function ___syscall_ioctl(fd, op, varargs) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(17, 0, 1, fd, op, varargs);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(11, 0, 1, fd, op, varargs);
   varargs >>>= 0;
   SYSCALLS.varargs = varargs;
   try {
@@ -5799,20 +4820,8 @@ function ___syscall_ioctl(fd, op, varargs) {
   }
 }
 
-function ___syscall_listen(fd, backlog) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(18, 0, 1, fd, backlog);
-  try {
-    var sock = getSocketFromFD(fd);
-    sock.sock_ops.listen(sock, backlog);
-    return 0;
-  } catch (e) {
-    if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
-    return -e.errno;
-  }
-}
-
 function ___syscall_lstat64(path, buf) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(19, 0, 1, path, buf);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(12, 0, 1, path, buf);
   path >>>= 0;
   buf >>>= 0;
   try {
@@ -5825,7 +4834,7 @@ function ___syscall_lstat64(path, buf) {
 }
 
 function ___syscall_mkdirat(dirfd, path, mode) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(20, 0, 1, dirfd, path, mode);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(13, 0, 1, dirfd, path, mode);
   path >>>= 0;
   try {
     path = SYSCALLS.getStr(path);
@@ -5843,7 +4852,7 @@ function ___syscall_mkdirat(dirfd, path, mode) {
 }
 
 function ___syscall_newfstatat(dirfd, path, buf, flags) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(21, 0, 1, dirfd, path, buf, flags);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(14, 0, 1, dirfd, path, buf, flags);
   path >>>= 0;
   buf >>>= 0;
   try {
@@ -5860,7 +4869,7 @@ function ___syscall_newfstatat(dirfd, path, buf, flags) {
 }
 
 function ___syscall_openat(dirfd, path, flags, varargs) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(22, 0, 1, dirfd, path, flags, varargs);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(15, 0, 1, dirfd, path, flags, varargs);
   path >>>= 0;
   varargs >>>= 0;
   SYSCALLS.varargs = varargs;
@@ -5876,7 +4885,7 @@ function ___syscall_openat(dirfd, path, flags, varargs) {
 }
 
 function ___syscall_readlinkat(dirfd, path, buf, bufsize) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(23, 0, 1, dirfd, path, buf, bufsize);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(16, 0, 1, dirfd, path, buf, bufsize);
   path >>>= 0;
   buf >>>= 0;
   bufsize >>>= 0;
@@ -5898,88 +4907,8 @@ function ___syscall_readlinkat(dirfd, path, buf, bufsize) {
   }
 }
 
-function ___syscall_recvfrom(fd, buf, len, flags, addr, addrlen) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(24, 0, 1, fd, buf, len, flags, addr, addrlen);
-  buf >>>= 0;
-  len >>>= 0;
-  addr >>>= 0;
-  addrlen >>>= 0;
-  try {
-    var sock = getSocketFromFD(fd);
-    var msg = sock.sock_ops.recvmsg(sock, len);
-    if (!msg) return 0;
-    // socket is closed
-    if (addr) {
-      var errno = writeSockaddr(addr, sock.family, DNS.lookup_name(msg.addr), msg.port, addrlen);
-    }
-    GROWABLE_HEAP_U8().set(msg.buffer, buf >>> 0);
-    return msg.buffer.byteLength;
-  } catch (e) {
-    if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
-    return -e.errno;
-  }
-}
-
-function ___syscall_recvmsg(fd, message, flags, d1, d2, d3) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(25, 0, 1, fd, message, flags, d1, d2, d3);
-  message >>>= 0;
-  try {
-    var sock = getSocketFromFD(fd);
-    var iov = GROWABLE_HEAP_U32()[(((message) + (8)) >>> 2) >>> 0];
-    var num = GROWABLE_HEAP_I32()[(((message) + (12)) >>> 2) >>> 0];
-    // get the total amount of data we can read across all arrays
-    var total = 0;
-    for (var i = 0; i < num; i++) {
-      total += GROWABLE_HEAP_I32()[(((iov) + ((8 * i) + 4)) >>> 2) >>> 0];
-    }
-    // try to read total data
-    var msg = sock.sock_ops.recvmsg(sock, total);
-    if (!msg) return 0;
-    // socket is closed
-    // TODO honor flags:
-    // MSG_OOB
-    // Requests out-of-band data. The significance and semantics of out-of-band data are protocol-specific.
-    // MSG_PEEK
-    // Peeks at the incoming message.
-    // MSG_WAITALL
-    // Requests that the function block until the full amount of data requested can be returned. The function may return a smaller amount of data if a signal is caught, if the connection is terminated, if MSG_PEEK was specified, or if an error is pending for the socket.
-    // write the source address out
-    var name = GROWABLE_HEAP_U32()[((message) >>> 2) >>> 0];
-    if (name) {
-      var errno = writeSockaddr(name, sock.family, DNS.lookup_name(msg.addr), msg.port);
-    }
-    // write the buffer out to the scatter-gather arrays
-    var bytesRead = 0;
-    var bytesRemaining = msg.buffer.byteLength;
-    for (var i = 0; bytesRemaining > 0 && i < num; i++) {
-      var iovbase = GROWABLE_HEAP_U32()[(((iov) + ((8 * i) + 0)) >>> 2) >>> 0];
-      var iovlen = GROWABLE_HEAP_I32()[(((iov) + ((8 * i) + 4)) >>> 2) >>> 0];
-      if (!iovlen) {
-        continue;
-      }
-      var length = Math.min(iovlen, bytesRemaining);
-      var buf = msg.buffer.subarray(bytesRead, bytesRead + length);
-      GROWABLE_HEAP_U8().set(buf, iovbase + bytesRead >>> 0);
-      bytesRead += length;
-      bytesRemaining -= length;
-    }
-    // TODO set msghdr.msg_flags
-    // MSG_EOR
-    // End of record was received (if supported by the protocol).
-    // MSG_OOB
-    // Out-of-band data was received.
-    // MSG_TRUNC
-    // Normal data was truncated.
-    // MSG_CTRUNC
-    return bytesRead;
-  } catch (e) {
-    if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
-    return -e.errno;
-  }
-}
-
 function ___syscall_renameat(olddirfd, oldpath, newdirfd, newpath) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(26, 0, 1, olddirfd, oldpath, newdirfd, newpath);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(17, 0, 1, olddirfd, oldpath, newdirfd, newpath);
   oldpath >>>= 0;
   newpath >>>= 0;
   try {
@@ -5996,7 +4925,7 @@ function ___syscall_renameat(olddirfd, oldpath, newdirfd, newpath) {
 }
 
 function ___syscall_rmdir(path) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(27, 0, 1, path);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(18, 0, 1, path);
   path >>>= 0;
   try {
     path = SYSCALLS.getStr(path);
@@ -6008,59 +4937,8 @@ function ___syscall_rmdir(path) {
   }
 }
 
-function ___syscall_sendmsg(fd, message, flags, d1, d2, d3) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(28, 0, 1, fd, message, flags, d1, d2, d3);
-  message >>>= 0;
-  d1 >>>= 0;
-  d2 >>>= 0;
-  try {
-    var sock = getSocketFromFD(fd);
-    var iov = GROWABLE_HEAP_U32()[(((message) + (8)) >>> 2) >>> 0];
-    var num = GROWABLE_HEAP_I32()[(((message) + (12)) >>> 2) >>> 0];
-    // read the address and port to send to
-    var addr, port;
-    var name = GROWABLE_HEAP_U32()[((message) >>> 2) >>> 0];
-    var namelen = GROWABLE_HEAP_I32()[(((message) + (4)) >>> 2) >>> 0];
-    if (name) {
-      var info = getSocketAddress(name, namelen);
-      port = info.port;
-      addr = info.addr;
-    }
-    // concatenate scatter-gather arrays into one message buffer
-    var total = 0;
-    for (var i = 0; i < num; i++) {
-      total += GROWABLE_HEAP_I32()[(((iov) + ((8 * i) + 4)) >>> 2) >>> 0];
-    }
-    var view = new Uint8Array(total);
-    var offset = 0;
-    for (var i = 0; i < num; i++) {
-      var iovbase = GROWABLE_HEAP_U32()[(((iov) + ((8 * i) + 0)) >>> 2) >>> 0];
-      var iovlen = GROWABLE_HEAP_I32()[(((iov) + ((8 * i) + 4)) >>> 2) >>> 0];
-      for (var j = 0; j < iovlen; j++) {
-        view[offset++] = GROWABLE_HEAP_I8()[(iovbase) + (j) >>> 0];
-      }
-    }
-    // write the buffer
-    return sock.sock_ops.sendmsg(sock, view, 0, total, addr, port);
-  } catch (e) {
-    if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
-    return -e.errno;
-  }
-}
-
-function ___syscall_socket(domain, type, protocol) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(29, 0, 1, domain, type, protocol);
-  try {
-    var sock = SOCKFS.createSocket(domain, type, protocol);
-    return sock.stream.fd;
-  } catch (e) {
-    if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
-    return -e.errno;
-  }
-}
-
 function ___syscall_stat64(path, buf) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(30, 0, 1, path, buf);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(19, 0, 1, path, buf);
   path >>>= 0;
   buf >>>= 0;
   try {
@@ -6073,7 +4951,7 @@ function ___syscall_stat64(path, buf) {
 }
 
 function ___syscall_symlink(target, linkpath) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(31, 0, 1, target, linkpath);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(20, 0, 1, target, linkpath);
   target >>>= 0;
   linkpath >>>= 0;
   try {
@@ -6088,7 +4966,7 @@ function ___syscall_symlink(target, linkpath) {
 }
 
 function ___syscall_truncate64(path, length) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(32, 0, 1, path, length);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(21, 0, 1, path, length);
   path >>>= 0;
   length = bigintToI53Checked(length);
   try {
@@ -6103,7 +4981,7 @@ function ___syscall_truncate64(path, length) {
 }
 
 function ___syscall_unlinkat(dirfd, path, flags) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(33, 0, 1, dirfd, path, flags);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(22, 0, 1, dirfd, path, flags);
   path >>>= 0;
   try {
     path = SYSCALLS.getStr(path);
@@ -6125,7 +5003,7 @@ function ___syscall_unlinkat(dirfd, path, flags) {
 var readI53FromI64 = ptr => GROWABLE_HEAP_U32()[((ptr) >>> 2) >>> 0] + GROWABLE_HEAP_I32()[(((ptr) + (4)) >>> 2) >>> 0] * 4294967296;
 
 function ___syscall_utimensat(dirfd, path, times, flags) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(34, 0, 1, dirfd, path, times, flags);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(23, 0, 1, dirfd, path, times, flags);
   path >>>= 0;
   times >>>= 0;
   try {
@@ -8014,30 +6892,6 @@ var __embind_register_void = function(rawType, name) {
   });
 };
 
-function __emscripten_fetch_free(id) {
-  if (Fetch.xhrs.has(id)) {
-    var xhr = Fetch.xhrs.get(id);
-    Fetch.xhrs.free(id);
-    // check if fetch is still in progress and should be aborted
-    if (xhr.readyState > 0 && xhr.readyState < 4) {
-      xhr.abort();
-    }
-  }
-}
-
-function __emscripten_fetch_get_response_headers(id, dst, dstSizeBytes) {
-  dst >>>= 0;
-  dstSizeBytes >>>= 0;
-  var responseHeaders = Fetch.xhrs.get(id).getAllResponseHeaders();
-  var lengthBytes = lengthBytesUTF8(responseHeaders) + 1;
-  stringToUTF8(responseHeaders, dst, dstSizeBytes);
-  return Math.min(lengthBytes, dstSizeBytes);
-}
-
-function __emscripten_fetch_get_response_headers_length(id) {
-  return lengthBytesUTF8(Fetch.xhrs.get(id).getAllResponseHeaders()) + 1;
-}
-
 var nowIsMonotonic = 1;
 
 var __emscripten_get_now_is_monotonic = () => nowIsMonotonic;
@@ -8465,7 +7319,7 @@ var __mktime_js = function(tmPtr) {
 };
 
 function __mmap_js(len, prot, flags, fd, offset, allocated, addr) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(35, 0, 1, len, prot, flags, fd, offset, allocated, addr);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(24, 0, 1, len, prot, flags, fd, offset, allocated, addr);
   len >>>= 0;
   offset = bigintToI53Checked(offset);
   allocated >>>= 0;
@@ -8485,7 +7339,7 @@ function __mmap_js(len, prot, flags, fd, offset, allocated, addr) {
 }
 
 function __munmap_js(addr, len, prot, flags, fd, offset) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(36, 0, 1, addr, len, prot, flags, fd, offset);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(25, 0, 1, addr, len, prot, flags, fd, offset);
   addr >>>= 0;
   len >>>= 0;
   offset = bigintToI53Checked(offset);
@@ -9432,7 +8286,7 @@ var getBoundingClientRect = e => specialHTMLTargets.indexOf(e) < 0 ? e.getBoundi
 };
 
 function _emscripten_get_element_css_size(target, width, height) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(37, 0, 1, target, width, height);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(26, 0, 1, target, width, height);
   target >>>= 0;
   width >>>= 0;
   height >>>= 0;
@@ -11461,6 +10315,8 @@ var _emscripten_glGetUniformBlockIndex = _glGetUniformBlockIndex;
 }
 
 var _emscripten_glGetUniformIndices = _glGetUniformIndices;
+
+/** @suppress {checkTypes} */ var jstoi_q = str => parseInt(str);
 
 /** @noinline */ var webglGetLeftBracePos = name => name.slice(-1) == "]" && name.lastIndexOf("[");
 
@@ -13581,7 +12437,7 @@ var registerUiEventCallback = (target, userData, useCapture, callbackfunc, event
 };
 
 function _emscripten_set_resize_callback_on_thread(target, userData, useCapture, callbackfunc, targetThread) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(38, 0, 1, target, userData, useCapture, callbackfunc, targetThread);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(27, 0, 1, target, userData, useCapture, callbackfunc, targetThread);
   target >>>= 0;
   userData >>>= 0;
   callbackfunc >>>= 0;
@@ -13709,7 +12565,7 @@ var registerWheelEventCallback = (target, userData, useCapture, callbackfunc, ev
 };
 
 function _emscripten_set_wheel_callback_on_thread(target, userData, useCapture, callbackfunc, targetThread) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(39, 0, 1, target, userData, useCapture, callbackfunc, targetThread);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(28, 0, 1, target, userData, useCapture, callbackfunc, targetThread);
   target >>>= 0;
   userData >>>= 0;
   callbackfunc >>>= 0;
@@ -13726,432 +12582,6 @@ function _emscripten_set_wheel_callback_on_thread(target, userData, useCapture, 
 var _emscripten_sleep = ms => Asyncify.handleSleep(wakeUp => safeSetTimeout(wakeUp, ms));
 
 _emscripten_sleep.isAsync = true;
-
-class HandleAllocator {
-  constructor() {
-    // TODO(https://github.com/emscripten-core/emscripten/issues/21414):
-    // Use inline field declarations.
-    this.allocated = [ undefined ];
-    this.freelist = [];
-  }
-  get(id) {
-    return this.allocated[id];
-  }
-  has(id) {
-    return this.allocated[id] !== undefined;
-  }
-  allocate(handle) {
-    var id = this.freelist.pop() || this.allocated.length;
-    this.allocated[id] = handle;
-    return id;
-  }
-  free(id) {
-    // Set the slot to `undefined` rather than using `delete` here since
-    // apparently arrays with holes in them can be less efficient.
-    this.allocated[id] = undefined;
-    this.freelist.push(id);
-  }
-}
-
-var Fetch = {
-  openDatabase(dbname, dbversion, onsuccess, onerror) {
-    try {
-      var openRequest = indexedDB.open(dbname, dbversion);
-    } catch (e) {
-      return onerror(e);
-    }
-    openRequest.onupgradeneeded = event => {
-      var db = /** @type {IDBDatabase} */ (event.target.result);
-      if (db.objectStoreNames.contains("FILES")) {
-        db.deleteObjectStore("FILES");
-      }
-      db.createObjectStore("FILES");
-    };
-    openRequest.onsuccess = event => onsuccess(event.target.result);
-    openRequest.onerror = onerror;
-  },
-  init() {
-    Fetch.xhrs = new HandleAllocator;
-    if (ENVIRONMENT_IS_PTHREAD) return;
-    var onsuccess = db => {
-      Fetch.dbInstance = db;
-      removeRunDependency("library_fetch_init");
-    };
-    var onerror = () => {
-      Fetch.dbInstance = false;
-      removeRunDependency("library_fetch_init");
-    };
-    addRunDependency("library_fetch_init");
-    Fetch.openDatabase("emscripten_filesystem", 1, onsuccess, onerror);
-  }
-};
-
-function fetchXHR(fetch, onsuccess, onerror, onprogress, onreadystatechange) {
-  var url = GROWABLE_HEAP_U32()[(((fetch) + (8)) >>> 2) >>> 0];
-  if (!url) {
-    onerror(fetch, 0, "no url specified!");
-    return;
-  }
-  var url_ = UTF8ToString(url);
-  var fetch_attr = fetch + 108;
-  var requestMethod = UTF8ToString(fetch_attr + 0);
-  requestMethod ||= "GET";
-  var timeoutMsecs = GROWABLE_HEAP_U32()[(((fetch_attr) + (56)) >>> 2) >>> 0];
-  var userName = GROWABLE_HEAP_U32()[(((fetch_attr) + (68)) >>> 2) >>> 0];
-  var password = GROWABLE_HEAP_U32()[(((fetch_attr) + (72)) >>> 2) >>> 0];
-  var requestHeaders = GROWABLE_HEAP_U32()[(((fetch_attr) + (76)) >>> 2) >>> 0];
-  var overriddenMimeType = GROWABLE_HEAP_U32()[(((fetch_attr) + (80)) >>> 2) >>> 0];
-  var dataPtr = GROWABLE_HEAP_U32()[(((fetch_attr) + (84)) >>> 2) >>> 0];
-  var dataLength = GROWABLE_HEAP_U32()[(((fetch_attr) + (88)) >>> 2) >>> 0];
-  var fetchAttributes = GROWABLE_HEAP_U32()[(((fetch_attr) + (52)) >>> 2) >>> 0];
-  var fetchAttrLoadToMemory = !!(fetchAttributes & 1);
-  var fetchAttrStreamData = !!(fetchAttributes & 2);
-  var fetchAttrSynchronous = !!(fetchAttributes & 64);
-  var userNameStr = userName ? UTF8ToString(userName) : undefined;
-  var passwordStr = password ? UTF8ToString(password) : undefined;
-  var xhr = new XMLHttpRequest;
-  xhr.withCredentials = !!GROWABLE_HEAP_U8()[(fetch_attr) + (60) >>> 0];
-  xhr.open(requestMethod, url_, !fetchAttrSynchronous, userNameStr, passwordStr);
-  if (!fetchAttrSynchronous) xhr.timeout = timeoutMsecs;
-  // XHR timeout field is only accessible in async XHRs, and must be set after .open() but before .send().
-  xhr.url_ = url_;
-  // Save the url for debugging purposes (and for comparing to the responseURL that server side advertised)
-  xhr.responseType = "arraybuffer";
-  if (overriddenMimeType) {
-    var overriddenMimeTypeStr = UTF8ToString(overriddenMimeType);
-    xhr.overrideMimeType(overriddenMimeTypeStr);
-  }
-  if (requestHeaders) {
-    for (;;) {
-      var key = GROWABLE_HEAP_U32()[((requestHeaders) >>> 2) >>> 0];
-      if (!key) break;
-      var value = GROWABLE_HEAP_U32()[(((requestHeaders) + (4)) >>> 2) >>> 0];
-      if (!value) break;
-      requestHeaders += 8;
-      var keyStr = UTF8ToString(key);
-      var valueStr = UTF8ToString(value);
-      xhr.setRequestHeader(keyStr, valueStr);
-    }
-  }
-  var id = Fetch.xhrs.allocate(xhr);
-  GROWABLE_HEAP_U32()[((fetch) >>> 2) >>> 0] = id;
-  var data = (dataPtr && dataLength) ? GROWABLE_HEAP_U8().slice(dataPtr, dataPtr + dataLength) : null;
-  // TODO: Support specifying custom headers to the request.
-  // Share the code to save the response, as we need to do so both on success
-  // and on error (despite an error, there may be a response, like a 404 page).
-  // This receives a condition, which determines whether to save the xhr's
-  // response, or just 0.
-  function saveResponseAndStatus() {
-    var ptr = 0;
-    var ptrLen = 0;
-    if (xhr.response && fetchAttrLoadToMemory && GROWABLE_HEAP_U32()[(((fetch) + (12)) >>> 2) >>> 0] === 0) {
-      ptrLen = xhr.response.byteLength;
-    }
-    if (ptrLen > 0) {
-      // The data pointer malloc()ed here has the same lifetime as the emscripten_fetch_t structure itself has, and is
-      // freed when emscripten_fetch_close() is called.
-      ptr = _malloc(ptrLen);
-      GROWABLE_HEAP_U8().set(new Uint8Array(/** @type{Array<number>} */ (xhr.response)), ptr >>> 0);
-    }
-    GROWABLE_HEAP_U32()[(((fetch) + (12)) >>> 2) >>> 0] = ptr;
-    writeI53ToI64(fetch + 16, ptrLen);
-    writeI53ToI64(fetch + 24, 0);
-    var len = xhr.response ? xhr.response.byteLength : 0;
-    if (len) {
-      // If the final XHR.onload handler receives the bytedata to compute total length, report that,
-      // otherwise don't write anything out here, which will retain the latest byte size reported in
-      // the most recent XHR.onprogress handler.
-      writeI53ToI64(fetch + 32, len);
-    }
-    GROWABLE_HEAP_I16()[(((fetch) + (40)) >>> 1) >>> 0] = xhr.readyState;
-    GROWABLE_HEAP_I16()[(((fetch) + (42)) >>> 1) >>> 0] = xhr.status;
-    if (xhr.statusText) stringToUTF8(xhr.statusText, fetch + 44, 64);
-  }
-  xhr.onload = e => {
-    // check if xhr was aborted by user and don't try to call back
-    if (!Fetch.xhrs.has(id)) {
-      return;
-    }
-    saveResponseAndStatus();
-    if (xhr.status >= 200 && xhr.status < 300) {
-      onsuccess?.(fetch, xhr, e);
-    } else {
-      onerror?.(fetch, xhr, e);
-    }
-  };
-  xhr.onerror = e => {
-    // check if xhr was aborted by user and don't try to call back
-    if (!Fetch.xhrs.has(id)) {
-      return;
-    }
-    saveResponseAndStatus();
-    onerror?.(fetch, xhr, e);
-  };
-  xhr.ontimeout = e => {
-    // check if xhr was aborted by user and don't try to call back
-    if (!Fetch.xhrs.has(id)) {
-      return;
-    }
-    onerror?.(fetch, xhr, e);
-  };
-  xhr.onprogress = e => {
-    // check if xhr was aborted by user and don't try to call back
-    if (!Fetch.xhrs.has(id)) {
-      return;
-    }
-    var ptrLen = (fetchAttrLoadToMemory && fetchAttrStreamData && xhr.response) ? xhr.response.byteLength : 0;
-    var ptr = 0;
-    if (ptrLen > 0 && fetchAttrLoadToMemory && fetchAttrStreamData) {
-      // Allocate byte data in Emscripten heap for the streamed memory block (freed immediately after onprogress call)
-      ptr = _malloc(ptrLen);
-      GROWABLE_HEAP_U8().set(new Uint8Array(/** @type{Array<number>} */ (xhr.response)), ptr >>> 0);
-    }
-    GROWABLE_HEAP_U32()[(((fetch) + (12)) >>> 2) >>> 0] = ptr;
-    writeI53ToI64(fetch + 16, ptrLen);
-    writeI53ToI64(fetch + 24, e.loaded - ptrLen);
-    writeI53ToI64(fetch + 32, e.total);
-    GROWABLE_HEAP_I16()[(((fetch) + (40)) >>> 1) >>> 0] = xhr.readyState;
-    // If loading files from a source that does not give HTTP status code, assume success if we get data bytes
-    if (xhr.readyState >= 3 && xhr.status === 0 && e.loaded > 0) xhr.status = 200;
-    GROWABLE_HEAP_I16()[(((fetch) + (42)) >>> 1) >>> 0] = xhr.status;
-    if (xhr.statusText) stringToUTF8(xhr.statusText, fetch + 44, 64);
-    onprogress?.(fetch, xhr, e);
-    if (ptr) {
-      _free(ptr);
-    }
-  };
-  xhr.onreadystatechange = e => {
-    // check if xhr was aborted by user and don't try to call back
-    if (!Fetch.xhrs.has(id)) {
-      runtimeKeepalivePop();
-      return;
-    }
-    GROWABLE_HEAP_I16()[(((fetch) + (40)) >>> 1) >>> 0] = xhr.readyState;
-    if (xhr.readyState >= 2) {
-      GROWABLE_HEAP_I16()[(((fetch) + (42)) >>> 1) >>> 0] = xhr.status;
-    }
-    onreadystatechange?.(fetch, xhr, e);
-  };
-  try {
-    xhr.send(data);
-  } catch (e) {
-    onerror?.(fetch, xhr, e);
-  }
-}
-
-function fetchCacheData(/** @type {IDBDatabase} */ db, fetch, data, onsuccess, onerror) {
-  if (!db) {
-    onerror(fetch, 0, "IndexedDB not available!");
-    return;
-  }
-  var fetch_attr = fetch + 108;
-  var destinationPath = GROWABLE_HEAP_U32()[(((fetch_attr) + (64)) >>> 2) >>> 0];
-  destinationPath ||= GROWABLE_HEAP_U32()[(((fetch) + (8)) >>> 2) >>> 0];
-  var destinationPathStr = UTF8ToString(destinationPath);
-  try {
-    var transaction = db.transaction([ "FILES" ], "readwrite");
-    var packages = transaction.objectStore("FILES");
-    var putRequest = packages.put(data, destinationPathStr);
-    putRequest.onsuccess = event => {
-      GROWABLE_HEAP_I16()[(((fetch) + (40)) >>> 1) >>> 0] = 4;
-      // Mimic XHR readyState 4 === 'DONE: The operation is complete'
-      GROWABLE_HEAP_I16()[(((fetch) + (42)) >>> 1) >>> 0] = 200;
-      // Mimic XHR HTTP status code 200 "OK"
-      stringToUTF8("OK", fetch + 44, 64);
-      onsuccess(fetch, 0, destinationPathStr);
-    };
-    putRequest.onerror = error => {
-      // Most likely we got an error if IndexedDB is unwilling to store any more data for this page.
-      // TODO: Can we identify and break down different IndexedDB-provided errors and convert those
-      // to more HTTP status codes for more information?
-      GROWABLE_HEAP_I16()[(((fetch) + (40)) >>> 1) >>> 0] = 4;
-      // Mimic XHR readyState 4 === 'DONE: The operation is complete'
-      GROWABLE_HEAP_I16()[(((fetch) + (42)) >>> 1) >>> 0] = 413;
-      // Mimic XHR HTTP status code 413 "Payload Too Large"
-      stringToUTF8("Payload Too Large", fetch + 44, 64);
-      onerror(fetch, 0, error);
-    };
-  } catch (e) {
-    onerror(fetch, 0, e);
-  }
-}
-
-function fetchLoadCachedData(db, fetch, onsuccess, onerror) {
-  if (!db) {
-    onerror(fetch, 0, "IndexedDB not available!");
-    return;
-  }
-  var fetch_attr = fetch + 108;
-  var path = GROWABLE_HEAP_U32()[(((fetch_attr) + (64)) >>> 2) >>> 0];
-  path ||= GROWABLE_HEAP_U32()[(((fetch) + (8)) >>> 2) >>> 0];
-  var pathStr = UTF8ToString(path);
-  try {
-    var transaction = db.transaction([ "FILES" ], "readonly");
-    var packages = transaction.objectStore("FILES");
-    var getRequest = packages.get(pathStr);
-    getRequest.onsuccess = event => {
-      if (event.target.result) {
-        var value = event.target.result;
-        var len = value.byteLength || value.length;
-        // The data pointer malloc()ed here has the same lifetime as the emscripten_fetch_t structure itself has, and is
-        // freed when emscripten_fetch_close() is called.
-        var ptr = _malloc(len);
-        GROWABLE_HEAP_U8().set(new Uint8Array(value), ptr >>> 0);
-        GROWABLE_HEAP_U32()[(((fetch) + (12)) >>> 2) >>> 0] = ptr;
-        writeI53ToI64(fetch + 16, len);
-        writeI53ToI64(fetch + 24, 0);
-        writeI53ToI64(fetch + 32, len);
-        GROWABLE_HEAP_I16()[(((fetch) + (40)) >>> 1) >>> 0] = 4;
-        // Mimic XHR readyState 4 === 'DONE: The operation is complete'
-        GROWABLE_HEAP_I16()[(((fetch) + (42)) >>> 1) >>> 0] = 200;
-        // Mimic XHR HTTP status code 200 "OK"
-        stringToUTF8("OK", fetch + 44, 64);
-        onsuccess(fetch, 0, value);
-      } else {
-        // Succeeded to load, but the load came back with the value of undefined, treat that as an error since we never store undefined in db.
-        GROWABLE_HEAP_I16()[(((fetch) + (40)) >>> 1) >>> 0] = 4;
-        // Mimic XHR readyState 4 === 'DONE: The operation is complete'
-        GROWABLE_HEAP_I16()[(((fetch) + (42)) >>> 1) >>> 0] = 404;
-        // Mimic XHR HTTP status code 404 "Not Found"
-        stringToUTF8("Not Found", fetch + 44, 64);
-        onerror(fetch, 0, "no data");
-      }
-    };
-    getRequest.onerror = error => {
-      GROWABLE_HEAP_I16()[(((fetch) + (40)) >>> 1) >>> 0] = 4;
-      // Mimic XHR readyState 4 === 'DONE: The operation is complete'
-      GROWABLE_HEAP_I16()[(((fetch) + (42)) >>> 1) >>> 0] = 404;
-      // Mimic XHR HTTP status code 404 "Not Found"
-      stringToUTF8("Not Found", fetch + 44, 64);
-      onerror(fetch, 0, error);
-    };
-  } catch (e) {
-    onerror(fetch, 0, e);
-  }
-}
-
-function fetchDeleteCachedData(db, fetch, onsuccess, onerror) {
-  if (!db) {
-    onerror(fetch, 0, "IndexedDB not available!");
-    return;
-  }
-  var fetch_attr = fetch + 108;
-  var path = GROWABLE_HEAP_U32()[(((fetch_attr) + (64)) >>> 2) >>> 0];
-  path ||= GROWABLE_HEAP_U32()[(((fetch) + (8)) >>> 2) >>> 0];
-  var pathStr = UTF8ToString(path);
-  try {
-    var transaction = db.transaction([ "FILES" ], "readwrite");
-    var packages = transaction.objectStore("FILES");
-    var request = packages.delete(pathStr);
-    request.onsuccess = event => {
-      var value = event.target.result;
-      GROWABLE_HEAP_U32()[(((fetch) + (12)) >>> 2) >>> 0] = 0;
-      writeI53ToI64(fetch + 16, 0);
-      writeI53ToI64(fetch + 24, 0);
-      writeI53ToI64(fetch + 32, 0);
-      // Mimic XHR readyState 4 === 'DONE: The operation is complete'
-      GROWABLE_HEAP_I16()[(((fetch) + (40)) >>> 1) >>> 0] = 4;
-      // Mimic XHR HTTP status code 200 "OK"
-      GROWABLE_HEAP_I16()[(((fetch) + (42)) >>> 1) >>> 0] = 200;
-      stringToUTF8("OK", fetch + 44, 64);
-      onsuccess(fetch, 0, value);
-    };
-    request.onerror = error => {
-      GROWABLE_HEAP_I16()[(((fetch) + (40)) >>> 1) >>> 0] = 4;
-      // Mimic XHR readyState 4 === 'DONE: The operation is complete'
-      GROWABLE_HEAP_I16()[(((fetch) + (42)) >>> 1) >>> 0] = 404;
-      // Mimic XHR HTTP status code 404 "Not Found"
-      stringToUTF8("Not Found", fetch + 44, 64);
-      onerror(fetch, 0, error);
-    };
-  } catch (e) {
-    onerror(fetch, 0, e);
-  }
-}
-
-function _emscripten_start_fetch(fetch, successcb, errorcb, progresscb, readystatechangecb) {
-  fetch >>>= 0;
-  // Avoid shutting down the runtime since we want to wait for the async
-  // response.
-  runtimeKeepalivePush();
-  var fetch_attr = fetch + 108;
-  var onsuccess = GROWABLE_HEAP_U32()[(((fetch_attr) + (36)) >>> 2) >>> 0];
-  var onerror = GROWABLE_HEAP_U32()[(((fetch_attr) + (40)) >>> 2) >>> 0];
-  var onprogress = GROWABLE_HEAP_U32()[(((fetch_attr) + (44)) >>> 2) >>> 0];
-  var onreadystatechange = GROWABLE_HEAP_U32()[(((fetch_attr) + (48)) >>> 2) >>> 0];
-  var fetchAttributes = GROWABLE_HEAP_U32()[(((fetch_attr) + (52)) >>> 2) >>> 0];
-  var fetchAttrSynchronous = !!(fetchAttributes & 64);
-  function doCallback(f) {
-    if (fetchAttrSynchronous) {
-      f();
-    } else {
-      callUserCallback(f);
-    }
-  }
-  var reportSuccess = (fetch, xhr, e) => {
-    runtimeKeepalivePop();
-    doCallback(() => {
-      if (onsuccess) (a1 => dynCall_vi(onsuccess, a1))(fetch); else successcb?.(fetch);
-    });
-  };
-  var reportProgress = (fetch, xhr, e) => {
-    doCallback(() => {
-      if (onprogress) (a1 => dynCall_vi(onprogress, a1))(fetch); else progresscb?.(fetch);
-    });
-  };
-  var reportError = (fetch, xhr, e) => {
-    runtimeKeepalivePop();
-    doCallback(() => {
-      if (onerror) (a1 => dynCall_vi(onerror, a1))(fetch); else errorcb?.(fetch);
-    });
-  };
-  var reportReadyStateChange = (fetch, xhr, e) => {
-    doCallback(() => {
-      if (onreadystatechange) (a1 => dynCall_vi(onreadystatechange, a1))(fetch); else readystatechangecb?.(fetch);
-    });
-  };
-  var performUncachedXhr = (fetch, xhr, e) => {
-    fetchXHR(fetch, reportSuccess, reportError, reportProgress, reportReadyStateChange);
-  };
-  var cacheResultAndReportSuccess = (fetch, xhr, e) => {
-    var storeSuccess = (fetch, xhr, e) => {
-      runtimeKeepalivePop();
-      doCallback(() => {
-        if (onsuccess) (a1 => dynCall_vi(onsuccess, a1))(fetch); else successcb?.(fetch);
-      });
-    };
-    var storeError = (fetch, xhr, e) => {
-      runtimeKeepalivePop();
-      doCallback(() => {
-        if (onsuccess) (a1 => dynCall_vi(onsuccess, a1))(fetch); else successcb?.(fetch);
-      });
-    };
-    fetchCacheData(Fetch.dbInstance, fetch, xhr.response, storeSuccess, storeError);
-  };
-  var performCachedXhr = (fetch, xhr, e) => {
-    fetchXHR(fetch, cacheResultAndReportSuccess, reportError, reportProgress, reportReadyStateChange);
-  };
-  var requestMethod = UTF8ToString(fetch_attr + 0);
-  var fetchAttrReplace = !!(fetchAttributes & 16);
-  var fetchAttrPersistFile = !!(fetchAttributes & 4);
-  var fetchAttrNoDownload = !!(fetchAttributes & 32);
-  if (requestMethod === "EM_IDB_STORE") {
-    // TODO(?): Here we perform a clone of the data, because storing shared typed arrays to IndexedDB does not seem to be allowed.
-    var ptr = GROWABLE_HEAP_U32()[(((fetch_attr) + (84)) >>> 2) >>> 0];
-    var size = GROWABLE_HEAP_U32()[(((fetch_attr) + (88)) >>> 2) >>> 0];
-    fetchCacheData(Fetch.dbInstance, fetch, GROWABLE_HEAP_U8().slice(ptr, ptr + size), reportSuccess, reportError);
-  } else if (requestMethod === "EM_IDB_DELETE") {
-    fetchDeleteCachedData(Fetch.dbInstance, fetch, reportSuccess, reportError);
-  } else if (!fetchAttrReplace) {
-    fetchLoadCachedData(Fetch.dbInstance, fetch, reportSuccess, fetchAttrNoDownload ? reportError : (fetchAttrPersistFile ? performCachedXhr : performUncachedXhr));
-  } else if (!fetchAttrNoDownload) {
-    fetchXHR(fetch, fetchAttrPersistFile ? cacheResultAndReportSuccess : reportSuccess, reportError, reportProgress, reportReadyStateChange);
-  } else {
-    return 0;
-  }
-  // todo: free
-  return fetch;
-}
 
 var _emscripten_unwind_to_js_event_loop = () => {
   throw "unwind";
@@ -14275,7 +12705,7 @@ var stringToAscii = (str, buffer) => {
 };
 
 var _environ_get = function(__environ, environ_buf) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(40, 0, 1, __environ, environ_buf);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(29, 0, 1, __environ, environ_buf);
   __environ >>>= 0;
   environ_buf >>>= 0;
   var bufSize = 0;
@@ -14289,7 +12719,7 @@ var _environ_get = function(__environ, environ_buf) {
 };
 
 var _environ_sizes_get = function(penviron_count, penviron_buf_size) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(41, 0, 1, penviron_count, penviron_buf_size);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(30, 0, 1, penviron_count, penviron_buf_size);
   penviron_count >>>= 0;
   penviron_buf_size >>>= 0;
   var strings = getEnvStrings();
@@ -14301,7 +12731,7 @@ var _environ_sizes_get = function(penviron_count, penviron_buf_size) {
 };
 
 function _fd_close(fd) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(42, 0, 1, fd);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(31, 0, 1, fd);
   try {
     var stream = SYSCALLS.getStreamFromFD(fd);
     FS.close(stream);
@@ -14313,7 +12743,7 @@ function _fd_close(fd) {
 }
 
 function _fd_fdstat_get(fd, pbuf) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(43, 0, 1, fd, pbuf);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(32, 0, 1, fd, pbuf);
   pbuf >>>= 0;
   try {
     var rightsBase = 0;
@@ -14355,7 +12785,7 @@ function _fd_fdstat_get(fd, pbuf) {
 };
 
 function _fd_read(fd, iov, iovcnt, pnum) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(44, 0, 1, fd, iov, iovcnt, pnum);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(33, 0, 1, fd, iov, iovcnt, pnum);
   iov >>>= 0;
   iovcnt >>>= 0;
   pnum >>>= 0;
@@ -14371,7 +12801,7 @@ function _fd_read(fd, iov, iovcnt, pnum) {
 }
 
 function _fd_seek(fd, offset, whence, newOffset) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(45, 0, 1, fd, offset, whence, newOffset);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(34, 0, 1, fd, offset, whence, newOffset);
   offset = bigintToI53Checked(offset);
   newOffset >>>= 0;
   try {
@@ -14389,7 +12819,7 @@ function _fd_seek(fd, offset, whence, newOffset) {
 }
 
 var _fd_sync = function(fd) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(46, 0, 1, fd);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(35, 0, 1, fd);
   try {
     var stream = SYSCALLS.getStreamFromFD(fd);
     return Asyncify.handleSleep(wakeUp => {
@@ -14436,7 +12866,7 @@ _fd_sync.isAsync = true;
 };
 
 function _fd_write(fd, iov, iovcnt, pnum) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(47, 0, 1, fd, iov, iovcnt, pnum);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(36, 0, 1, fd, iov, iovcnt, pnum);
   iov >>>= 0;
   iovcnt >>>= 0;
   pnum >>>= 0;
@@ -14449,158 +12879,6 @@ function _fd_write(fd, iov, iovcnt, pnum) {
     if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
     return e.errno;
   }
-}
-
-function _getaddrinfo(node, service, hint, out) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(48, 0, 1, node, service, hint, out);
-  node >>>= 0;
-  service >>>= 0;
-  hint >>>= 0;
-  out >>>= 0;
-  // Note getaddrinfo currently only returns a single addrinfo with ai_next defaulting to NULL. When NULL
-  // hints are specified or ai_family set to AF_UNSPEC or ai_socktype or ai_protocol set to 0 then we
-  // really should provide a linked list of suitable addrinfo values.
-  var addrs = [];
-  var canon = null;
-  var addr = 0;
-  var port = 0;
-  var flags = 0;
-  var family = 0;
-  var type = 0;
-  var proto = 0;
-  var ai, last;
-  function allocaddrinfo(family, type, proto, canon, addr, port) {
-    var sa, salen, ai;
-    var errno;
-    salen = family === 10 ? 28 : 16;
-    addr = family === 10 ? inetNtop6(addr) : inetNtop4(addr);
-    sa = _malloc(salen);
-    errno = writeSockaddr(sa, family, addr, port);
-    assert(!errno);
-    ai = _malloc(32);
-    GROWABLE_HEAP_I32()[(((ai) + (4)) >>> 2) >>> 0] = family;
-    GROWABLE_HEAP_I32()[(((ai) + (8)) >>> 2) >>> 0] = type;
-    GROWABLE_HEAP_I32()[(((ai) + (12)) >>> 2) >>> 0] = proto;
-    GROWABLE_HEAP_U32()[(((ai) + (24)) >>> 2) >>> 0] = canon;
-    GROWABLE_HEAP_U32()[(((ai) + (20)) >>> 2) >>> 0] = sa;
-    if (family === 10) {
-      GROWABLE_HEAP_I32()[(((ai) + (16)) >>> 2) >>> 0] = 28;
-    } else {
-      GROWABLE_HEAP_I32()[(((ai) + (16)) >>> 2) >>> 0] = 16;
-    }
-    GROWABLE_HEAP_I32()[(((ai) + (28)) >>> 2) >>> 0] = 0;
-    return ai;
-  }
-  if (hint) {
-    flags = GROWABLE_HEAP_I32()[((hint) >>> 2) >>> 0];
-    family = GROWABLE_HEAP_I32()[(((hint) + (4)) >>> 2) >>> 0];
-    type = GROWABLE_HEAP_I32()[(((hint) + (8)) >>> 2) >>> 0];
-    proto = GROWABLE_HEAP_I32()[(((hint) + (12)) >>> 2) >>> 0];
-  }
-  if (type && !proto) {
-    proto = type === 2 ? 17 : 6;
-  }
-  if (!type && proto) {
-    type = proto === 17 ? 2 : 1;
-  }
-  // If type or proto are set to zero in hints we should really be returning multiple addrinfo values, but for
-  // now default to a TCP STREAM socket so we can at least return a sensible addrinfo given NULL hints.
-  if (proto === 0) {
-    proto = 6;
-  }
-  if (type === 0) {
-    type = 1;
-  }
-  if (!node && !service) {
-    return -2;
-  }
-  if (flags & ~(1 | 2 | 4 | 1024 | 8 | 16 | 32)) {
-    return -1;
-  }
-  if (hint !== 0 && (GROWABLE_HEAP_I32()[((hint) >>> 2) >>> 0] & 2) && !node) {
-    return -1;
-  }
-  if (flags & 32) {
-    // TODO
-    return -2;
-  }
-  if (type !== 0 && type !== 1 && type !== 2) {
-    return -7;
-  }
-  if (family !== 0 && family !== 2 && family !== 10) {
-    return -6;
-  }
-  if (service) {
-    service = UTF8ToString(service);
-    port = parseInt(service, 10);
-    if (isNaN(port)) {
-      if (flags & 1024) {
-        return -2;
-      }
-      // TODO support resolving well-known service names from:
-      // http://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.txt
-      return -8;
-    }
-  }
-  if (!node) {
-    if (family === 0) {
-      family = 2;
-    }
-    if ((flags & 1) === 0) {
-      if (family === 2) {
-        addr = _htonl(2130706433);
-      } else {
-        addr = [ 0, 0, 0, _htonl(1) ];
-      }
-    }
-    ai = allocaddrinfo(family, type, proto, null, addr, port);
-    GROWABLE_HEAP_U32()[((out) >>> 2) >>> 0] = ai;
-    return 0;
-  }
-  // try as a numeric address
-  node = UTF8ToString(node);
-  addr = inetPton4(node);
-  if (addr !== null) {
-    // incoming node is a valid ipv4 address
-    if (family === 0 || family === 2) {
-      family = 2;
-    } else if (family === 10 && (flags & 8)) {
-      addr = [ 0, 0, _htonl(65535), addr ];
-      family = 10;
-    } else {
-      return -2;
-    }
-  } else {
-    addr = inetPton6(node);
-    if (addr !== null) {
-      // incoming node is a valid ipv6 address
-      if (family === 0 || family === 10) {
-        family = 10;
-      } else {
-        return -2;
-      }
-    }
-  }
-  if (addr != null) {
-    ai = allocaddrinfo(family, type, proto, node, addr, port);
-    GROWABLE_HEAP_U32()[((out) >>> 2) >>> 0] = ai;
-    return 0;
-  }
-  if (flags & 4) {
-    return -2;
-  }
-  // try as a hostname
-  // resolve the hostname to a temporary fake address
-  node = DNS.lookup_name(node);
-  addr = inetPton4(node);
-  if (family === 0) {
-    family = 2;
-  } else if (family === 10) {
-    addr = [ 0, 0, _htonl(65535), addr ];
-  }
-  ai = allocaddrinfo(family, type, proto, null, addr, port);
-  GROWABLE_HEAP_U32()[((out) >>> 2) >>> 0] = ai;
-  return 0;
 }
 
 function _getentropy(buffer, size) {
@@ -14703,13 +12981,11 @@ for (/**@suppress{duplicate}*/ var i = 0; i <= 288; ++i) {
   miniTempWebGLIntBuffers[i] = miniTempWebGLIntBuffersStorage.subarray(0, i);
 }
 
-Fetch.init();
-
 // proxiedFunctionTable specifies the list of functions that can be called
 // either synchronously or asynchronously from other threads in postMessage()d
 // or internally queued events. This way a pthread in a Worker can synchronously
 // access e.g. the DOM on the main thread.
-var proxiedFunctionTable = [ _proc_exit, exitOnMainThread, pthreadCreateProxied, ___syscall_accept4, ___syscall_bind, ___syscall_chmod, ___syscall_connect, ___syscall_faccessat, ___syscall_fchmod, ___syscall_fcntl64, ___syscall_fstat64, ___syscall_ftruncate64, ___syscall_getcwd, ___syscall_getdents64, ___syscall_getpeername, ___syscall_getsockname, ___syscall_getsockopt, ___syscall_ioctl, ___syscall_listen, ___syscall_lstat64, ___syscall_mkdirat, ___syscall_newfstatat, ___syscall_openat, ___syscall_readlinkat, ___syscall_recvfrom, ___syscall_recvmsg, ___syscall_renameat, ___syscall_rmdir, ___syscall_sendmsg, ___syscall_socket, ___syscall_stat64, ___syscall_symlink, ___syscall_truncate64, ___syscall_unlinkat, ___syscall_utimensat, __mmap_js, __munmap_js, _emscripten_get_element_css_size, _emscripten_set_resize_callback_on_thread, _emscripten_set_wheel_callback_on_thread, _environ_get, _environ_sizes_get, _fd_close, _fd_fdstat_get, _fd_read, _fd_seek, _fd_sync, _fd_write, _getaddrinfo ];
+var proxiedFunctionTable = [ _proc_exit, exitOnMainThread, pthreadCreateProxied, ___syscall_chmod, ___syscall_faccessat, ___syscall_fchmod, ___syscall_fcntl64, ___syscall_fstat64, ___syscall_ftruncate64, ___syscall_getcwd, ___syscall_getdents64, ___syscall_ioctl, ___syscall_lstat64, ___syscall_mkdirat, ___syscall_newfstatat, ___syscall_openat, ___syscall_readlinkat, ___syscall_renameat, ___syscall_rmdir, ___syscall_stat64, ___syscall_symlink, ___syscall_truncate64, ___syscall_unlinkat, ___syscall_utimensat, __mmap_js, __munmap_js, _emscripten_get_element_css_size, _emscripten_set_resize_callback_on_thread, _emscripten_set_wheel_callback_on_thread, _environ_get, _environ_sizes_get, _fd_close, _fd_fdstat_get, _fd_read, _fd_seek, _fd_sync, _fd_write ];
 
 var wasmImports;
 
@@ -14726,10 +13002,7 @@ function assignWasmImports() {
     /** @export */ __cxa_throw: ___cxa_throw,
     /** @export */ __pthread_create_js: ___pthread_create_js,
     /** @export */ __resumeException: ___resumeException,
-    /** @export */ __syscall_accept4: ___syscall_accept4,
-    /** @export */ __syscall_bind: ___syscall_bind,
     /** @export */ __syscall_chmod: ___syscall_chmod,
-    /** @export */ __syscall_connect: ___syscall_connect,
     /** @export */ __syscall_faccessat: ___syscall_faccessat,
     /** @export */ __syscall_fchmod: ___syscall_fchmod,
     /** @export */ __syscall_fcntl64: ___syscall_fcntl64,
@@ -14737,22 +13010,14 @@ function assignWasmImports() {
     /** @export */ __syscall_ftruncate64: ___syscall_ftruncate64,
     /** @export */ __syscall_getcwd: ___syscall_getcwd,
     /** @export */ __syscall_getdents64: ___syscall_getdents64,
-    /** @export */ __syscall_getpeername: ___syscall_getpeername,
-    /** @export */ __syscall_getsockname: ___syscall_getsockname,
-    /** @export */ __syscall_getsockopt: ___syscall_getsockopt,
     /** @export */ __syscall_ioctl: ___syscall_ioctl,
-    /** @export */ __syscall_listen: ___syscall_listen,
     /** @export */ __syscall_lstat64: ___syscall_lstat64,
     /** @export */ __syscall_mkdirat: ___syscall_mkdirat,
     /** @export */ __syscall_newfstatat: ___syscall_newfstatat,
     /** @export */ __syscall_openat: ___syscall_openat,
     /** @export */ __syscall_readlinkat: ___syscall_readlinkat,
-    /** @export */ __syscall_recvfrom: ___syscall_recvfrom,
-    /** @export */ __syscall_recvmsg: ___syscall_recvmsg,
     /** @export */ __syscall_renameat: ___syscall_renameat,
     /** @export */ __syscall_rmdir: ___syscall_rmdir,
-    /** @export */ __syscall_sendmsg: ___syscall_sendmsg,
-    /** @export */ __syscall_socket: ___syscall_socket,
     /** @export */ __syscall_stat64: ___syscall_stat64,
     /** @export */ __syscall_symlink: ___syscall_symlink,
     /** @export */ __syscall_truncate64: ___syscall_truncate64,
@@ -14772,9 +13037,6 @@ function assignWasmImports() {
     /** @export */ _embind_register_std_string: __embind_register_std_string,
     /** @export */ _embind_register_std_wstring: __embind_register_std_wstring,
     /** @export */ _embind_register_void: __embind_register_void,
-    /** @export */ _emscripten_fetch_free: __emscripten_fetch_free,
-    /** @export */ _emscripten_fetch_get_response_headers: __emscripten_fetch_get_response_headers,
-    /** @export */ _emscripten_fetch_get_response_headers_length: __emscripten_fetch_get_response_headers_length,
     /** @export */ _emscripten_get_now_is_monotonic: __emscripten_get_now_is_monotonic,
     /** @export */ _emscripten_init_main_thread_js: __emscripten_init_main_thread_js,
     /** @export */ _emscripten_notify_mailbox_postmessage: __emscripten_notify_mailbox_postmessage,
@@ -15113,7 +13375,6 @@ function assignWasmImports() {
     /** @export */ emscripten_set_timeout: _emscripten_set_timeout,
     /** @export */ emscripten_set_wheel_callback_on_thread: _emscripten_set_wheel_callback_on_thread,
     /** @export */ emscripten_sleep: _emscripten_sleep,
-    /** @export */ emscripten_start_fetch: _emscripten_start_fetch,
     /** @export */ emscripten_unwind_to_js_event_loop: _emscripten_unwind_to_js_event_loop,
     /** @export */ emscripten_webgl_create_context: _emscripten_webgl_create_context,
     /** @export */ emscripten_webgl_destroy_context: _emscripten_webgl_destroy_context,
@@ -15128,7 +13389,6 @@ function assignWasmImports() {
     /** @export */ fd_seek: _fd_seek,
     /** @export */ fd_sync: _fd_sync,
     /** @export */ fd_write: _fd_write,
-    /** @export */ getaddrinfo: _getaddrinfo,
     /** @export */ getentropy: _getentropy,
     /** @export */ invoke_dii,
     /** @export */ invoke_diii,
@@ -15425,12 +13685,6 @@ var dynCall_jiiiii = Module["dynCall_jiiiii"] = (a0, a1, a2, a3, a4, a5) => (dyn
 var dynCall_diiiiiiii = Module["dynCall_diiiiiiii"] = (a0, a1, a2, a3, a4, a5, a6, a7, a8) => (dynCall_diiiiiiii = Module["dynCall_diiiiiiii"] = wasmExports["dynCall_diiiiiiii"])(a0, a1, a2, a3, a4, a5, a6, a7, a8);
 
 var dynCall_fi = Module["dynCall_fi"] = (a0, a1) => (dynCall_fi = Module["dynCall_fi"] = wasmExports["dynCall_fi"])(a0, a1);
-
-var dynCall_jiijii = Module["dynCall_jiijii"] = (a0, a1, a2, a3, a4, a5) => (dynCall_jiijii = Module["dynCall_jiijii"] = wasmExports["dynCall_jiijii"])(a0, a1, a2, a3, a4, a5);
-
-var dynCall_viiiiiijjii = Module["dynCall_viiiiiijjii"] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10) => (dynCall_viiiiiijjii = Module["dynCall_viiiiiijjii"] = wasmExports["dynCall_viiiiiijjii"])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
-
-var dynCall_vijiij = Module["dynCall_vijiij"] = (a0, a1, a2, a3, a4, a5) => (dynCall_vijiij = Module["dynCall_vijiij"] = wasmExports["dynCall_vijiij"])(a0, a1, a2, a3, a4, a5);
 
 var dynCall_ff = Module["dynCall_ff"] = (a0, a1) => (dynCall_ff = Module["dynCall_ff"] = wasmExports["dynCall_ff"])(a0, a1);
 
