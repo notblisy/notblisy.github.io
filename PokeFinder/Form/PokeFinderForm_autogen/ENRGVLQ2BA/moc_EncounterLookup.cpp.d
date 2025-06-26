@@ -1,5 +1,5 @@
-P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Form/PokeFinderForm_autogen/ENRGVLQ2BA/moc_EncounterLookup.cpp: P:/blisynet/PokeFinder/Source/Form/Util/EncounterLookup.hpp \
-  P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Form/PokeFinderForm_autogen/moc_predefs.h \
+P:/blisynet/PokeFinderWeb/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Form/PokeFinderForm_autogen/ENRGVLQ2BA/moc_EncounterLookup.cpp: P:/blisynet/PokeFinderWeb/Source/Form/Util/EncounterLookup.hpp \
+  P:/blisynet/PokeFinderWeb/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Form/PokeFinderForm_autogen/moc_predefs.h \
   C:/Users/jakes/OneDrive/Desktop/WASM/emsdk/upstream/emscripten/cache/sysroot/include/alloca.h \
   C:/Users/jakes/OneDrive/Desktop/WASM/emsdk/upstream/emscripten/cache/sysroot/include/assert.h \
   C:/Users/jakes/OneDrive/Desktop/WASM/emsdk/upstream/emscripten/cache/sysroot/include/bits/alltypes.h \
@@ -16,7 +16,7 @@ P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Fo
   C:/Users/jakes/OneDrive/Desktop/WASM/emsdk/upstream/emscripten/cache/sysroot/include/string.h \
   C:/Users/jakes/OneDrive/Desktop/WASM/emsdk/upstream/emscripten/cache/sysroot/include/strings.h \
   C:/Users/jakes/OneDrive/Desktop/WASM/emsdk/upstream/emscripten/cache/sysroot/include/wasi/api.h \
-  P:/blisynet/PokeFinder/Source/Core/Global.hpp \
+  P:/blisynet/PokeFinderWeb/Source/Core/Global.hpp \
   Z:/QT6/6.9.1/wasm_multithread/include/QtCore/q17memory.h \
   Z:/QT6/6.9.1/wasm_multithread/include/QtCore/q20functional.h \
   Z:/QT6/6.9.1/wasm_multithread/include/QtCore/q20iterator.h \

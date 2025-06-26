@@ -18,6 +18,7 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 #include "Form/Controls/ComboBox.hpp"
 #include "Form/Controls/Filter.hpp"
@@ -30,6 +31,12 @@ class Ui_PokeSpot
 {
 public:
     QGridLayout *gridLayout_2;
+    QGroupBox *groupBoxSettings;
+    QGridLayout *gridLayout_3;
+    QLabel *labelLocation;
+    ComboBox *comboBoxLocation;
+    QLabel *labelPokemon;
+    ComboBox *comboBoxPokemon;
     QGroupBox *groupBoxProfile;
     QGridLayout *gridLayout_5;
     QLabel *labelProfile;
@@ -57,16 +64,11 @@ public:
     TextBox *textBoxFoodOffset;
     TextBox *textBoxEncounterOffset;
     QPushButton *pushButtonGenerate;
-    QGroupBox *groupBoxSettings;
-    QGridLayout *gridLayout_3;
-    QLabel *labelLocation;
-    ComboBox *comboBoxLocation;
-    QLabel *labelPokemon;
-    ComboBox *comboBoxPokemon;
     QGroupBox *groupBoxFilters;
     QGridLayout *gridLayout_4;
     Filter *filter;
     TableView *tableView;
+    QToolButton *closebutton;
 
     void setupUi(QWidget *PokeSpot)
     {
@@ -75,6 +77,33 @@ public:
         PokeSpot->resize(700, 600);
         gridLayout_2 = new QGridLayout(PokeSpot);
         gridLayout_2->setObjectName("gridLayout_2");
+        groupBoxSettings = new QGroupBox(PokeSpot);
+        groupBoxSettings->setObjectName("groupBoxSettings");
+        gridLayout_3 = new QGridLayout(groupBoxSettings);
+        gridLayout_3->setObjectName("gridLayout_3");
+        labelLocation = new QLabel(groupBoxSettings);
+        labelLocation->setObjectName("labelLocation");
+
+        gridLayout_3->addWidget(labelLocation, 0, 0, 1, 1);
+
+        comboBoxLocation = new ComboBox(groupBoxSettings);
+        comboBoxLocation->setObjectName("comboBoxLocation");
+
+        gridLayout_3->addWidget(comboBoxLocation, 0, 1, 1, 1);
+
+        labelPokemon = new QLabel(groupBoxSettings);
+        labelPokemon->setObjectName("labelPokemon");
+
+        gridLayout_3->addWidget(labelPokemon, 1, 0, 1, 1);
+
+        comboBoxPokemon = new ComboBox(groupBoxSettings);
+        comboBoxPokemon->setObjectName("comboBoxPokemon");
+
+        gridLayout_3->addWidget(comboBoxPokemon, 1, 1, 1, 1);
+
+
+        gridLayout_2->addWidget(groupBoxSettings, 2, 1, 1, 1);
+
         groupBoxProfile = new QGroupBox(PokeSpot);
         groupBoxProfile->setObjectName("groupBoxProfile");
         gridLayout_5 = new QGridLayout(groupBoxProfile);
@@ -132,7 +161,7 @@ public:
         gridLayout_5->addWidget(labelProfileGameValue, 0, 6, 1, 1);
 
 
-        gridLayout_2->addWidget(groupBoxProfile, 0, 0, 1, 3);
+        gridLayout_2->addWidget(groupBoxProfile, 1, 0, 1, 3);
 
         groupBoxRNGInfo = new QGroupBox(PokeSpot);
         groupBoxRNGInfo->setObjectName("groupBoxRNGInfo");
@@ -211,34 +240,7 @@ public:
         gridLayout->addWidget(pushButtonGenerate, 4, 0, 1, 3);
 
 
-        gridLayout_2->addWidget(groupBoxRNGInfo, 1, 0, 1, 1);
-
-        groupBoxSettings = new QGroupBox(PokeSpot);
-        groupBoxSettings->setObjectName("groupBoxSettings");
-        gridLayout_3 = new QGridLayout(groupBoxSettings);
-        gridLayout_3->setObjectName("gridLayout_3");
-        labelLocation = new QLabel(groupBoxSettings);
-        labelLocation->setObjectName("labelLocation");
-
-        gridLayout_3->addWidget(labelLocation, 0, 0, 1, 1);
-
-        comboBoxLocation = new ComboBox(groupBoxSettings);
-        comboBoxLocation->setObjectName("comboBoxLocation");
-
-        gridLayout_3->addWidget(comboBoxLocation, 0, 1, 1, 1);
-
-        labelPokemon = new QLabel(groupBoxSettings);
-        labelPokemon->setObjectName("labelPokemon");
-
-        gridLayout_3->addWidget(labelPokemon, 1, 0, 1, 1);
-
-        comboBoxPokemon = new ComboBox(groupBoxSettings);
-        comboBoxPokemon->setObjectName("comboBoxPokemon");
-
-        gridLayout_3->addWidget(comboBoxPokemon, 1, 1, 1, 1);
-
-
-        gridLayout_2->addWidget(groupBoxSettings, 1, 1, 1, 1);
+        gridLayout_2->addWidget(groupBoxRNGInfo, 2, 0, 1, 1);
 
         groupBoxFilters = new QGroupBox(PokeSpot);
         groupBoxFilters->setObjectName("groupBoxFilters");
@@ -255,12 +257,17 @@ public:
         gridLayout_4->addWidget(filter, 0, 0, 1, 1);
 
 
-        gridLayout_2->addWidget(groupBoxFilters, 1, 2, 1, 1);
+        gridLayout_2->addWidget(groupBoxFilters, 2, 2, 1, 1);
 
         tableView = new TableView(PokeSpot);
         tableView->setObjectName("tableView");
 
-        gridLayout_2->addWidget(tableView, 2, 0, 1, 3);
+        gridLayout_2->addWidget(tableView, 3, 0, 1, 3);
+
+        closebutton = new QToolButton(PokeSpot);
+        closebutton->setObjectName("closebutton");
+
+        gridLayout_2->addWidget(closebutton, 0, 0, 1, 1);
 
         QWidget::setTabOrder(comboBoxProfiles, pushButtonProfileManager);
         QWidget::setTabOrder(pushButtonProfileManager, textBoxFoodSeed);
@@ -284,6 +291,9 @@ public:
     void retranslateUi(QWidget *PokeSpot)
     {
         PokeSpot->setWindowTitle(QCoreApplication::translate("PokeSpot", "PokeSpot", nullptr));
+        groupBoxSettings->setTitle(QCoreApplication::translate("PokeSpot", "Settings", nullptr));
+        labelLocation->setText(QCoreApplication::translate("PokeSpot", "Location", nullptr));
+        labelPokemon->setText(QCoreApplication::translate("PokeSpot", "Pok\303\251mon", nullptr));
         groupBoxProfile->setTitle(QCoreApplication::translate("PokeSpot", "Profile", nullptr));
         labelProfile->setText(QCoreApplication::translate("PokeSpot", "Profile", nullptr));
         pushButtonProfileManager->setText(QCoreApplication::translate("PokeSpot", "Manager", nullptr));
@@ -296,10 +306,8 @@ public:
         labelEncounterAdvances->setText(QCoreApplication::translate("PokeSpot", "Encounter Advances", nullptr));
         labelOffset->setText(QCoreApplication::translate("PokeSpot", "Offset (Food / Encounter)", nullptr));
         pushButtonGenerate->setText(QCoreApplication::translate("PokeSpot", "Generate", nullptr));
-        groupBoxSettings->setTitle(QCoreApplication::translate("PokeSpot", "Settings", nullptr));
-        labelLocation->setText(QCoreApplication::translate("PokeSpot", "Location", nullptr));
-        labelPokemon->setText(QCoreApplication::translate("PokeSpot", "Pok\303\251mon", nullptr));
         groupBoxFilters->setTitle(QCoreApplication::translate("PokeSpot", "Filters", nullptr));
+        closebutton->setText(QCoreApplication::translate("PokeSpot", "X", nullptr));
     } // retranslateUi
 
 };

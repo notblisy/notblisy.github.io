@@ -19,6 +19,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QTabWidget>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 #include "Form/Controls/DateTimeEdit.hpp"
 #include "Form/Controls/IDsFilter.hpp"
@@ -31,6 +32,10 @@ class Ui_IDs3
 {
 public:
     QGridLayout *gridLayout_9;
+    QGroupBox *groupBoxFilters;
+    QGridLayout *gridLayout_2;
+    IDsFilter *idFilter;
+    TableView *tableView;
     QGroupBox *groupBoxRNGInfo;
     QGridLayout *gridLayout;
     QTabWidget *tabWidget;
@@ -64,10 +69,7 @@ public:
     QLabel *labelMaxAdvances;
     TextBox *textBoxMaxAdvancesRS;
     QPushButton *pushButtonGenerateRS;
-    QGroupBox *groupBoxFilters;
-    QGridLayout *gridLayout_2;
-    IDsFilter *idFilter;
-    TableView *tableView;
+    QToolButton *closebutton;
 
     void setupUi(QWidget *IDs3)
     {
@@ -76,6 +78,23 @@ public:
         IDs3->resize(710, 570);
         gridLayout_9 = new QGridLayout(IDs3);
         gridLayout_9->setObjectName("gridLayout_9");
+        groupBoxFilters = new QGroupBox(IDs3);
+        groupBoxFilters->setObjectName("groupBoxFilters");
+        gridLayout_2 = new QGridLayout(groupBoxFilters);
+        gridLayout_2->setObjectName("gridLayout_2");
+        idFilter = new IDsFilter(groupBoxFilters);
+        idFilter->setObjectName("idFilter");
+
+        gridLayout_2->addWidget(idFilter, 0, 0, 1, 1);
+
+
+        gridLayout_9->addWidget(groupBoxFilters, 1, 1, 1, 1);
+
+        tableView = new TableView(IDs3);
+        tableView->setObjectName("tableView");
+
+        gridLayout_9->addWidget(tableView, 2, 0, 1, 2);
+
         groupBoxRNGInfo = new QGroupBox(IDs3);
         groupBoxRNGInfo->setObjectName("groupBoxRNGInfo");
         gridLayout = new QGridLayout(groupBoxRNGInfo);
@@ -228,24 +247,12 @@ public:
         gridLayout->addWidget(tabWidget, 0, 0, 1, 1);
 
 
-        gridLayout_9->addWidget(groupBoxRNGInfo, 0, 0, 1, 1);
+        gridLayout_9->addWidget(groupBoxRNGInfo, 1, 0, 1, 1);
 
-        groupBoxFilters = new QGroupBox(IDs3);
-        groupBoxFilters->setObjectName("groupBoxFilters");
-        gridLayout_2 = new QGridLayout(groupBoxFilters);
-        gridLayout_2->setObjectName("gridLayout_2");
-        idFilter = new IDsFilter(groupBoxFilters);
-        idFilter->setObjectName("idFilter");
+        closebutton = new QToolButton(IDs3);
+        closebutton->setObjectName("closebutton");
 
-        gridLayout_2->addWidget(idFilter, 0, 0, 1, 1);
-
-
-        gridLayout_9->addWidget(groupBoxFilters, 0, 1, 1, 1);
-
-        tableView = new TableView(IDs3);
-        tableView->setObjectName("tableView");
-
-        gridLayout_9->addWidget(tableView, 1, 0, 1, 2);
+        gridLayout_9->addWidget(closebutton, 0, 0, 1, 1);
 
         QWidget::setTabOrder(tabWidget, textBoxSeedXDColo);
         QWidget::setTabOrder(textBoxSeedXDColo, textBoxInitialAdvancesXDColo);
@@ -273,6 +280,7 @@ public:
     void retranslateUi(QWidget *IDs3)
     {
         IDs3->setWindowTitle(QCoreApplication::translate("IDs3", "Gen 3 TID\\SID", nullptr));
+        groupBoxFilters->setTitle(QCoreApplication::translate("IDs3", "Filters", nullptr));
         groupBoxRNGInfo->setTitle(QCoreApplication::translate("IDs3", "RNG Info", nullptr));
         labelSeedXDColo->setText(QCoreApplication::translate("IDs3", "Seed", nullptr));
         labelInitialAdvancesXDColo->setText(QCoreApplication::translate("IDs3", "Initial Advances", nullptr));
@@ -291,7 +299,7 @@ public:
         labelMaxAdvances->setText(QCoreApplication::translate("IDs3", "Max Advances", nullptr));
         pushButtonGenerateRS->setText(QCoreApplication::translate("IDs3", "Generate", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tabRS), QCoreApplication::translate("IDs3", "RS", nullptr));
-        groupBoxFilters->setTitle(QCoreApplication::translate("IDs3", "Filters", nullptr));
+        closebutton->setText(QCoreApplication::translate("IDs3", "X", nullptr));
     } // retranslateUi
 
 };

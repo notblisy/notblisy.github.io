@@ -1,4 +1,4 @@
-# Install script for directory: P:/blisynet/PokeFinder/Source/Form
+# Install script for directory: P:/blisynet/PokeFinderWeb/Source/Form
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

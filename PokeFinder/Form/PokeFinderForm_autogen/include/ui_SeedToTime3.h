@@ -16,6 +16,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpacerItem>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 #include "Form/Controls/TableView.hpp"
 #include "Form/Controls/TextBox.hpp"
@@ -26,15 +27,16 @@ class Ui_SeedToTime3
 {
 public:
     QGridLayout *gridLayout;
-    QLabel *seedLabel;
     TextBox *textBoxSeed;
     QSpacerItem *horizontalSpacer;
-    QLabel *labelYear;
     TextBox *textBoxYear;
+    QLabel *seedLabel;
     QLabel *labelAdvances;
     TextBox *textBoxAdvances;
     QPushButton *pushButtonFind;
+    QLabel *labelYear;
     TableView *tableView;
+    QToolButton *closebutton;
 
     void setupUi(QWidget *SeedToTime3)
     {
@@ -43,53 +45,58 @@ public:
         SeedToTime3->resize(540, 350);
         gridLayout = new QGridLayout(SeedToTime3);
         gridLayout->setObjectName("gridLayout");
-        seedLabel = new QLabel(SeedToTime3);
-        seedLabel->setObjectName("seedLabel");
-
-        gridLayout->addWidget(seedLabel, 0, 0, 1, 1);
-
         textBoxSeed = new TextBox(SeedToTime3);
         textBoxSeed->setObjectName("textBoxSeed");
 
-        gridLayout->addWidget(textBoxSeed, 0, 1, 1, 1);
+        gridLayout->addWidget(textBoxSeed, 1, 1, 1, 1);
 
         horizontalSpacer = new QSpacerItem(0, 0, QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Minimum);
 
-        gridLayout->addItem(horizontalSpacer, 0, 2, 1, 1);
-
-        labelYear = new QLabel(SeedToTime3);
-        labelYear->setObjectName("labelYear");
-
-        gridLayout->addWidget(labelYear, 1, 0, 1, 1);
+        gridLayout->addItem(horizontalSpacer, 1, 2, 1, 1);
 
         textBoxYear = new TextBox(SeedToTime3);
         textBoxYear->setObjectName("textBoxYear");
         textBoxYear->setText(QString::fromUtf8("2000"));
 
-        gridLayout->addWidget(textBoxYear, 1, 1, 1, 1);
+        gridLayout->addWidget(textBoxYear, 2, 1, 1, 1);
+
+        seedLabel = new QLabel(SeedToTime3);
+        seedLabel->setObjectName("seedLabel");
+
+        gridLayout->addWidget(seedLabel, 1, 0, 1, 1);
 
         labelAdvances = new QLabel(SeedToTime3);
         labelAdvances->setObjectName("labelAdvances");
 
-        gridLayout->addWidget(labelAdvances, 2, 0, 1, 1);
+        gridLayout->addWidget(labelAdvances, 3, 0, 1, 1);
 
         textBoxAdvances = new TextBox(SeedToTime3);
         textBoxAdvances->setObjectName("textBoxAdvances");
         textBoxAdvances->setEnabled(true);
         textBoxAdvances->setReadOnly(true);
 
-        gridLayout->addWidget(textBoxAdvances, 2, 1, 1, 1);
+        gridLayout->addWidget(textBoxAdvances, 3, 1, 1, 1);
 
         pushButtonFind = new QPushButton(SeedToTime3);
         pushButtonFind->setObjectName("pushButtonFind");
 
-        gridLayout->addWidget(pushButtonFind, 2, 2, 1, 1);
+        gridLayout->addWidget(pushButtonFind, 3, 2, 1, 1);
+
+        labelYear = new QLabel(SeedToTime3);
+        labelYear->setObjectName("labelYear");
+
+        gridLayout->addWidget(labelYear, 2, 0, 1, 1);
 
         tableView = new TableView(SeedToTime3);
         tableView->setObjectName("tableView");
         tableView->verticalHeader()->setVisible(false);
 
-        gridLayout->addWidget(tableView, 3, 0, 1, 3);
+        gridLayout->addWidget(tableView, 4, 0, 1, 3);
+
+        closebutton = new QToolButton(SeedToTime3);
+        closebutton->setObjectName("closebutton");
+
+        gridLayout->addWidget(closebutton, 0, 0, 1, 1);
 
 
         retranslateUi(SeedToTime3);
@@ -101,9 +108,10 @@ public:
     {
         SeedToTime3->setWindowTitle(QCoreApplication::translate("SeedToTime3", "Gen 3 Seed to Time", nullptr));
         seedLabel->setText(QCoreApplication::translate("SeedToTime3", "16/32-Bit Seed", nullptr));
-        labelYear->setText(QCoreApplication::translate("SeedToTime3", "Year", nullptr));
         labelAdvances->setText(QCoreApplication::translate("SeedToTime3", "Advances", nullptr));
         pushButtonFind->setText(QCoreApplication::translate("SeedToTime3", "Find", nullptr));
+        labelYear->setText(QCoreApplication::translate("SeedToTime3", "Year", nullptr));
+        closebutton->setText(QCoreApplication::translate("SeedToTime3", "X", nullptr));
     } // retranslateUi
 
 };

@@ -1,5 +1,5 @@
-P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Model/PokeFinderModel_autogen/XOY2WPVXGD/moc_ProfileModel4.cpp: P:/blisynet/PokeFinder/Source/Model/Gen4/ProfileModel4.hpp \
-  P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Model/PokeFinderModel_autogen/moc_predefs.h \
+P:/blisynet/PokeFinderWeb/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Model/PokeFinderModel_autogen/XOY2WPVXGD/moc_ProfileModel4.cpp: P:/blisynet/PokeFinderWeb/Source/Model/Gen4/ProfileModel4.hpp \
+  P:/blisynet/PokeFinderWeb/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Model/PokeFinderModel_autogen/moc_predefs.h \
   C:/Users/jakes/OneDrive/Desktop/WASM/emsdk/upstream/emscripten/cache/sysroot/include/alloca.h \
   C:/Users/jakes/OneDrive/Desktop/WASM/emsdk/upstream/emscripten/cache/sysroot/include/assert.h \
   C:/Users/jakes/OneDrive/Desktop/WASM/emsdk/upstream/emscripten/cache/sysroot/include/bits/alltypes.h \
@@ -14,10 +14,10 @@ P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Mo
   C:/Users/jakes/OneDrive/Desktop/WASM/emsdk/upstream/emscripten/cache/sysroot/include/string.h \
   C:/Users/jakes/OneDrive/Desktop/WASM/emsdk/upstream/emscripten/cache/sysroot/include/strings.h \
   C:/Users/jakes/OneDrive/Desktop/WASM/emsdk/upstream/emscripten/cache/sysroot/include/wasi/api.h \
-  P:/blisynet/PokeFinder/Source/Core/Gen4/Profile4.hpp \
-  P:/blisynet/PokeFinder/Source/Core/Global.hpp \
-  P:/blisynet/PokeFinder/Source/Core/Parents/Profile.hpp \
-  P:/blisynet/PokeFinder/Source/Model/TableModel.hpp \
+  P:/blisynet/PokeFinderWeb/Source/Core/Gen4/Profile4.hpp \
+  P:/blisynet/PokeFinderWeb/Source/Core/Global.hpp \
+  P:/blisynet/PokeFinderWeb/Source/Core/Parents/Profile.hpp \
+  P:/blisynet/PokeFinderWeb/Source/Model/TableModel.hpp \
   Z:/QT6/6.9.1/wasm_multithread/include/QtCore/QAbstractTableModel \
   Z:/QT6/6.9.1/wasm_multithread/include/QtCore/q17memory.h \
   Z:/QT6/6.9.1/wasm_multithread/include/QtCore/q20functional.h \

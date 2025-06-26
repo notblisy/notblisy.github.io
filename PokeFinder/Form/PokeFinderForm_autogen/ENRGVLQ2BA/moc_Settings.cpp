@@ -45,7 +45,8 @@ template <> constexpr inline auto Settings::qt_create_metaobjectdata<qt_meta_tag
         "index",
         "styleIndexChanged",
         "tableHeaderSizeIndexChanged",
-        "threadsIndexChanged"
+        "threadsIndexChanged",
+        "on_settingsclose_clicked"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -67,6 +68,8 @@ template <> constexpr inline auto Settings::qt_create_metaobjectdata<qt_meta_tag
         QtMocHelpers::SlotData<void(int)>(7, 2, QMC::AccessPrivate, QMetaType::Void, {{
             { QMetaType::Int, 4 },
         }}),
+        // Slot 'on_settingsclose_clicked'
+        QtMocHelpers::SlotData<void()>(8, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -95,6 +98,7 @@ void Settings::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, vo
         case 2: _t->styleIndexChanged((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
         case 3: _t->tableHeaderSizeIndexChanged((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
         case 4: _t->threadsIndexChanged((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 5: _t->on_settingsclose_clicked(); break;
         default: ;
         }
     }
@@ -119,14 +123,14 @@ int Settings::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 5)
+        if (_id < 6)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 5;
+        _id -= 6;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 5)
+        if (_id < 6)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 5;
+        _id -= 6;
     }
     return _id;
 }

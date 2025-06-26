@@ -17,6 +17,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpinBox>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 #include "Form/Controls/TableView.hpp"
 #include "Form/Controls/TextBox.hpp"
@@ -27,24 +28,25 @@ class Ui_IVToPID
 {
 public:
     QGridLayout *gridLayout;
-    QLabel *labelHP;
-    QLabel *labelAtk;
-    QLabel *labelDef;
-    QLabel *labelSpA;
-    QLabel *labelSpD;
     QLabel *labelSpe;
-    QSpinBox *spinBoxHP;
-    QSpinBox *spinBoxAtk;
-    QSpinBox *spinBoxDef;
-    QSpinBox *spinBoxSpA;
-    QSpinBox *spinBoxSpD;
-    QSpinBox *spinBoxSpe;
-    QLabel *labelNature;
-    QLabel *labelTID;
-    QComboBox *comboBoxNature;
-    TextBox *textBoxTID;
+    QLabel *labelAtk;
     QPushButton *pushButtonFind;
+    QLabel *labelTID;
+    QSpinBox *spinBoxSpD;
+    QLabel *labelNature;
+    TextBox *textBoxTID;
+    QSpinBox *spinBoxDef;
+    QSpinBox *spinBoxHP;
+    QComboBox *comboBoxNature;
+    QLabel *labelSpA;
+    QLabel *labelHP;
+    QLabel *labelDef;
+    QSpinBox *spinBoxAtk;
+    QSpinBox *spinBoxSpe;
+    QLabel *labelSpD;
+    QSpinBox *spinBoxSpA;
     TableView *tableView;
+    QToolButton *closebutton;
 
     void setupUi(QWidget *IVToPID)
     {
@@ -53,86 +55,36 @@ public:
         IVToPID->resize(700, 450);
         gridLayout = new QGridLayout(IVToPID);
         gridLayout->setObjectName("gridLayout");
-        labelHP = new QLabel(IVToPID);
-        labelHP->setObjectName("labelHP");
+        labelSpe = new QLabel(IVToPID);
+        labelSpe->setObjectName("labelSpe");
 
-        gridLayout->addWidget(labelHP, 0, 0, 1, 1);
+        gridLayout->addWidget(labelSpe, 1, 5, 1, 1);
 
         labelAtk = new QLabel(IVToPID);
         labelAtk->setObjectName("labelAtk");
 
-        gridLayout->addWidget(labelAtk, 0, 1, 1, 1);
+        gridLayout->addWidget(labelAtk, 1, 1, 1, 1);
 
-        labelDef = new QLabel(IVToPID);
-        labelDef->setObjectName("labelDef");
+        pushButtonFind = new QPushButton(IVToPID);
+        pushButtonFind->setObjectName("pushButtonFind");
 
-        gridLayout->addWidget(labelDef, 0, 2, 1, 1);
+        gridLayout->addWidget(pushButtonFind, 4, 2, 1, 1);
 
-        labelSpA = new QLabel(IVToPID);
-        labelSpA->setObjectName("labelSpA");
+        labelTID = new QLabel(IVToPID);
+        labelTID->setObjectName("labelTID");
 
-        gridLayout->addWidget(labelSpA, 0, 3, 1, 1);
-
-        labelSpD = new QLabel(IVToPID);
-        labelSpD->setObjectName("labelSpD");
-
-        gridLayout->addWidget(labelSpD, 0, 4, 1, 1);
-
-        labelSpe = new QLabel(IVToPID);
-        labelSpe->setObjectName("labelSpe");
-
-        gridLayout->addWidget(labelSpe, 0, 5, 1, 1);
-
-        spinBoxHP = new QSpinBox(IVToPID);
-        spinBoxHP->setObjectName("spinBoxHP");
-        spinBoxHP->setMaximum(31);
-
-        gridLayout->addWidget(spinBoxHP, 1, 0, 1, 1);
-
-        spinBoxAtk = new QSpinBox(IVToPID);
-        spinBoxAtk->setObjectName("spinBoxAtk");
-        spinBoxAtk->setMaximum(31);
-
-        gridLayout->addWidget(spinBoxAtk, 1, 1, 1, 1);
-
-        spinBoxDef = new QSpinBox(IVToPID);
-        spinBoxDef->setObjectName("spinBoxDef");
-        spinBoxDef->setMaximum(31);
-
-        gridLayout->addWidget(spinBoxDef, 1, 2, 1, 1);
-
-        spinBoxSpA = new QSpinBox(IVToPID);
-        spinBoxSpA->setObjectName("spinBoxSpA");
-        spinBoxSpA->setMaximum(31);
-
-        gridLayout->addWidget(spinBoxSpA, 1, 3, 1, 1);
+        gridLayout->addWidget(labelTID, 3, 1, 1, 1);
 
         spinBoxSpD = new QSpinBox(IVToPID);
         spinBoxSpD->setObjectName("spinBoxSpD");
         spinBoxSpD->setMaximum(31);
 
-        gridLayout->addWidget(spinBoxSpD, 1, 4, 1, 1);
-
-        spinBoxSpe = new QSpinBox(IVToPID);
-        spinBoxSpe->setObjectName("spinBoxSpe");
-        spinBoxSpe->setMaximum(31);
-
-        gridLayout->addWidget(spinBoxSpe, 1, 5, 1, 1);
+        gridLayout->addWidget(spinBoxSpD, 2, 4, 1, 1);
 
         labelNature = new QLabel(IVToPID);
         labelNature->setObjectName("labelNature");
 
-        gridLayout->addWidget(labelNature, 2, 0, 1, 1);
-
-        labelTID = new QLabel(IVToPID);
-        labelTID->setObjectName("labelTID");
-
-        gridLayout->addWidget(labelTID, 2, 1, 1, 1);
-
-        comboBoxNature = new QComboBox(IVToPID);
-        comboBoxNature->setObjectName("comboBoxNature");
-
-        gridLayout->addWidget(comboBoxNature, 3, 0, 1, 1);
+        gridLayout->addWidget(labelNature, 3, 0, 1, 1);
 
         textBoxTID = new TextBox(IVToPID);
         textBoxTID->setObjectName("textBoxTID");
@@ -142,17 +94,72 @@ public:
         sizePolicy.setHeightForWidth(textBoxTID->sizePolicy().hasHeightForWidth());
         textBoxTID->setSizePolicy(sizePolicy);
 
-        gridLayout->addWidget(textBoxTID, 3, 1, 1, 1);
+        gridLayout->addWidget(textBoxTID, 4, 1, 1, 1);
 
-        pushButtonFind = new QPushButton(IVToPID);
-        pushButtonFind->setObjectName("pushButtonFind");
+        spinBoxDef = new QSpinBox(IVToPID);
+        spinBoxDef->setObjectName("spinBoxDef");
+        spinBoxDef->setMaximum(31);
 
-        gridLayout->addWidget(pushButtonFind, 3, 2, 1, 1);
+        gridLayout->addWidget(spinBoxDef, 2, 2, 1, 1);
+
+        spinBoxHP = new QSpinBox(IVToPID);
+        spinBoxHP->setObjectName("spinBoxHP");
+        spinBoxHP->setMaximum(31);
+
+        gridLayout->addWidget(spinBoxHP, 2, 0, 1, 1);
+
+        comboBoxNature = new QComboBox(IVToPID);
+        comboBoxNature->setObjectName("comboBoxNature");
+
+        gridLayout->addWidget(comboBoxNature, 4, 0, 1, 1);
+
+        labelSpA = new QLabel(IVToPID);
+        labelSpA->setObjectName("labelSpA");
+
+        gridLayout->addWidget(labelSpA, 1, 3, 1, 1);
+
+        labelHP = new QLabel(IVToPID);
+        labelHP->setObjectName("labelHP");
+
+        gridLayout->addWidget(labelHP, 1, 0, 1, 1);
+
+        labelDef = new QLabel(IVToPID);
+        labelDef->setObjectName("labelDef");
+
+        gridLayout->addWidget(labelDef, 1, 2, 1, 1);
+
+        spinBoxAtk = new QSpinBox(IVToPID);
+        spinBoxAtk->setObjectName("spinBoxAtk");
+        spinBoxAtk->setMaximum(31);
+
+        gridLayout->addWidget(spinBoxAtk, 2, 1, 1, 1);
+
+        spinBoxSpe = new QSpinBox(IVToPID);
+        spinBoxSpe->setObjectName("spinBoxSpe");
+        spinBoxSpe->setMaximum(31);
+
+        gridLayout->addWidget(spinBoxSpe, 2, 5, 1, 1);
+
+        labelSpD = new QLabel(IVToPID);
+        labelSpD->setObjectName("labelSpD");
+
+        gridLayout->addWidget(labelSpD, 1, 4, 1, 1);
+
+        spinBoxSpA = new QSpinBox(IVToPID);
+        spinBoxSpA->setObjectName("spinBoxSpA");
+        spinBoxSpA->setMaximum(31);
+
+        gridLayout->addWidget(spinBoxSpA, 2, 3, 1, 1);
 
         tableView = new TableView(IVToPID);
         tableView->setObjectName("tableView");
 
-        gridLayout->addWidget(tableView, 4, 0, 1, 6);
+        gridLayout->addWidget(tableView, 5, 0, 1, 6);
+
+        closebutton = new QToolButton(IVToPID);
+        closebutton->setObjectName("closebutton");
+
+        gridLayout->addWidget(closebutton, 0, 0, 1, 1);
 
 
         retranslateUi(IVToPID);
@@ -163,15 +170,16 @@ public:
     void retranslateUi(QWidget *IVToPID)
     {
         IVToPID->setWindowTitle(QCoreApplication::translate("IVToPID", "IVs to PID", nullptr));
-        labelHP->setText(QCoreApplication::translate("IVToPID", "HP", nullptr));
-        labelAtk->setText(QCoreApplication::translate("IVToPID", "Atk", nullptr));
-        labelDef->setText(QCoreApplication::translate("IVToPID", "Def", nullptr));
-        labelSpA->setText(QCoreApplication::translate("IVToPID", "SpA", nullptr));
-        labelSpD->setText(QCoreApplication::translate("IVToPID", "SpD", nullptr));
         labelSpe->setText(QCoreApplication::translate("IVToPID", "Spe", nullptr));
-        labelNature->setText(QCoreApplication::translate("IVToPID", "Nature", nullptr));
-        labelTID->setText(QCoreApplication::translate("IVToPID", "TID", nullptr));
+        labelAtk->setText(QCoreApplication::translate("IVToPID", "Atk", nullptr));
         pushButtonFind->setText(QCoreApplication::translate("IVToPID", "Find", nullptr));
+        labelTID->setText(QCoreApplication::translate("IVToPID", "TID", nullptr));
+        labelNature->setText(QCoreApplication::translate("IVToPID", "Nature", nullptr));
+        labelSpA->setText(QCoreApplication::translate("IVToPID", "SpA", nullptr));
+        labelHP->setText(QCoreApplication::translate("IVToPID", "HP", nullptr));
+        labelDef->setText(QCoreApplication::translate("IVToPID", "Def", nullptr));
+        labelSpD->setText(QCoreApplication::translate("IVToPID", "SpD", nullptr));
+        closebutton->setText(QCoreApplication::translate("IVToPID", "X", nullptr));
     } // retranslateUi
 
 };

@@ -15,6 +15,7 @@
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QSpacerItem>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 #include "Form/Controls/TextBox.hpp"
 
@@ -29,6 +30,7 @@ public:
     QSpacerItem *horizontalSpacer;
     QLabel *labelInfo;
     QGraphicsView *graphicsView;
+    QToolButton *closebutton;
 
     void setupUi(QWidget *SpindaPainter)
     {
@@ -40,27 +42,32 @@ public:
         labelPID = new QLabel(SpindaPainter);
         labelPID->setObjectName("labelPID");
 
-        gridLayout->addWidget(labelPID, 0, 0, 1, 1);
+        gridLayout->addWidget(labelPID, 1, 0, 1, 1);
 
         textBoxPID = new TextBox(SpindaPainter);
         textBoxPID->setObjectName("textBoxPID");
         textBoxPID->setText(QString::fromUtf8("0"));
 
-        gridLayout->addWidget(textBoxPID, 0, 1, 1, 1);
+        gridLayout->addWidget(textBoxPID, 1, 1, 1, 1);
 
         horizontalSpacer = new QSpacerItem(0, 0, QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Minimum);
 
-        gridLayout->addItem(horizontalSpacer, 0, 2, 1, 1);
+        gridLayout->addItem(horizontalSpacer, 1, 2, 1, 1);
 
         labelInfo = new QLabel(SpindaPainter);
         labelInfo->setObjectName("labelInfo");
 
-        gridLayout->addWidget(labelInfo, 0, 3, 1, 1);
+        gridLayout->addWidget(labelInfo, 1, 3, 1, 1);
 
         graphicsView = new QGraphicsView(SpindaPainter);
         graphicsView->setObjectName("graphicsView");
 
-        gridLayout->addWidget(graphicsView, 1, 0, 1, 4);
+        gridLayout->addWidget(graphicsView, 2, 0, 1, 4);
+
+        closebutton = new QToolButton(SpindaPainter);
+        closebutton->setObjectName("closebutton");
+
+        gridLayout->addWidget(closebutton, 0, 0, 1, 1);
 
 
         retranslateUi(SpindaPainter);
@@ -72,6 +79,7 @@ public:
     {
         SpindaPainter->setWindowTitle(QCoreApplication::translate("SpindaPainter", "Spinda Painter", nullptr));
         labelPID->setText(QCoreApplication::translate("SpindaPainter", "PID", nullptr));
+        closebutton->setText(QCoreApplication::translate("SpindaPainter", "X", nullptr));
     } // retranslateUi
 
 };

@@ -56,7 +56,8 @@ template <> constexpr inline auto Wild3::qt_create_metaobjectdata<qt_meta_tag_ZN
         "searcherFeebasTileStateChanged",
         "searcherLocationIndexChanged",
         "searcherPokemonIndexChanged",
-        "seedToTime"
+        "seedToTime",
+        "on_closebutton_clicked"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -108,6 +109,8 @@ template <> constexpr inline auto Wild3::qt_create_metaobjectdata<qt_meta_tag_ZN
         }}),
         // Slot 'seedToTime'
         QtMocHelpers::SlotData<void()>(18, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'on_closebutton_clicked'
+        QtMocHelpers::SlotData<void()>(19, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -145,6 +148,7 @@ void Wild3::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void 
         case 11: _t->searcherLocationIndexChanged((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
         case 12: _t->searcherPokemonIndexChanged((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
         case 13: _t->seedToTime(); break;
+        case 14: _t->on_closebutton_clicked(); break;
         default: ;
         }
     }
@@ -173,14 +177,14 @@ int Wild3::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 14)
+        if (_id < 15)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 14;
+        _id -= 15;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 14)
+        if (_id < 15)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 14;
+        _id -= 15;
     }
     return _id;
 }

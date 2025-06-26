@@ -19,6 +19,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QTabWidget>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 #include "Form/Controls/ComboBox.hpp"
 #include "Form/Controls/TableView.hpp"
@@ -30,6 +31,7 @@ class Ui_Researcher
 {
 public:
     QGridLayout *gridLayout_7;
+    TableView *tableView;
     QTabWidget *rngSelection;
     QWidget *tab32Bit;
     QGridLayout *gridLayout;
@@ -57,13 +59,6 @@ public:
     TextBox *textBoxXorshiftSeed0;
     QLabel *labelXorshiftSeed1;
     TextBox *textBoxXorshiftSeed1;
-    QGroupBox *groupBoxParameters;
-    QGridLayout *gridLayout_6;
-    QLabel *labelInitialAdvances;
-    TextBox *textBoxInitialAdvances;
-    QLabel *labelMaxAdvances;
-    TextBox *textBoxMaxAdvances;
-    QPushButton *pushButtonGenerate;
     QGroupBox *groupBoxSearch;
     QGridLayout *gridLayout_4;
     QCheckBox *checkBoxSearch;
@@ -132,7 +127,14 @@ public:
     TextBox *textBoxRValue10;
     QCheckBox *checkBoxHex10;
     ComboBox *comboBoxRValue10;
-    TableView *tableView;
+    QGroupBox *groupBoxParameters;
+    QGridLayout *gridLayout_6;
+    QLabel *labelInitialAdvances;
+    TextBox *textBoxInitialAdvances;
+    QLabel *labelMaxAdvances;
+    TextBox *textBoxMaxAdvances;
+    QPushButton *pushButtonGenerate;
+    QToolButton *toolButton;
 
     void setupUi(QWidget *Researcher)
     {
@@ -142,6 +144,16 @@ public:
         Researcher->setWindowTitle(QString::fromUtf8("Researcher"));
         gridLayout_7 = new QGridLayout(Researcher);
         gridLayout_7->setObjectName("gridLayout_7");
+        tableView = new TableView(Researcher);
+        tableView->setObjectName("tableView");
+        QSizePolicy sizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(1);
+        sizePolicy.setHeightForWidth(tableView->sizePolicy().hasHeightForWidth());
+        tableView->setSizePolicy(sizePolicy);
+
+        gridLayout_7->addWidget(tableView, 5, 0, 1, 2);
+
         rngSelection = new QTabWidget(Researcher);
         rngSelection->setObjectName("rngSelection");
         tab32Bit = new QWidget();
@@ -271,41 +283,7 @@ public:
 
         rngSelection->addTab(tabXorshift, QString());
 
-        gridLayout_7->addWidget(rngSelection, 0, 0, 1, 1);
-
-        groupBoxParameters = new QGroupBox(Researcher);
-        groupBoxParameters->setObjectName("groupBoxParameters");
-        gridLayout_6 = new QGridLayout(groupBoxParameters);
-        gridLayout_6->setObjectName("gridLayout_6");
-        labelInitialAdvances = new QLabel(groupBoxParameters);
-        labelInitialAdvances->setObjectName("labelInitialAdvances");
-
-        gridLayout_6->addWidget(labelInitialAdvances, 0, 0, 1, 1);
-
-        textBoxInitialAdvances = new TextBox(groupBoxParameters);
-        textBoxInitialAdvances->setObjectName("textBoxInitialAdvances");
-        textBoxInitialAdvances->setText(QString::fromUtf8("0"));
-
-        gridLayout_6->addWidget(textBoxInitialAdvances, 0, 1, 1, 1);
-
-        labelMaxAdvances = new QLabel(groupBoxParameters);
-        labelMaxAdvances->setObjectName("labelMaxAdvances");
-
-        gridLayout_6->addWidget(labelMaxAdvances, 1, 0, 1, 1);
-
-        textBoxMaxAdvances = new TextBox(groupBoxParameters);
-        textBoxMaxAdvances->setObjectName("textBoxMaxAdvances");
-        textBoxMaxAdvances->setText(QString::fromUtf8("1000"));
-
-        gridLayout_6->addWidget(textBoxMaxAdvances, 1, 1, 1, 1);
-
-        pushButtonGenerate = new QPushButton(groupBoxParameters);
-        pushButtonGenerate->setObjectName("pushButtonGenerate");
-
-        gridLayout_6->addWidget(pushButtonGenerate, 2, 0, 1, 2);
-
-
-        gridLayout_7->addWidget(groupBoxParameters, 1, 0, 1, 1);
+        gridLayout_7->addWidget(rngSelection, 1, 0, 1, 1);
 
         groupBoxSearch = new QGroupBox(Researcher);
         groupBoxSearch->setObjectName("groupBoxSearch");
@@ -353,7 +331,7 @@ public:
         gridLayout_4->addWidget(pushButtonNext, 1, 2, 1, 2);
 
 
-        gridLayout_7->addWidget(groupBoxSearch, 2, 0, 1, 1);
+        gridLayout_7->addWidget(groupBoxSearch, 3, 0, 1, 1);
 
         groupBoxCustoms = new QGroupBox(Researcher);
         groupBoxCustoms->setObjectName("groupBoxCustoms");
@@ -1072,17 +1050,46 @@ public:
         gridLayout_5->addWidget(comboBoxRValue10, 9, 6, 1, 1);
 
 
-        gridLayout_7->addWidget(groupBoxCustoms, 0, 1, 4, 1);
+        gridLayout_7->addWidget(groupBoxCustoms, 1, 1, 4, 1);
 
-        tableView = new TableView(Researcher);
-        tableView->setObjectName("tableView");
-        QSizePolicy sizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(1);
-        sizePolicy.setHeightForWidth(tableView->sizePolicy().hasHeightForWidth());
-        tableView->setSizePolicy(sizePolicy);
+        groupBoxParameters = new QGroupBox(Researcher);
+        groupBoxParameters->setObjectName("groupBoxParameters");
+        gridLayout_6 = new QGridLayout(groupBoxParameters);
+        gridLayout_6->setObjectName("gridLayout_6");
+        labelInitialAdvances = new QLabel(groupBoxParameters);
+        labelInitialAdvances->setObjectName("labelInitialAdvances");
 
-        gridLayout_7->addWidget(tableView, 4, 0, 1, 2);
+        gridLayout_6->addWidget(labelInitialAdvances, 0, 0, 1, 1);
+
+        textBoxInitialAdvances = new TextBox(groupBoxParameters);
+        textBoxInitialAdvances->setObjectName("textBoxInitialAdvances");
+        textBoxInitialAdvances->setText(QString::fromUtf8("0"));
+
+        gridLayout_6->addWidget(textBoxInitialAdvances, 0, 1, 1, 1);
+
+        labelMaxAdvances = new QLabel(groupBoxParameters);
+        labelMaxAdvances->setObjectName("labelMaxAdvances");
+
+        gridLayout_6->addWidget(labelMaxAdvances, 1, 0, 1, 1);
+
+        textBoxMaxAdvances = new TextBox(groupBoxParameters);
+        textBoxMaxAdvances->setObjectName("textBoxMaxAdvances");
+        textBoxMaxAdvances->setText(QString::fromUtf8("1000"));
+
+        gridLayout_6->addWidget(textBoxMaxAdvances, 1, 1, 1, 1);
+
+        pushButtonGenerate = new QPushButton(groupBoxParameters);
+        pushButtonGenerate->setObjectName("pushButtonGenerate");
+
+        gridLayout_6->addWidget(pushButtonGenerate, 2, 0, 1, 2);
+
+
+        gridLayout_7->addWidget(groupBoxParameters, 2, 0, 1, 1);
+
+        toolButton = new QToolButton(Researcher);
+        toolButton->setObjectName("toolButton");
+
+        gridLayout_7->addWidget(toolButton, 0, 0, 1, 1);
 
         QWidget::setTabOrder(rngSelection, comboBoxRNG32Bit);
         QWidget::setTabOrder(comboBoxRNG32Bit, textBox32BitSeed);
@@ -1182,10 +1189,6 @@ public:
         labelXorshiftSeed0->setText(QCoreApplication::translate("Researcher", "Seed 0", nullptr));
         labelXorshiftSeed1->setText(QCoreApplication::translate("Researcher", "Seed 1", nullptr));
         rngSelection->setTabText(rngSelection->indexOf(tabXorshift), QCoreApplication::translate("Researcher", "Xorshift", nullptr));
-        groupBoxParameters->setTitle(QCoreApplication::translate("Researcher", "Parameters", nullptr));
-        labelInitialAdvances->setText(QCoreApplication::translate("Researcher", "Initial Advances", nullptr));
-        labelMaxAdvances->setText(QCoreApplication::translate("Researcher", "Max Advances", nullptr));
-        pushButtonGenerate->setText(QCoreApplication::translate("Researcher", "Generate", nullptr));
         groupBoxSearch->setTitle(QCoreApplication::translate("Researcher", "Search", nullptr));
         checkBoxSearch->setText(QCoreApplication::translate("Researcher", "Value (Hex)", nullptr));
         comboBoxSearch->setItemText(0, QCoreApplication::translate("Researcher", "64Bit", nullptr));
@@ -1664,6 +1667,11 @@ public:
         comboBoxRValue10->setItemText(29, QCoreApplication::translate("Researcher", "Previous 8", nullptr));
         comboBoxRValue10->setItemText(30, QCoreApplication::translate("Researcher", "Previous 9", nullptr));
 
+        groupBoxParameters->setTitle(QCoreApplication::translate("Researcher", "Parameters", nullptr));
+        labelInitialAdvances->setText(QCoreApplication::translate("Researcher", "Initial Advances", nullptr));
+        labelMaxAdvances->setText(QCoreApplication::translate("Researcher", "Max Advances", nullptr));
+        pushButtonGenerate->setText(QCoreApplication::translate("Researcher", "Generate", nullptr));
+        toolButton->setText(QCoreApplication::translate("Researcher", "X", nullptr));
         (void)Researcher;
     } // retranslateUi
 

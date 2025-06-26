@@ -23,6 +23,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QTabWidget>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 #include "Form/Controls/ComboBox.hpp"
 #include "Form/Controls/Filter.hpp"
@@ -35,18 +36,6 @@ class Ui_Static3
 {
 public:
     QGridLayout *gridLayout_7;
-    QGroupBox *groupBoxProfile;
-    QGridLayout *gridLayout_4;
-    QLabel *labelProfile;
-    QComboBox *comboBoxProfiles;
-    QPushButton *pushButtonProfileManager;
-    QLabel *labelProfileTID;
-    QLabel *labelProfileTIDValue;
-    QLabel *labelProfileSID;
-    QLabel *labelProfileSIDValue;
-    QFrame *line;
-    QLabel *labelProfileGame;
-    QLabel *labelProfileGameValue;
     QTabWidget *tabRNGSelector;
     QWidget *tabStatic;
     QGridLayout *gridLayout_5;
@@ -99,6 +88,19 @@ public:
     Filter *filterSearcher;
     QProgressBar *progressBar;
     TableView *tableViewSearcher;
+    QGroupBox *groupBoxProfile;
+    QGridLayout *gridLayout_4;
+    QLabel *labelProfile;
+    QComboBox *comboBoxProfiles;
+    QPushButton *pushButtonProfileManager;
+    QLabel *labelProfileTID;
+    QLabel *labelProfileTIDValue;
+    QLabel *labelProfileSID;
+    QLabel *labelProfileSIDValue;
+    QFrame *line;
+    QLabel *labelProfileGame;
+    QLabel *labelProfileGameValue;
+    QToolButton *closebutton;
 
     void setupUi(QWidget *Static3)
     {
@@ -112,67 +114,6 @@ public:
         gridLayout_7->setSpacing(6);
         gridLayout_7->setContentsMargins(11, 11, 11, 11);
         gridLayout_7->setObjectName("gridLayout_7");
-        groupBoxProfile = new QGroupBox(Static3);
-        groupBoxProfile->setObjectName("groupBoxProfile");
-        gridLayout_4 = new QGridLayout(groupBoxProfile);
-        gridLayout_4->setSpacing(6);
-        gridLayout_4->setContentsMargins(11, 11, 11, 11);
-        gridLayout_4->setObjectName("gridLayout_4");
-        labelProfile = new QLabel(groupBoxProfile);
-        labelProfile->setObjectName("labelProfile");
-
-        gridLayout_4->addWidget(labelProfile, 0, 0, 1, 1);
-
-        comboBoxProfiles = new QComboBox(groupBoxProfile);
-        comboBoxProfiles->setObjectName("comboBoxProfiles");
-
-        gridLayout_4->addWidget(comboBoxProfiles, 0, 1, 1, 1);
-
-        pushButtonProfileManager = new QPushButton(groupBoxProfile);
-        pushButtonProfileManager->setObjectName("pushButtonProfileManager");
-
-        gridLayout_4->addWidget(pushButtonProfileManager, 1, 1, 1, 1);
-
-        labelProfileTID = new QLabel(groupBoxProfile);
-        labelProfileTID->setObjectName("labelProfileTID");
-
-        gridLayout_4->addWidget(labelProfileTID, 0, 2, 1, 1);
-
-        labelProfileTIDValue = new QLabel(groupBoxProfile);
-        labelProfileTIDValue->setObjectName("labelProfileTIDValue");
-
-        gridLayout_4->addWidget(labelProfileTIDValue, 0, 3, 1, 1);
-
-        labelProfileSID = new QLabel(groupBoxProfile);
-        labelProfileSID->setObjectName("labelProfileSID");
-
-        gridLayout_4->addWidget(labelProfileSID, 1, 2, 1, 1);
-
-        labelProfileSIDValue = new QLabel(groupBoxProfile);
-        labelProfileSIDValue->setObjectName("labelProfileSIDValue");
-
-        gridLayout_4->addWidget(labelProfileSIDValue, 1, 3, 1, 1);
-
-        line = new QFrame(groupBoxProfile);
-        line->setObjectName("line");
-        line->setFrameShape(QFrame::Shape::VLine);
-        line->setFrameShadow(QFrame::Shadow::Sunken);
-
-        gridLayout_4->addWidget(line, 0, 4, 2, 1);
-
-        labelProfileGame = new QLabel(groupBoxProfile);
-        labelProfileGame->setObjectName("labelProfileGame");
-
-        gridLayout_4->addWidget(labelProfileGame, 0, 5, 1, 1);
-
-        labelProfileGameValue = new QLabel(groupBoxProfile);
-        labelProfileGameValue->setObjectName("labelProfileGameValue");
-
-        gridLayout_4->addWidget(labelProfileGameValue, 0, 6, 1, 1);
-
-
-        gridLayout_7->addWidget(groupBoxProfile, 0, 0, 1, 1);
-
         tabRNGSelector = new QTabWidget(Static3);
         tabRNGSelector->setObjectName("tabRNGSelector");
         tabStatic = new QWidget();
@@ -457,7 +398,73 @@ public:
 
         tabRNGSelector->addTab(tabSpreadSearcher, QString());
 
-        gridLayout_7->addWidget(tabRNGSelector, 1, 0, 1, 1);
+        gridLayout_7->addWidget(tabRNGSelector, 2, 0, 1, 1);
+
+        groupBoxProfile = new QGroupBox(Static3);
+        groupBoxProfile->setObjectName("groupBoxProfile");
+        gridLayout_4 = new QGridLayout(groupBoxProfile);
+        gridLayout_4->setSpacing(6);
+        gridLayout_4->setContentsMargins(11, 11, 11, 11);
+        gridLayout_4->setObjectName("gridLayout_4");
+        labelProfile = new QLabel(groupBoxProfile);
+        labelProfile->setObjectName("labelProfile");
+
+        gridLayout_4->addWidget(labelProfile, 0, 0, 1, 1);
+
+        comboBoxProfiles = new QComboBox(groupBoxProfile);
+        comboBoxProfiles->setObjectName("comboBoxProfiles");
+
+        gridLayout_4->addWidget(comboBoxProfiles, 0, 1, 1, 1);
+
+        pushButtonProfileManager = new QPushButton(groupBoxProfile);
+        pushButtonProfileManager->setObjectName("pushButtonProfileManager");
+
+        gridLayout_4->addWidget(pushButtonProfileManager, 1, 1, 1, 1);
+
+        labelProfileTID = new QLabel(groupBoxProfile);
+        labelProfileTID->setObjectName("labelProfileTID");
+
+        gridLayout_4->addWidget(labelProfileTID, 0, 2, 1, 1);
+
+        labelProfileTIDValue = new QLabel(groupBoxProfile);
+        labelProfileTIDValue->setObjectName("labelProfileTIDValue");
+
+        gridLayout_4->addWidget(labelProfileTIDValue, 0, 3, 1, 1);
+
+        labelProfileSID = new QLabel(groupBoxProfile);
+        labelProfileSID->setObjectName("labelProfileSID");
+
+        gridLayout_4->addWidget(labelProfileSID, 1, 2, 1, 1);
+
+        labelProfileSIDValue = new QLabel(groupBoxProfile);
+        labelProfileSIDValue->setObjectName("labelProfileSIDValue");
+
+        gridLayout_4->addWidget(labelProfileSIDValue, 1, 3, 1, 1);
+
+        line = new QFrame(groupBoxProfile);
+        line->setObjectName("line");
+        line->setFrameShape(QFrame::Shape::VLine);
+        line->setFrameShadow(QFrame::Shadow::Sunken);
+
+        gridLayout_4->addWidget(line, 0, 4, 2, 1);
+
+        labelProfileGame = new QLabel(groupBoxProfile);
+        labelProfileGame->setObjectName("labelProfileGame");
+
+        gridLayout_4->addWidget(labelProfileGame, 0, 5, 1, 1);
+
+        labelProfileGameValue = new QLabel(groupBoxProfile);
+        labelProfileGameValue->setObjectName("labelProfileGameValue");
+
+        gridLayout_4->addWidget(labelProfileGameValue, 0, 6, 1, 1);
+
+
+        gridLayout_7->addWidget(groupBoxProfile, 1, 0, 1, 1);
+
+        closebutton = new QToolButton(Static3);
+        closebutton->setObjectName("closebutton");
+
+        gridLayout_7->addWidget(closebutton, 0, 0, 1, 1);
 
         QWidget::setTabOrder(comboBoxProfiles, pushButtonProfileManager);
         QWidget::setTabOrder(pushButtonProfileManager, tabRNGSelector);
@@ -487,12 +494,6 @@ public:
     void retranslateUi(QWidget *Static3)
     {
         Static3->setWindowTitle(QCoreApplication::translate("Static3", "Gen 3 Static", nullptr));
-        groupBoxProfile->setTitle(QCoreApplication::translate("Static3", "Profile", nullptr));
-        labelProfile->setText(QCoreApplication::translate("Static3", "Profile", nullptr));
-        pushButtonProfileManager->setText(QCoreApplication::translate("Static3", "Manager", nullptr));
-        labelProfileTID->setText(QCoreApplication::translate("Static3", "TID", nullptr));
-        labelProfileSID->setText(QCoreApplication::translate("Static3", "SID", nullptr));
-        labelProfileGame->setText(QCoreApplication::translate("Static3", "Game", nullptr));
         groupBoxGeneratorRNGInfo->setTitle(QCoreApplication::translate("Static3", "RNG Info", nullptr));
         labelGeneratorMethod->setText(QCoreApplication::translate("Static3", "Method", nullptr));
         comboBoxGeneratorMethod->setItemText(0, QCoreApplication::translate("Static3", "Method 1", nullptr));
@@ -540,6 +541,13 @@ public:
         labelSearcherLevel->setText(QCoreApplication::translate("Static3", "Level", nullptr));
         groupBoxSearcherFilters->setTitle(QCoreApplication::translate("Static3", "Filters", nullptr));
         tabRNGSelector->setTabText(tabRNGSelector->indexOf(tabSpreadSearcher), QCoreApplication::translate("Static3", "Searcher", nullptr));
+        groupBoxProfile->setTitle(QCoreApplication::translate("Static3", "Profile", nullptr));
+        labelProfile->setText(QCoreApplication::translate("Static3", "Profile", nullptr));
+        pushButtonProfileManager->setText(QCoreApplication::translate("Static3", "Manager", nullptr));
+        labelProfileTID->setText(QCoreApplication::translate("Static3", "TID", nullptr));
+        labelProfileSID->setText(QCoreApplication::translate("Static3", "SID", nullptr));
+        labelProfileGame->setText(QCoreApplication::translate("Static3", "Game", nullptr));
+        closebutton->setText(QCoreApplication::translate("Static3", "X", nullptr));
     } // retranslateUi
 
 };

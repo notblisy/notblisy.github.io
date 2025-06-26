@@ -16,6 +16,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QToolButton>
 #include "Form/Controls/TextBox.hpp"
 
 QT_BEGIN_NAMESPACE
@@ -24,16 +25,17 @@ class Ui_JirachiAdvancer
 {
 public:
     QGridLayout *gridLayout;
-    QLabel *labelStartingSeed;
-    TextBox *textBoxStartingSeed;
-    QLabel *labelTargetSeed;
-    TextBox *textBoxTargetSeed;
-    QLabel *labelMaxAdvances;
-    TextBox *textBoxMaxAdvances;
-    QLabel *labelBruteForceRange;
     TextBox *textBoxBruteForceRange;
-    QPushButton *pushButtonGenerate;
+    QLabel *labelTargetSeed;
+    QLabel *labelStartingSeed;
+    TextBox *textBoxTargetSeed;
     QListWidget *listWidget;
+    QLabel *labelBruteForceRange;
+    QLabel *labelMaxAdvances;
+    QPushButton *pushButtonGenerate;
+    TextBox *textBoxMaxAdvances;
+    TextBox *textBoxStartingSeed;
+    QToolButton *toolButton;
 
     void setupUi(QDialog *JirachiAdvancer)
     {
@@ -42,55 +44,60 @@ public:
         JirachiAdvancer->resize(448, 364);
         gridLayout = new QGridLayout(JirachiAdvancer);
         gridLayout->setObjectName("gridLayout");
-        labelStartingSeed = new QLabel(JirachiAdvancer);
-        labelStartingSeed->setObjectName("labelStartingSeed");
+        textBoxBruteForceRange = new TextBox(JirachiAdvancer);
+        textBoxBruteForceRange->setObjectName("textBoxBruteForceRange");
 
-        gridLayout->addWidget(labelStartingSeed, 0, 0, 1, 1);
-
-        textBoxStartingSeed = new TextBox(JirachiAdvancer);
-        textBoxStartingSeed->setObjectName("textBoxStartingSeed");
-
-        gridLayout->addWidget(textBoxStartingSeed, 0, 1, 1, 1);
+        gridLayout->addWidget(textBoxBruteForceRange, 2, 3, 1, 1);
 
         labelTargetSeed = new QLabel(JirachiAdvancer);
         labelTargetSeed->setObjectName("labelTargetSeed");
 
-        gridLayout->addWidget(labelTargetSeed, 0, 2, 1, 1);
+        gridLayout->addWidget(labelTargetSeed, 1, 2, 1, 1);
+
+        labelStartingSeed = new QLabel(JirachiAdvancer);
+        labelStartingSeed->setObjectName("labelStartingSeed");
+
+        gridLayout->addWidget(labelStartingSeed, 1, 0, 1, 1);
 
         textBoxTargetSeed = new TextBox(JirachiAdvancer);
         textBoxTargetSeed->setObjectName("textBoxTargetSeed");
 
-        gridLayout->addWidget(textBoxTargetSeed, 0, 3, 1, 1);
-
-        labelMaxAdvances = new QLabel(JirachiAdvancer);
-        labelMaxAdvances->setObjectName("labelMaxAdvances");
-
-        gridLayout->addWidget(labelMaxAdvances, 1, 0, 1, 1);
-
-        textBoxMaxAdvances = new TextBox(JirachiAdvancer);
-        textBoxMaxAdvances->setObjectName("textBoxMaxAdvances");
-
-        gridLayout->addWidget(textBoxMaxAdvances, 1, 1, 1, 1);
-
-        labelBruteForceRange = new QLabel(JirachiAdvancer);
-        labelBruteForceRange->setObjectName("labelBruteForceRange");
-
-        gridLayout->addWidget(labelBruteForceRange, 1, 2, 1, 1);
-
-        textBoxBruteForceRange = new TextBox(JirachiAdvancer);
-        textBoxBruteForceRange->setObjectName("textBoxBruteForceRange");
-
-        gridLayout->addWidget(textBoxBruteForceRange, 1, 3, 1, 1);
-
-        pushButtonGenerate = new QPushButton(JirachiAdvancer);
-        pushButtonGenerate->setObjectName("pushButtonGenerate");
-
-        gridLayout->addWidget(pushButtonGenerate, 2, 3, 1, 1);
+        gridLayout->addWidget(textBoxTargetSeed, 1, 3, 1, 1);
 
         listWidget = new QListWidget(JirachiAdvancer);
         listWidget->setObjectName("listWidget");
 
-        gridLayout->addWidget(listWidget, 3, 0, 1, 4);
+        gridLayout->addWidget(listWidget, 4, 0, 1, 4);
+
+        labelBruteForceRange = new QLabel(JirachiAdvancer);
+        labelBruteForceRange->setObjectName("labelBruteForceRange");
+
+        gridLayout->addWidget(labelBruteForceRange, 2, 2, 1, 1);
+
+        labelMaxAdvances = new QLabel(JirachiAdvancer);
+        labelMaxAdvances->setObjectName("labelMaxAdvances");
+
+        gridLayout->addWidget(labelMaxAdvances, 2, 0, 1, 1);
+
+        pushButtonGenerate = new QPushButton(JirachiAdvancer);
+        pushButtonGenerate->setObjectName("pushButtonGenerate");
+
+        gridLayout->addWidget(pushButtonGenerate, 3, 3, 1, 1);
+
+        textBoxMaxAdvances = new TextBox(JirachiAdvancer);
+        textBoxMaxAdvances->setObjectName("textBoxMaxAdvances");
+
+        gridLayout->addWidget(textBoxMaxAdvances, 2, 1, 1, 1);
+
+        textBoxStartingSeed = new TextBox(JirachiAdvancer);
+        textBoxStartingSeed->setObjectName("textBoxStartingSeed");
+
+        gridLayout->addWidget(textBoxStartingSeed, 1, 1, 1, 1);
+
+        toolButton = new QToolButton(JirachiAdvancer);
+        toolButton->setObjectName("toolButton");
+
+        gridLayout->addWidget(toolButton, 0, 0, 1, 1);
 
 
         retranslateUi(JirachiAdvancer);
@@ -101,11 +108,12 @@ public:
     void retranslateUi(QDialog *JirachiAdvancer)
     {
         JirachiAdvancer->setWindowTitle(QCoreApplication::translate("JirachiAdvancer", "Jirachi Advancer", nullptr));
-        labelStartingSeed->setText(QCoreApplication::translate("JirachiAdvancer", "Starting Seed", nullptr));
         labelTargetSeed->setText(QCoreApplication::translate("JirachiAdvancer", "Target Seed", nullptr));
-        labelMaxAdvances->setText(QCoreApplication::translate("JirachiAdvancer", "Max Advances", nullptr));
+        labelStartingSeed->setText(QCoreApplication::translate("JirachiAdvancer", "Starting Seed", nullptr));
         labelBruteForceRange->setText(QCoreApplication::translate("JirachiAdvancer", "Brute Force Range", nullptr));
+        labelMaxAdvances->setText(QCoreApplication::translate("JirachiAdvancer", "Max Advances", nullptr));
         pushButtonGenerate->setText(QCoreApplication::translate("JirachiAdvancer", "Generate", nullptr));
+        toolButton->setText(QCoreApplication::translate("JirachiAdvancer", "X", nullptr));
     } // retranslateUi
 
 };

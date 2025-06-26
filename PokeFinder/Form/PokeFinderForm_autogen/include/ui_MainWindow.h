@@ -113,6 +113,7 @@ public:
         actionEncounterLookup->setObjectName("actionEncounterLookup");
         actionGameCubeSeedFinder = new QAction(MainWindow);
         actionGameCubeSeedFinder->setObjectName("actionGameCubeSeedFinder");
+        actionGameCubeSeedFinder->setEnabled(false);
         actionProfileCalibrator = new QAction(MainWindow);
         actionProfileCalibrator->setObjectName("actionProfileCalibrator");
         actionProfileManager3 = new QAction(MainWindow);
@@ -291,7 +292,7 @@ public:
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 358, 21));
+        menubar->setGeometry(QRect(0, 0, 358, 22));
         menuTools = new QMenu(menubar);
         menuTools->setObjectName("menuTools");
         menuGen3Tools = new QMenu(menubar);

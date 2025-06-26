@@ -19,6 +19,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QTabWidget>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 #include "Form/Controls/ComboBox.hpp"
 #include "Form/Controls/EggSettings.hpp"
@@ -32,18 +33,6 @@ class Ui_Eggs3
 {
 public:
     QGridLayout *gridLayout;
-    QGroupBox *groupBoxProfile;
-    QGridLayout *gridLayout_13;
-    QLabel *labelProfile;
-    QComboBox *comboBoxProfiles;
-    QPushButton *pushButtonProfileManager;
-    QLabel *labelProfileTID;
-    QLabel *labelProfileTIDValue;
-    QLabel *labelProfileSID;
-    QLabel *labelProfileSIDValue;
-    QFrame *line;
-    QLabel *labelProfileGame;
-    QLabel *labelProfileGameValue;
     QTabWidget *tabEggSelection;
     QWidget *tabEmerald;
     QGridLayout *gridLayout_17;
@@ -103,6 +92,19 @@ public:
     QGridLayout *gridLayout_3;
     Filter *filterRSFRLG;
     TableView *tableViewRSFRLG;
+    QGroupBox *groupBoxProfile;
+    QGridLayout *gridLayout_13;
+    QLabel *labelProfile;
+    QComboBox *comboBoxProfiles;
+    QPushButton *pushButtonProfileManager;
+    QLabel *labelProfileTID;
+    QLabel *labelProfileTIDValue;
+    QLabel *labelProfileSID;
+    QLabel *labelProfileSIDValue;
+    QFrame *line;
+    QLabel *labelProfileGame;
+    QLabel *labelProfileGameValue;
+    QToolButton *closebutton;
 
     void setupUi(QWidget *Eggs3)
     {
@@ -111,67 +113,6 @@ public:
         Eggs3->resize(1200, 700);
         gridLayout = new QGridLayout(Eggs3);
         gridLayout->setObjectName("gridLayout");
-        groupBoxProfile = new QGroupBox(Eggs3);
-        groupBoxProfile->setObjectName("groupBoxProfile");
-        gridLayout_13 = new QGridLayout(groupBoxProfile);
-        gridLayout_13->setObjectName("gridLayout_13");
-        labelProfile = new QLabel(groupBoxProfile);
-        labelProfile->setObjectName("labelProfile");
-
-        gridLayout_13->addWidget(labelProfile, 0, 0, 1, 1);
-
-        comboBoxProfiles = new QComboBox(groupBoxProfile);
-        comboBoxProfiles->setObjectName("comboBoxProfiles");
-
-        gridLayout_13->addWidget(comboBoxProfiles, 0, 1, 1, 1);
-
-        pushButtonProfileManager = new QPushButton(groupBoxProfile);
-        pushButtonProfileManager->setObjectName("pushButtonProfileManager");
-
-        gridLayout_13->addWidget(pushButtonProfileManager, 1, 1, 1, 1);
-
-        labelProfileTID = new QLabel(groupBoxProfile);
-        labelProfileTID->setObjectName("labelProfileTID");
-
-        gridLayout_13->addWidget(labelProfileTID, 0, 2, 1, 1);
-
-        labelProfileTIDValue = new QLabel(groupBoxProfile);
-        labelProfileTIDValue->setObjectName("labelProfileTIDValue");
-        labelProfileTIDValue->setText(QString::fromUtf8("12345"));
-
-        gridLayout_13->addWidget(labelProfileTIDValue, 0, 3, 1, 1);
-
-        labelProfileSID = new QLabel(groupBoxProfile);
-        labelProfileSID->setObjectName("labelProfileSID");
-
-        gridLayout_13->addWidget(labelProfileSID, 1, 2, 1, 1);
-
-        labelProfileSIDValue = new QLabel(groupBoxProfile);
-        labelProfileSIDValue->setObjectName("labelProfileSIDValue");
-        labelProfileSIDValue->setText(QString::fromUtf8("54321"));
-
-        gridLayout_13->addWidget(labelProfileSIDValue, 1, 3, 1, 1);
-
-        line = new QFrame(groupBoxProfile);
-        line->setObjectName("line");
-        line->setFrameShape(QFrame::Shape::VLine);
-        line->setFrameShadow(QFrame::Shadow::Sunken);
-
-        gridLayout_13->addWidget(line, 0, 4, 2, 1);
-
-        labelProfileGame = new QLabel(groupBoxProfile);
-        labelProfileGame->setObjectName("labelProfileGame");
-
-        gridLayout_13->addWidget(labelProfileGame, 0, 5, 1, 1);
-
-        labelProfileGameValue = new QLabel(groupBoxProfile);
-        labelProfileGameValue->setObjectName("labelProfileGameValue");
-
-        gridLayout_13->addWidget(labelProfileGameValue, 0, 6, 1, 1);
-
-
-        gridLayout->addWidget(groupBoxProfile, 0, 0, 1, 1);
-
         tabEggSelection = new QTabWidget(Eggs3);
         tabEggSelection->setObjectName("tabEggSelection");
         tabEmerald = new QWidget();
@@ -463,7 +404,73 @@ public:
 
         tabEggSelection->addTab(tabRSFRLG, QString());
 
-        gridLayout->addWidget(tabEggSelection, 1, 0, 1, 1);
+        gridLayout->addWidget(tabEggSelection, 2, 0, 1, 1);
+
+        groupBoxProfile = new QGroupBox(Eggs3);
+        groupBoxProfile->setObjectName("groupBoxProfile");
+        gridLayout_13 = new QGridLayout(groupBoxProfile);
+        gridLayout_13->setObjectName("gridLayout_13");
+        labelProfile = new QLabel(groupBoxProfile);
+        labelProfile->setObjectName("labelProfile");
+
+        gridLayout_13->addWidget(labelProfile, 0, 0, 1, 1);
+
+        comboBoxProfiles = new QComboBox(groupBoxProfile);
+        comboBoxProfiles->setObjectName("comboBoxProfiles");
+
+        gridLayout_13->addWidget(comboBoxProfiles, 0, 1, 1, 1);
+
+        pushButtonProfileManager = new QPushButton(groupBoxProfile);
+        pushButtonProfileManager->setObjectName("pushButtonProfileManager");
+
+        gridLayout_13->addWidget(pushButtonProfileManager, 1, 1, 1, 1);
+
+        labelProfileTID = new QLabel(groupBoxProfile);
+        labelProfileTID->setObjectName("labelProfileTID");
+
+        gridLayout_13->addWidget(labelProfileTID, 0, 2, 1, 1);
+
+        labelProfileTIDValue = new QLabel(groupBoxProfile);
+        labelProfileTIDValue->setObjectName("labelProfileTIDValue");
+        labelProfileTIDValue->setText(QString::fromUtf8("12345"));
+
+        gridLayout_13->addWidget(labelProfileTIDValue, 0, 3, 1, 1);
+
+        labelProfileSID = new QLabel(groupBoxProfile);
+        labelProfileSID->setObjectName("labelProfileSID");
+
+        gridLayout_13->addWidget(labelProfileSID, 1, 2, 1, 1);
+
+        labelProfileSIDValue = new QLabel(groupBoxProfile);
+        labelProfileSIDValue->setObjectName("labelProfileSIDValue");
+        labelProfileSIDValue->setText(QString::fromUtf8("54321"));
+
+        gridLayout_13->addWidget(labelProfileSIDValue, 1, 3, 1, 1);
+
+        line = new QFrame(groupBoxProfile);
+        line->setObjectName("line");
+        line->setFrameShape(QFrame::Shape::VLine);
+        line->setFrameShadow(QFrame::Shadow::Sunken);
+
+        gridLayout_13->addWidget(line, 0, 4, 2, 1);
+
+        labelProfileGame = new QLabel(groupBoxProfile);
+        labelProfileGame->setObjectName("labelProfileGame");
+
+        gridLayout_13->addWidget(labelProfileGame, 0, 5, 1, 1);
+
+        labelProfileGameValue = new QLabel(groupBoxProfile);
+        labelProfileGameValue->setObjectName("labelProfileGameValue");
+
+        gridLayout_13->addWidget(labelProfileGameValue, 0, 6, 1, 1);
+
+
+        gridLayout->addWidget(groupBoxProfile, 1, 0, 1, 1);
+
+        closebutton = new QToolButton(Eggs3);
+        closebutton->setObjectName("closebutton");
+
+        gridLayout->addWidget(closebutton, 0, 0, 1, 1);
 
         QWidget::setTabOrder(comboBoxProfiles, pushButtonProfileManager);
         QWidget::setTabOrder(pushButtonProfileManager, tabEggSelection);
@@ -501,13 +508,6 @@ public:
     void retranslateUi(QWidget *Eggs3)
     {
         Eggs3->setWindowTitle(QCoreApplication::translate("Eggs3", "Gen 3 Eggs", nullptr));
-        groupBoxProfile->setTitle(QCoreApplication::translate("Eggs3", "Profile", nullptr));
-        labelProfile->setText(QCoreApplication::translate("Eggs3", "Profile", nullptr));
-        pushButtonProfileManager->setText(QCoreApplication::translate("Eggs3", "Manager", nullptr));
-        labelProfileTID->setText(QCoreApplication::translate("Eggs3", "TID", nullptr));
-        labelProfileSID->setText(QCoreApplication::translate("Eggs3", "SID", nullptr));
-        labelProfileGame->setText(QCoreApplication::translate("Eggs3", "Game", nullptr));
-        labelProfileGameValue->setText(QCoreApplication::translate("Eggs3", "Emerald", nullptr));
         groupBoxEmeraldRNGInfo->setTitle(QCoreApplication::translate("Eggs3", "RNG Info", nullptr));
         labelEmeraldAdvanceHeld->setText(QCoreApplication::translate("Eggs3", "Held Advances", nullptr));
         labelEmeraldPickupAdvance->setText(QCoreApplication::translate("Eggs3", "Pickup Advances", nullptr));
@@ -548,6 +548,14 @@ public:
         groupBoxRSFRLGSettings->setTitle(QCoreApplication::translate("Eggs3", "Settings", nullptr));
         groupBoxRSFRLGFilters->setTitle(QCoreApplication::translate("Eggs3", "Filters", nullptr));
         tabEggSelection->setTabText(tabEggSelection->indexOf(tabRSFRLG), QCoreApplication::translate("Eggs3", "RS/FRLG", nullptr));
+        groupBoxProfile->setTitle(QCoreApplication::translate("Eggs3", "Profile", nullptr));
+        labelProfile->setText(QCoreApplication::translate("Eggs3", "Profile", nullptr));
+        pushButtonProfileManager->setText(QCoreApplication::translate("Eggs3", "Manager", nullptr));
+        labelProfileTID->setText(QCoreApplication::translate("Eggs3", "TID", nullptr));
+        labelProfileSID->setText(QCoreApplication::translate("Eggs3", "SID", nullptr));
+        labelProfileGame->setText(QCoreApplication::translate("Eggs3", "Game", nullptr));
+        labelProfileGameValue->setText(QCoreApplication::translate("Eggs3", "Emerald", nullptr));
+        closebutton->setText(QCoreApplication::translate("Eggs3", "X", nullptr));
     } // retranslateUi
 
 };

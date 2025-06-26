@@ -1,4 +1,4 @@
-# Install script for directory: P:/blisynet/PokeFinder/Source/Core/External/bzip2/man
+# Install script for directory: P:/blisynet/PokeFinderWeb/Source/Core/External/bzip2/man
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -46,7 +46,7 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-  file(INSTALL DESTINATION "C:/Users/jakes/OneDrive/Desktop/WASM/emsdk/upstream/emscripten/cache/sysroot/man/man1" TYPE FILE FILES "P:/blisynet/PokeFinder/Source/Core/External/bzip2/man/bzip2.1")
+  file(INSTALL DESTINATION "C:/Users/jakes/OneDrive/Desktop/WASM/emsdk/upstream/emscripten/cache/sysroot/man/man1" TYPE FILE FILES "P:/blisynet/PokeFinderWeb/Source/Core/External/bzip2/man/bzip2.1")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
@@ -58,7 +58,7 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-  file(INSTALL DESTINATION "C:/Users/jakes/OneDrive/Desktop/WASM/emsdk/upstream/emscripten/cache/sysroot/man/man1" TYPE FILE FILES "P:/blisynet/PokeFinder/Source/Core/External/bzip2/man/bzgrep.1")
+  file(INSTALL DESTINATION "C:/Users/jakes/OneDrive/Desktop/WASM/emsdk/upstream/emscripten/cache/sysroot/man/man1" TYPE FILE FILES "P:/blisynet/PokeFinderWeb/Source/Core/External/bzip2/man/bzgrep.1")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
@@ -70,7 +70,7 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-  file(INSTALL DESTINATION "C:/Users/jakes/OneDrive/Desktop/WASM/emsdk/upstream/emscripten/cache/sysroot/man/man1" TYPE FILE FILES "P:/blisynet/PokeFinder/Source/Core/External/bzip2/man/bzdiff.1")
+  file(INSTALL DESTINATION "C:/Users/jakes/OneDrive/Desktop/WASM/emsdk/upstream/emscripten/cache/sysroot/man/man1" TYPE FILE FILES "P:/blisynet/PokeFinderWeb/Source/Core/External/bzip2/man/bzdiff.1")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
@@ -82,6 +82,6 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-  file(INSTALL DESTINATION "C:/Users/jakes/OneDrive/Desktop/WASM/emsdk/upstream/emscripten/cache/sysroot/man/man1" TYPE FILE FILES "P:/blisynet/PokeFinder/Source/Core/External/bzip2/man/bzmore.1")
+  file(INSTALL DESTINATION "C:/Users/jakes/OneDrive/Desktop/WASM/emsdk/upstream/emscripten/cache/sysroot/man/man1" TYPE FILE FILES "P:/blisynet/PokeFinderWeb/Source/Core/External/bzip2/man/bzmore.1")
 endif()
 

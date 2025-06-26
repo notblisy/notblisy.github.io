@@ -46,7 +46,8 @@ template <> constexpr inline auto IDs3::qt_create_metaobjectdata<qt_meta_tag_ZN4
         "toggleDeadBatteryRS",
         "checked",
         "toggleDateTimeRS",
-        "toggleSeedRS"
+        "toggleSeedRS",
+        "on_closebutton_clicked"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -68,6 +69,8 @@ template <> constexpr inline auto IDs3::qt_create_metaobjectdata<qt_meta_tag_ZN4
         QtMocHelpers::SlotData<void(bool)>(8, 2, QMC::AccessPrivate, QMetaType::Void, {{
             { QMetaType::Bool, 6 },
         }}),
+        // Slot 'on_closebutton_clicked'
+        QtMocHelpers::SlotData<void()>(9, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -97,6 +100,7 @@ void IDs3::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void *
         case 3: _t->toggleDeadBatteryRS((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
         case 4: _t->toggleDateTimeRS((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
         case 5: _t->toggleSeedRS((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
+        case 6: _t->on_closebutton_clicked(); break;
         default: ;
         }
     }
@@ -121,14 +125,14 @@ int IDs3::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 6)
+        if (_id < 7)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 6;
+        _id -= 7;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 6)
+        if (_id < 7)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 6;
+        _id -= 7;
     }
     return _id;
 }

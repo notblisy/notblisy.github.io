@@ -15,6 +15,7 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 #include "Form/Controls/ComboBox.hpp"
 #include "Form/Controls/TableView.hpp"
@@ -25,12 +26,13 @@ class Ui_EncounterLookup
 {
 public:
     QGridLayout *gridLayout;
-    QLabel *labelPokemon;
     ComboBox *comboBoxPokemon;
-    QLabel *labelGame;
     ComboBox *comboBoxGame;
     QPushButton *pushButtonFind;
     TableView *tableView;
+    QLabel *labelPokemon;
+    QLabel *labelGame;
+    QToolButton *closebutton;
 
     void setupUi(QWidget *EncounterLookup)
     {
@@ -39,27 +41,10 @@ public:
         EncounterLookup->resize(400, 400);
         gridLayout = new QGridLayout(EncounterLookup);
         gridLayout->setObjectName("gridLayout");
-        labelPokemon = new QLabel(EncounterLookup);
-        labelPokemon->setObjectName("labelPokemon");
-        QSizePolicy sizePolicy(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Preferred);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(labelPokemon->sizePolicy().hasHeightForWidth());
-        labelPokemon->setSizePolicy(sizePolicy);
-
-        gridLayout->addWidget(labelPokemon, 0, 0, 1, 1);
-
         comboBoxPokemon = new ComboBox(EncounterLookup);
         comboBoxPokemon->setObjectName("comboBoxPokemon");
 
-        gridLayout->addWidget(comboBoxPokemon, 0, 1, 1, 1);
-
-        labelGame = new QLabel(EncounterLookup);
-        labelGame->setObjectName("labelGame");
-        sizePolicy.setHeightForWidth(labelGame->sizePolicy().hasHeightForWidth());
-        labelGame->setSizePolicy(sizePolicy);
-
-        gridLayout->addWidget(labelGame, 1, 0, 1, 1);
+        gridLayout->addWidget(comboBoxPokemon, 1, 1, 1, 1);
 
         comboBoxGame = new ComboBox(EncounterLookup);
         comboBoxGame->addItem(QString());
@@ -80,17 +65,39 @@ public:
         comboBoxGame->addItem(QString());
         comboBoxGame->setObjectName("comboBoxGame");
 
-        gridLayout->addWidget(comboBoxGame, 1, 1, 1, 1);
+        gridLayout->addWidget(comboBoxGame, 2, 1, 1, 1);
 
         pushButtonFind = new QPushButton(EncounterLookup);
         pushButtonFind->setObjectName("pushButtonFind");
 
-        gridLayout->addWidget(pushButtonFind, 2, 2, 1, 1);
+        gridLayout->addWidget(pushButtonFind, 3, 2, 1, 1);
 
         tableView = new TableView(EncounterLookup);
         tableView->setObjectName("tableView");
 
-        gridLayout->addWidget(tableView, 3, 0, 1, 3);
+        gridLayout->addWidget(tableView, 4, 0, 1, 3);
+
+        labelPokemon = new QLabel(EncounterLookup);
+        labelPokemon->setObjectName("labelPokemon");
+        QSizePolicy sizePolicy(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Preferred);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(labelPokemon->sizePolicy().hasHeightForWidth());
+        labelPokemon->setSizePolicy(sizePolicy);
+
+        gridLayout->addWidget(labelPokemon, 1, 0, 1, 1);
+
+        labelGame = new QLabel(EncounterLookup);
+        labelGame->setObjectName("labelGame");
+        sizePolicy.setHeightForWidth(labelGame->sizePolicy().hasHeightForWidth());
+        labelGame->setSizePolicy(sizePolicy);
+
+        gridLayout->addWidget(labelGame, 2, 0, 1, 1);
+
+        closebutton = new QToolButton(EncounterLookup);
+        closebutton->setObjectName("closebutton");
+
+        gridLayout->addWidget(closebutton, 0, 0, 1, 1);
 
 
         retranslateUi(EncounterLookup);
@@ -101,8 +108,6 @@ public:
     void retranslateUi(QWidget *EncounterLookup)
     {
         EncounterLookup->setWindowTitle(QCoreApplication::translate("EncounterLookup", "Encounter Lookup", nullptr));
-        labelPokemon->setText(QCoreApplication::translate("EncounterLookup", "Pok\303\251mon", nullptr));
-        labelGame->setText(QCoreApplication::translate("EncounterLookup", "Game", nullptr));
         comboBoxGame->setItemText(0, QCoreApplication::translate("EncounterLookup", "Ruby", nullptr));
         comboBoxGame->setItemText(1, QCoreApplication::translate("EncounterLookup", "Sapphire", nullptr));
         comboBoxGame->setItemText(2, QCoreApplication::translate("EncounterLookup", "Fire Red", nullptr));
@@ -121,6 +126,9 @@ public:
         comboBoxGame->setItemText(15, QCoreApplication::translate("EncounterLookup", "Shining Pearl", nullptr));
 
         pushButtonFind->setText(QCoreApplication::translate("EncounterLookup", "Find", nullptr));
+        labelPokemon->setText(QCoreApplication::translate("EncounterLookup", "Pok\303\251mon", nullptr));
+        labelGame->setText(QCoreApplication::translate("EncounterLookup", "Game", nullptr));
+        closebutton->setText(QCoreApplication::translate("EncounterLookup", "X", nullptr));
     } // retranslateUi
 
 };

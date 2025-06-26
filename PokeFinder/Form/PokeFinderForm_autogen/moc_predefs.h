@@ -1,8 +1,6 @@
 clang++: warning: argument unused during compilation: '-c' [-Wunused-command-line-argument]
 #define BZ2_STATICLIB 1
 #define EMSCRIPTEN 1
-#define GIT_BRANCH master
-#define GIT_COMMIT 1b27b8d51b34278742c17ccb608fedf5f47336e9
 #define QT_CORE_LIB 1
 #define QT_GUI_LIB 1
 #define QT_NETWORK_LIB 1

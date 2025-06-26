@@ -1,15 +1,14 @@
 {
 	"AUTOGEN_COMMAND_LINE_LENGTH_MAX" : 32000,
-	"BUILD_DIR" : "P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Form/PokeFinderForm_autogen",
-	"CMAKE_BINARY_DIR" : "P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug",
-	"CMAKE_CURRENT_BINARY_DIR" : "P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Form",
-	"CMAKE_CURRENT_SOURCE_DIR" : "P:/blisynet/PokeFinder/Source/Form",
+	"BUILD_DIR" : "P:/blisynet/PokeFinderWeb/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Form/PokeFinderForm_autogen",
+	"CMAKE_BINARY_DIR" : "P:/blisynet/PokeFinderWeb/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug",
+	"CMAKE_CURRENT_BINARY_DIR" : "P:/blisynet/PokeFinderWeb/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Form",
+	"CMAKE_CURRENT_SOURCE_DIR" : "P:/blisynet/PokeFinderWeb/Source/Form",
 	"CMAKE_EXECUTABLE" : "Z:/QT6/Tools/CMake_64/bin/cmake.exe",
 	"CMAKE_LIST_FILES" : 
 	[
-		"P:/blisynet/PokeFinder/Source/Form/CMakeLists.txt",
-		"P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/.qtc/package-manager/auto-setup.cmake",
-		"P:/blisynet/PokeFinder/Source/Form/version.h.in",
+		"P:/blisynet/PokeFinderWeb/Source/Form/CMakeLists.txt",
+		"P:/blisynet/PokeFinderWeb/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/.qtc/package-manager/auto-setup.cmake",
 		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6Core/Qt6CoreConfigVersion.cmake",
 		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6Core/Qt6CoreConfigVersionImpl.cmake",
 		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6Core/Qt6CoreConfig.cmake",
@@ -29,6 +28,17 @@
 		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6Core/Qt6CoreConfigExtras.cmake",
 		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6Core/Qt6WasmMacros.cmake",
 		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6Core/Qt6CoreVersionlessAliasTargets.cmake",
+		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6LinguistTools/Qt6LinguistToolsConfigVersion.cmake",
+		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6LinguistTools/Qt6LinguistToolsConfigVersionImpl.cmake",
+		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6LinguistTools/Qt6LinguistToolsConfig.cmake",
+		"Z:/QT6/Tools/CMake_64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake",
+		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6LinguistTools/Qt6LinguistToolsDependencies.cmake",
+		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6LinguistTools/Qt6LinguistToolsTargets.cmake",
+		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6LinguistTools/Qt6LinguistToolsTargets-relwithdebinfo.cmake",
+		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6LinguistTools/Qt6LinguistToolsAdditionalTargetInfo.cmake",
+		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6LinguistTools/Qt6LinguistToolsVersionlessTargets.cmake",
+		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6LinguistTools/Qt6LinguistToolsMacros.cmake",
+		"Z:/QT6/Tools/CMake_64/share/cmake-3.30/Modules/CMakeParseArguments.cmake",
 		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6Network/Qt6NetworkConfigVersion.cmake",
 		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6Network/Qt6NetworkConfigVersionImpl.cmake",
 		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6Network/Qt6NetworkConfig.cmake",
@@ -124,426 +134,413 @@
 		"Z:/QT6/6.9.1/wasm_multithread/lib/cmake/Qt6/Qt6Dependencies.cmake",
 		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6HostInfo/Qt6HostInfoConfigVersion.cmake",
 		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6HostInfo/Qt6HostInfoConfig.cmake",
-		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6LinguistTools/Qt6LinguistToolsConfigVersion.cmake",
-		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6LinguistTools/Qt6LinguistToolsConfigVersionImpl.cmake",
-		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6LinguistTools/Qt6LinguistToolsConfig.cmake",
-		"Z:/QT6/Tools/CMake_64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake",
-		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6LinguistTools/Qt6LinguistToolsDependencies.cmake",
-		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6LinguistTools/Qt6LinguistToolsTargets.cmake",
-		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6LinguistTools/Qt6LinguistToolsTargets-relwithdebinfo.cmake",
-		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6LinguistTools/Qt6LinguistToolsAdditionalTargetInfo.cmake",
-		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6LinguistTools/Qt6LinguistToolsVersionlessTargets.cmake",
-		"Z:/QT6/6.9.1/mingw_64/lib/cmake/Qt6LinguistTools/Qt6LinguistToolsMacros.cmake",
-		"Z:/QT6/Tools/CMake_64/share/cmake-3.30/Modules/CMakeParseArguments.cmake",
-		"P:/blisynet/PokeFinder/CMake/EmbedTranslations.cmake",
-		"P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Form/i18n.qrc",
-		"P:/blisynet/PokeFinder/Source/Form/resources.qrc"
+		"P:/blisynet/PokeFinderWeb/CMake/EmbedTranslations.cmake",
+		"P:/blisynet/PokeFinderWeb/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Form/i18n.qrc",
+		"P:/blisynet/PokeFinderWeb/Source/Form/resources.qrc"
 	],
-	"CMAKE_SOURCE_DIR" : "P:/blisynet/PokeFinder",
+	"CMAKE_SOURCE_DIR" : "P:/blisynet/PokeFinderWeb",
 	"CROSS_CONFIG" : false,
-	"DEP_FILE" : "P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Form/PokeFinderForm_autogen/deps",
+	"DEP_FILE" : "P:/blisynet/PokeFinderWeb/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Form/PokeFinderForm_autogen/deps",
 	"DEP_FILE_RULE_NAME" : "PokeFinderForm_autogen/timestamp",
 	"HEADERS" : 
 	[
 		[
-			"P:/blisynet/PokeFinder/Source/Core/External/bzip2/bzlib.h",
+			"P:/blisynet/PokeFinderWeb/Source/Core/External/bzip2/bzlib.h",
 			"MU",
 			"5OEDIASMNN/moc_bzlib.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Core/External/bzip2/bzlib_private.h",
+			"P:/blisynet/PokeFinderWeb/Source/Core/External/bzip2/bzlib_private.h",
 			"MU",
 			"5OEDIASMNN/moc_bzlib_private.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Controls/CheckList.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Controls/CheckList.hpp",
 			"MU",
 			"RWI5I7HFOE/moc_CheckList.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Controls/ComboBox.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Controls/ComboBox.hpp",
 			"MU",
 			"RWI5I7HFOE/moc_ComboBox.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Controls/ComboMenu.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Controls/ComboMenu.hpp",
 			"MU",
 			"RWI5I7HFOE/moc_ComboMenu.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Controls/Controls.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Controls/Controls.hpp",
 			"MU",
 			"RWI5I7HFOE/moc_Controls.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Controls/DateEdit.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Controls/DateEdit.hpp",
 			"MU",
 			"RWI5I7HFOE/moc_DateEdit.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Controls/DateTimeEdit.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Controls/DateTimeEdit.hpp",
 			"MU",
 			"RWI5I7HFOE/moc_DateTimeEdit.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Controls/EggSettings.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Controls/EggSettings.hpp",
 			"MU",
 			"RWI5I7HFOE/moc_EggSettings.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Controls/Filter.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Controls/Filter.hpp",
 			"MU",
 			"RWI5I7HFOE/moc_Filter.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Controls/GraphicsPixmapItem.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Controls/GraphicsPixmapItem.hpp",
 			"MU",
 			"RWI5I7HFOE/moc_GraphicsPixmapItem.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Controls/IDsFilter.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Controls/IDsFilter.hpp",
 			"MU",
 			"RWI5I7HFOE/moc_IDsFilter.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Controls/TableView.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Controls/TableView.hpp",
 			"MU",
 			"RWI5I7HFOE/moc_TableView.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Controls/TextBox.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Controls/TextBox.hpp",
 			"MU",
 			"RWI5I7HFOE/moc_TextBox.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen3/Eggs3.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen3/Eggs3.hpp",
 			"MU",
 			"PX2TDGPGIW/moc_Eggs3.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen3/GameCube.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen3/GameCube.hpp",
 			"MU",
 			"PX2TDGPGIW/moc_GameCube.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen3/IDs3.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen3/IDs3.hpp",
 			"MU",
 			"PX2TDGPGIW/moc_IDs3.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen3/Profile/ProfileEditor3.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen3/Profile/ProfileEditor3.hpp",
 			"MU",
 			"RCGHQI4RQJ/moc_ProfileEditor3.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen3/Profile/ProfileManager3.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen3/Profile/ProfileManager3.hpp",
 			"MU",
 			"RCGHQI4RQJ/moc_ProfileManager3.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen3/Static3.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen3/Static3.hpp",
 			"MU",
 			"PX2TDGPGIW/moc_Static3.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen3/Tools/GameCubeSeedFinder.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen3/Tools/GameCubeSeedFinder.hpp",
 			"MU",
 			"6VRQ4JV3TF/moc_GameCubeSeedFinder.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen3/Tools/JirachiAdvancer.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen3/Tools/JirachiAdvancer.hpp",
 			"MU",
 			"6VRQ4JV3TF/moc_JirachiAdvancer.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen3/Tools/PIDToIV.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen3/Tools/PIDToIV.hpp",
 			"MU",
 			"6VRQ4JV3TF/moc_PIDToIV.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen3/Tools/PokeSpot.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen3/Tools/PokeSpot.hpp",
 			"MU",
 			"6VRQ4JV3TF/moc_PokeSpot.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen3/Tools/SeedToTime3.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen3/Tools/SeedToTime3.hpp",
 			"MU",
 			"6VRQ4JV3TF/moc_SeedToTime3.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen3/Tools/SpindaPainter.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen3/Tools/SpindaPainter.hpp",
 			"MU",
 			"6VRQ4JV3TF/moc_SpindaPainter.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen3/Wild3.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen3/Wild3.hpp",
 			"MU",
 			"PX2TDGPGIW/moc_Wild3.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen4/Eggs4.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen4/Eggs4.hpp",
 			"MU",
 			"XOY2WPVXGD/moc_Eggs4.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen4/Event4.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen4/Event4.hpp",
 			"MU",
 			"XOY2WPVXGD/moc_Event4.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen4/IDs4.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen4/IDs4.hpp",
 			"MU",
 			"XOY2WPVXGD/moc_IDs4.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen4/Profile/ProfileEditor4.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen4/Profile/ProfileEditor4.hpp",
 			"MU",
 			"X3UHRJDH6L/moc_ProfileEditor4.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen4/Profile/ProfileManager4.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen4/Profile/ProfileManager4.hpp",
 			"MU",
 			"X3UHRJDH6L/moc_ProfileManager4.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen4/Static4.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen4/Static4.hpp",
 			"MU",
 			"XOY2WPVXGD/moc_Static4.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen4/Tools/ChainedSID.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen4/Tools/ChainedSID.hpp",
 			"MU",
 			"Z5B2CIGWHT/moc_ChainedSID.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen4/Tools/RoamerMap.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen4/Tools/RoamerMap.hpp",
 			"MU",
 			"Z5B2CIGWHT/moc_RoamerMap.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen4/Tools/SearchCalls.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen4/Tools/SearchCalls.hpp",
 			"MU",
 			"Z5B2CIGWHT/moc_SearchCalls.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen4/Tools/SearchCoinFlips.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen4/Tools/SearchCoinFlips.hpp",
 			"MU",
 			"Z5B2CIGWHT/moc_SearchCoinFlips.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen4/Tools/SeedToTime4.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen4/Tools/SeedToTime4.hpp",
 			"MU",
 			"Z5B2CIGWHT/moc_SeedToTime4.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen4/Wild4.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen4/Wild4.hpp",
 			"MU",
 			"XOY2WPVXGD/moc_Wild4.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen5/DreamRadar.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen5/DreamRadar.hpp",
 			"MU",
 			"QFHE62HPLD/moc_DreamRadar.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen5/Eggs5.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen5/Eggs5.hpp",
 			"MU",
 			"QFHE62HPLD/moc_Eggs5.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen5/Event5.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen5/Event5.hpp",
 			"MU",
 			"QFHE62HPLD/moc_Event5.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen5/HiddenGrotto.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen5/HiddenGrotto.hpp",
 			"MU",
 			"QFHE62HPLD/moc_HiddenGrotto.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen5/IDs5.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen5/IDs5.hpp",
 			"MU",
 			"QFHE62HPLD/moc_IDs5.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen5/Profile/ProfileCalibrator5.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen5/Profile/ProfileCalibrator5.hpp",
 			"MU",
 			"A4TSPUBO7C/moc_ProfileCalibrator5.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen5/Profile/ProfileEditor5.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen5/Profile/ProfileEditor5.hpp",
 			"MU",
 			"A4TSPUBO7C/moc_ProfileEditor5.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen5/Profile/ProfileManager5.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen5/Profile/ProfileManager5.hpp",
 			"MU",
 			"A4TSPUBO7C/moc_ProfileManager5.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen5/Static5.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen5/Static5.hpp",
 			"MU",
 			"QFHE62HPLD/moc_Static5.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen5/Wild5.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen5/Wild5.hpp",
 			"MU",
 			"QFHE62HPLD/moc_Wild5.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen8/Eggs8.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen8/Eggs8.hpp",
 			"MU",
 			"J5FEHUXVVP/moc_Eggs8.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen8/Event8.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen8/Event8.hpp",
 			"MU",
 			"J5FEHUXVVP/moc_Event8.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen8/IDs8.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen8/IDs8.hpp",
 			"MU",
 			"J5FEHUXVVP/moc_IDs8.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen8/Profile/ProfileEditor8.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen8/Profile/ProfileEditor8.hpp",
 			"MU",
 			"EZMPEI45N3/moc_ProfileEditor8.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen8/Profile/ProfileManager8.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen8/Profile/ProfileManager8.hpp",
 			"MU",
 			"EZMPEI45N3/moc_ProfileManager8.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen8/Raids.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen8/Raids.hpp",
 			"MU",
 			"J5FEHUXVVP/moc_Raids.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen8/Static8.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen8/Static8.hpp",
 			"MU",
 			"J5FEHUXVVP/moc_Static8.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen8/Tools/DenMap.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen8/Tools/DenMap.hpp",
 			"MU",
 			"5NANHEMZRF/moc_DenMap.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen8/Underground.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen8/Underground.hpp",
 			"MU",
 			"J5FEHUXVVP/moc_Underground.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen8/Wild8.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen8/Wild8.hpp",
 			"MU",
 			"J5FEHUXVVP/moc_Wild8.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/MainWindow.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/MainWindow.hpp",
 			"MU",
 			"EWIEGA46WW/moc_MainWindow.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Util/EncounterLookup.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Util/EncounterLookup.hpp",
 			"MU",
 			"ENRGVLQ2BA/moc_EncounterLookup.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Util/IVCalculator.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Util/IVCalculator.hpp",
 			"MU",
 			"ENRGVLQ2BA/moc_IVCalculator.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Util/IVToPID.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Util/IVToPID.hpp",
 			"MU",
 			"ENRGVLQ2BA/moc_IVToPID.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Util/Researcher.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Util/Researcher.hpp",
 			"MU",
 			"ENRGVLQ2BA/moc_Researcher.cpp",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Util/Settings.hpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Util/Settings.hpp",
 			"MU",
 			"ENRGVLQ2BA/moc_Settings.cpp",
 			null
 		]
 	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
-	"INCLUDE_DIR" : "P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Form/PokeFinderForm_autogen/include",
-	"MOC_COMPILATION_FILE" : "P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Form/PokeFinderForm_autogen/mocs_compilation.cpp",
+	"INCLUDE_DIR" : "P:/blisynet/PokeFinderWeb/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Form/PokeFinderForm_autogen/include",
+	"MOC_COMPILATION_FILE" : "P:/blisynet/PokeFinderWeb/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Form/PokeFinderForm_autogen/mocs_compilation.cpp",
 	"MOC_DEFINITIONS" : 
 	[
 		"BZ2_STATICLIB",
-		"GIT_BRANCH=master",
-		"GIT_COMMIT=1b27b8d51b34278742c17ccb608fedf5f47336e9",
 		"QT_CORE_LIB",
 		"QT_GUI_LIB",
 		"QT_NETWORK_LIB",
@@ -558,11 +555,11 @@
 	],
 	"MOC_INCLUDES" : 
 	[
-		"P:/blisynet/PokeFinder/Source",
-		"P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/generated",
-		"P:/blisynet/PokeFinder/Source/Core/External/fph",
-		"P:/blisynet/PokeFinder/Source/Core/External/nlohmann",
-		"P:/blisynet/PokeFinder/Source/Core/External/bzip2",
+		"P:/blisynet/PokeFinderWeb/Source",
+		"P:/blisynet/PokeFinderWeb/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/generated",
+		"P:/blisynet/PokeFinderWeb/Source/Core/External/fph",
+		"P:/blisynet/PokeFinderWeb/Source/Core/External/nlohmann",
+		"P:/blisynet/PokeFinderWeb/Source/Core/External/bzip2",
 		"Z:/QT6/6.9.1/wasm_multithread/include/QtCore",
 		"Z:/QT6/6.9.1/wasm_multithread/include",
 		"Z:/QT6/6.9.1/wasm_multithread/mkspecs/wasm-emscripten",
@@ -591,213 +588,233 @@
 		"-c",
 		"Z:/QT6/Tools/CMake_64/share/cmake-3.30/Modules/CMakeCXXCompilerABI.cpp"
 	],
-	"MOC_PREDEFS_FILE" : "P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Form/PokeFinderForm_autogen/moc_predefs.h",
+	"MOC_PREDEFS_FILE" : "P:/blisynet/PokeFinderWeb/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Form/PokeFinderForm_autogen/moc_predefs.h",
 	"MOC_RELAXED_MODE" : false,
 	"MOC_SKIP" : [],
 	"MULTI_CONFIG" : false,
 	"PARALLEL" : 8,
-	"PARSE_CACHE_FILE" : "P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Form/CMakeFiles/PokeFinderForm_autogen.dir/ParseCache.txt",
+	"PARSE_CACHE_FILE" : "P:/blisynet/PokeFinderWeb/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Form/CMakeFiles/PokeFinderForm_autogen.dir/ParseCache.txt",
 	"QT_MOC_EXECUTABLE" : "Z:/QT6/6.9.1/mingw_64/bin/moc.exe",
 	"QT_UIC_EXECUTABLE" : "Z:/QT6/6.9.1/mingw_64/bin/uic.exe",
 	"QT_VERSION_MAJOR" : 6,
 	"QT_VERSION_MINOR" : 9,
-	"SETTINGS_FILE" : "P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Form/CMakeFiles/PokeFinderForm_autogen.dir/AutogenUsed.txt",
+	"SETTINGS_FILE" : "P:/blisynet/PokeFinderWeb/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Form/CMakeFiles/PokeFinderForm_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Controls/CheckList.cpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Controls/CheckList.cpp",
 			"MU",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Controls/ComboBox.cpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Controls/ComboBox.cpp",
 			"MU",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Controls/ComboMenu.cpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Controls/ComboMenu.cpp",
 			"MU",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Controls/DateEdit.cpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Controls/DateEdit.cpp",
 			"MU",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Controls/DateTimeEdit.cpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Controls/DateTimeEdit.cpp",
 			"MU",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Controls/EggSettings.cpp",
-			"MU",
-			null
-		],
-		[ "P:/blisynet/PokeFinder/Source/Form/Controls/Filter.cpp", "MU", null ],
-		[
-			"P:/blisynet/PokeFinder/Source/Form/Controls/GraphicsPixmapItem.cpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Controls/EggSettings.cpp",
 			"MU",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Controls/IDsFilter.cpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Controls/Filter.cpp",
 			"MU",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Controls/TableView.cpp",
-			"MU",
-			null
-		],
-		[ "P:/blisynet/PokeFinder/Source/Form/Controls/TextBox.cpp", "MU", null ],
-		[ "P:/blisynet/PokeFinder/Source/Form/Gen3/Eggs3.cpp", "MU", null ],
-		[ "P:/blisynet/PokeFinder/Source/Form/Gen3/GameCube.cpp", "MU", null ],
-		[ "P:/blisynet/PokeFinder/Source/Form/Gen3/IDs3.cpp", "MU", null ],
-		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen3/Profile/ProfileEditor3.cpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Controls/GraphicsPixmapItem.cpp",
 			"MU",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen3/Profile/ProfileManager3.cpp",
-			"MU",
-			null
-		],
-		[ "P:/blisynet/PokeFinder/Source/Form/Gen3/Static3.cpp", "MU", null ],
-		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen3/Tools/GameCubeSeedFinder.cpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Controls/IDsFilter.cpp",
 			"MU",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen3/Tools/JirachiAdvancer.cpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Controls/TableView.cpp",
 			"MU",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen3/Tools/PIDToIV.cpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Controls/TextBox.cpp",
+			"MU",
+			null
+		],
+		[ "P:/blisynet/PokeFinderWeb/Source/Form/Gen3/Eggs3.cpp", "MU", null ],
+		[ "P:/blisynet/PokeFinderWeb/Source/Form/Gen3/GameCube.cpp", "MU", null ],
+		[ "P:/blisynet/PokeFinderWeb/Source/Form/Gen3/IDs3.cpp", "MU", null ],
+		[
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen3/Profile/ProfileEditor3.cpp",
 			"MU",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen3/Tools/PokeSpot.cpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen3/Profile/ProfileManager3.cpp",
+			"MU",
+			null
+		],
+		[ "P:/blisynet/PokeFinderWeb/Source/Form/Gen3/Static3.cpp", "MU", null ],
+		[
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen3/Tools/GameCubeSeedFinder.cpp",
 			"MU",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen3/Tools/SeedToTime3.cpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen3/Tools/JirachiAdvancer.cpp",
 			"MU",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen3/Tools/SpindaPainter.cpp",
-			"MU",
-			null
-		],
-		[ "P:/blisynet/PokeFinder/Source/Form/Gen3/Wild3.cpp", "MU", null ],
-		[ "P:/blisynet/PokeFinder/Source/Form/Gen4/Eggs4.cpp", "MU", null ],
-		[ "P:/blisynet/PokeFinder/Source/Form/Gen4/Event4.cpp", "MU", null ],
-		[ "P:/blisynet/PokeFinder/Source/Form/Gen4/IDs4.cpp", "MU", null ],
-		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen4/Profile/ProfileEditor4.cpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen3/Tools/PIDToIV.cpp",
 			"MU",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen4/Profile/ProfileManager4.cpp",
-			"MU",
-			null
-		],
-		[ "P:/blisynet/PokeFinder/Source/Form/Gen4/Static4.cpp", "MU", null ],
-		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen4/Tools/ChainedSID.cpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen3/Tools/PokeSpot.cpp",
 			"MU",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen4/Tools/RoamerMap.cpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen3/Tools/SeedToTime3.cpp",
 			"MU",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen4/Tools/SearchCalls.cpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen3/Tools/SpindaPainter.cpp",
+			"MU",
+			null
+		],
+		[ "P:/blisynet/PokeFinderWeb/Source/Form/Gen3/Wild3.cpp", "MU", null ],
+		[ "P:/blisynet/PokeFinderWeb/Source/Form/Gen4/Eggs4.cpp", "MU", null ],
+		[ "P:/blisynet/PokeFinderWeb/Source/Form/Gen4/Event4.cpp", "MU", null ],
+		[ "P:/blisynet/PokeFinderWeb/Source/Form/Gen4/IDs4.cpp", "MU", null ],
+		[
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen4/Profile/ProfileEditor4.cpp",
 			"MU",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen4/Tools/SearchCoinFlips.cpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen4/Profile/ProfileManager4.cpp",
+			"MU",
+			null
+		],
+		[ "P:/blisynet/PokeFinderWeb/Source/Form/Gen4/Static4.cpp", "MU", null ],
+		[
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen4/Tools/ChainedSID.cpp",
 			"MU",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen4/Tools/SeedToTime4.cpp",
-			"MU",
-			null
-		],
-		[ "P:/blisynet/PokeFinder/Source/Form/Gen4/Wild4.cpp", "MU", null ],
-		[ "P:/blisynet/PokeFinder/Source/Form/Gen5/DreamRadar.cpp", "MU", null ],
-		[ "P:/blisynet/PokeFinder/Source/Form/Gen5/Eggs5.cpp", "MU", null ],
-		[ "P:/blisynet/PokeFinder/Source/Form/Gen5/Event5.cpp", "MU", null ],
-		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen5/HiddenGrotto.cpp",
-			"MU",
-			null
-		],
-		[ "P:/blisynet/PokeFinder/Source/Form/Gen5/IDs5.cpp", "MU", null ],
-		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen5/Profile/ProfileCalibrator5.cpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen4/Tools/RoamerMap.cpp",
 			"MU",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen5/Profile/ProfileEditor5.cpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen4/Tools/SearchCalls.cpp",
 			"MU",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen5/Profile/ProfileManager5.cpp",
-			"MU",
-			null
-		],
-		[ "P:/blisynet/PokeFinder/Source/Form/Gen5/Static5.cpp", "MU", null ],
-		[ "P:/blisynet/PokeFinder/Source/Form/Gen5/Wild5.cpp", "MU", null ],
-		[ "P:/blisynet/PokeFinder/Source/Form/Gen8/Eggs8.cpp", "MU", null ],
-		[ "P:/blisynet/PokeFinder/Source/Form/Gen8/Event8.cpp", "MU", null ],
-		[ "P:/blisynet/PokeFinder/Source/Form/Gen8/IDs8.cpp", "MU", null ],
-		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen8/Profile/ProfileEditor8.cpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen4/Tools/SearchCoinFlips.cpp",
 			"MU",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen8/Profile/ProfileManager8.cpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen4/Tools/SeedToTime4.cpp",
 			"MU",
 			null
 		],
-		[ "P:/blisynet/PokeFinder/Source/Form/Gen8/Raids.cpp", "MU", null ],
-		[ "P:/blisynet/PokeFinder/Source/Form/Gen8/Static8.cpp", "MU", null ],
+		[ "P:/blisynet/PokeFinderWeb/Source/Form/Gen4/Wild4.cpp", "MU", null ],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Gen8/Tools/DenMap.cpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen5/DreamRadar.cpp",
 			"MU",
 			null
 		],
-		[ "P:/blisynet/PokeFinder/Source/Form/Gen8/Underground.cpp", "MU", null ],
-		[ "P:/blisynet/PokeFinder/Source/Form/Gen8/Wild8.cpp", "MU", null ],
-		[ "P:/blisynet/PokeFinder/Source/Form/MainWindow.cpp", "MU", null ],
+		[ "P:/blisynet/PokeFinderWeb/Source/Form/Gen5/Eggs5.cpp", "MU", null ],
+		[ "P:/blisynet/PokeFinderWeb/Source/Form/Gen5/Event5.cpp", "MU", null ],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Util/EncounterLookup.cpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen5/HiddenGrotto.cpp",
+			"MU",
+			null
+		],
+		[ "P:/blisynet/PokeFinderWeb/Source/Form/Gen5/IDs5.cpp", "MU", null ],
+		[
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen5/Profile/ProfileCalibrator5.cpp",
 			"MU",
 			null
 		],
 		[
-			"P:/blisynet/PokeFinder/Source/Form/Util/IVCalculator.cpp",
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen5/Profile/ProfileEditor5.cpp",
 			"MU",
 			null
 		],
-		[ "P:/blisynet/PokeFinder/Source/Form/Util/IVToPID.cpp", "MU", null ],
-		[ "P:/blisynet/PokeFinder/Source/Form/Util/Researcher.cpp", "MU", null ],
-		[ "P:/blisynet/PokeFinder/Source/Form/Util/Settings.cpp", "MU", null ]
+		[
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen5/Profile/ProfileManager5.cpp",
+			"MU",
+			null
+		],
+		[ "P:/blisynet/PokeFinderWeb/Source/Form/Gen5/Static5.cpp", "MU", null ],
+		[ "P:/blisynet/PokeFinderWeb/Source/Form/Gen5/Wild5.cpp", "MU", null ],
+		[ "P:/blisynet/PokeFinderWeb/Source/Form/Gen8/Eggs8.cpp", "MU", null ],
+		[ "P:/blisynet/PokeFinderWeb/Source/Form/Gen8/Event8.cpp", "MU", null ],
+		[ "P:/blisynet/PokeFinderWeb/Source/Form/Gen8/IDs8.cpp", "MU", null ],
+		[
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen8/Profile/ProfileEditor8.cpp",
+			"MU",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen8/Profile/ProfileManager8.cpp",
+			"MU",
+			null
+		],
+		[ "P:/blisynet/PokeFinderWeb/Source/Form/Gen8/Raids.cpp", "MU", null ],
+		[ "P:/blisynet/PokeFinderWeb/Source/Form/Gen8/Static8.cpp", "MU", null ],
+		[
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen8/Tools/DenMap.cpp",
+			"MU",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinderWeb/Source/Form/Gen8/Underground.cpp",
+			"MU",
+			null
+		],
+		[ "P:/blisynet/PokeFinderWeb/Source/Form/Gen8/Wild8.cpp", "MU", null ],
+		[ "P:/blisynet/PokeFinderWeb/Source/Form/MainWindow.cpp", "MU", null ],
+		[
+			"P:/blisynet/PokeFinderWeb/Source/Form/Util/EncounterLookup.cpp",
+			"MU",
+			null
+		],
+		[
+			"P:/blisynet/PokeFinderWeb/Source/Form/Util/IVCalculator.cpp",
+			"MU",
+			null
+		],
+		[ "P:/blisynet/PokeFinderWeb/Source/Form/Util/IVToPID.cpp", "MU", null ],
+		[
+			"P:/blisynet/PokeFinderWeb/Source/Form/Util/Researcher.cpp",
+			"MU",
+			null
+		],
+		[ "P:/blisynet/PokeFinderWeb/Source/Form/Util/Settings.cpp", "MU", null ]
 	],
 	"UIC_OPTIONS" : [],
 	"UIC_SEARCH_PATHS" : [],

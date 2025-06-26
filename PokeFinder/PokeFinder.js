@@ -81,15 +81,6 @@ var readyPromise = new Promise((resolve, reject) => {
   readyPromiseReject = reject;
 });
 
-[ "__embind_initialize_bindings", "___indirect_function_table", "_jsHaveAsyncify", "_jsHaveJspi", "___asyncjs__qt_asyncify_suspend_js", "_qt_asyncify_resume_js", "_main", "onRuntimeInitialized" ].forEach(prop => {
-  if (!Object.getOwnPropertyDescriptor(readyPromise, prop)) {
-    Object.defineProperty(readyPromise, prop, {
-      get: () => abort("You are getting " + prop + " on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js"),
-      set: () => abort("You are setting " + prop + " on the Promise object, instead of the instance. Use .then() to get called back with the instance, see the MODULARIZE docs in src/settings.js")
-    });
-  }
-});
-
 // Determine the runtime environment we are in. You can customize this by
 // setting the ENVIRONMENT setting at compile time (see settings.js).
 // Attempt to auto-detect the environment
@@ -110,11 +101,6 @@ var ENVIRONMENT_IS_SHELL = !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_NODE && !ENVIR
 // The way we signal to a worker that it is hosting a pthread is to construct
 // it with a specific name.
 var ENVIRONMENT_IS_PTHREAD = ENVIRONMENT_IS_WORKER && self.name?.startsWith("em-pthread");
-
-if (ENVIRONMENT_IS_PTHREAD) {
-  assert(!globalThis.moduleLoaded, "module should only be loaded once on each pthread worker");
-  globalThis.moduleLoaded = true;
-}
 
 if (ENVIRONMENT_IS_NODE) {
   // `require()` is no-op in an ESM module, use `createRequire()` to construct
@@ -160,14 +146,6 @@ function locateFile(path) {
 var readAsync, readBinary;
 
 if (ENVIRONMENT_IS_NODE) {
-  if (typeof process == "undefined" || !process.release || process.release.name !== "node") throw new Error("not compiled for this environment (did you build to HTML and try to run it not on the web, or set ENVIRONMENT to something - like node - and run it someplace else - like on the web?)");
-  var nodeVersion = process.versions.node;
-  var numericVersion = nodeVersion.split(".").slice(0, 3);
-  numericVersion = (numericVersion[0] * 1e4) + (numericVersion[1] * 100) + (numericVersion[2].split("-")[0] * 1);
-  var minVersion = 16e4;
-  if (numericVersion < 16e4) {
-    throw new Error("This emscripten-generated code requires node v16.0.0 (detected v" + nodeVersion + ")");
-  }
   // These modules will usually be used on Node.js. Load them eagerly to avoid
   // the complexity of lazy-loading.
   var fs = require("fs");
@@ -179,7 +157,6 @@ if (ENVIRONMENT_IS_NODE) {
     // necessary in that case, the path should already be absolute.
     filename = isFileURI(filename) ? new URL(filename) : nodePath.normalize(filename);
     var ret = fs.readFileSync(filename);
-    assert(ret.buffer);
     return ret;
   };
   readAsync = (filename, binary = true) => {
@@ -201,8 +178,6 @@ if (ENVIRONMENT_IS_NODE) {
     process.exitCode = status;
     throw toThrow;
   };
-} else if (ENVIRONMENT_IS_SHELL) {
-  if ((typeof process == "object" && typeof require === "function") || typeof window == "object" || typeof importScripts == "function") throw new Error("not compiled for this environment (did you build to HTML and try to run it not on the web, or set ENVIRONMENT to something - like node - and run it someplace else - like on the web?)");
 } else // Note that this includes Node.js workers when relevant (pthreads is enabled).
 // Node.js workers are detected as a combination of ENVIRONMENT_IS_WORKER and
 // ENVIRONMENT_IS_NODE.
@@ -230,7 +205,6 @@ if (ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) {
   } else {
     scriptDirectory = scriptDirectory.substr(0, scriptDirectory.replace(/[?#].*/, "").lastIndexOf("/") + 1);
   }
-  if (!(typeof window == "object" || typeof importScripts == "function")) throw new Error("not compiled for this environment (did you build to HTML and try to run it not on the web, or set ENVIRONMENT to something - like node - and run it someplace else - like on the web?)");
   // Differentiate the Web Worker from the Node Worker case, as reading must
   // be done differently.
   if (!ENVIRONMENT_IS_NODE) {
@@ -277,9 +251,7 @@ if (ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) {
     };
   }
 } else // end include: web_or_worker_shell_read.js
-{
-  throw new Error("environment detection error");
-}
+{}
 
 // Set up the out() and err() hooks, which are how we can print to stdout or
 // stderr, respectively.
@@ -307,68 +279,15 @@ Object.assign(Module, moduleOverrides);
 // reclaim data used.
 moduleOverrides = null;
 
-checkIncomingModuleAPI();
-
 // Emit code to handle expected values on the Module object. This applies Module.x
 // to the proper local x. This has two benefits: first, we only emit it if it is
 // expected to arrive, and second, by using a local everywhere else that can be
 // minified.
 if (Module["arguments"]) arguments_ = Module["arguments"];
 
-legacyModuleProp("arguments", "arguments_");
-
 if (Module["thisProgram"]) thisProgram = Module["thisProgram"];
 
-legacyModuleProp("thisProgram", "thisProgram");
-
 // perform assertions in shell.js after we set up out() and err(), as otherwise if an assertion fails it cannot print the message
-// Assertions on removed incoming Module JS APIs.
-assert(typeof Module["memoryInitializerPrefixURL"] == "undefined", "Module.memoryInitializerPrefixURL option was removed, use Module.locateFile instead");
-
-assert(typeof Module["pthreadMainPrefixURL"] == "undefined", "Module.pthreadMainPrefixURL option was removed, use Module.locateFile instead");
-
-assert(typeof Module["cdInitializerPrefixURL"] == "undefined", "Module.cdInitializerPrefixURL option was removed, use Module.locateFile instead");
-
-assert(typeof Module["filePackagePrefixURL"] == "undefined", "Module.filePackagePrefixURL option was removed, use Module.locateFile instead");
-
-assert(typeof Module["read"] == "undefined", "Module.read option was removed");
-
-assert(typeof Module["readAsync"] == "undefined", "Module.readAsync option was removed (modify readAsync in JS)");
-
-assert(typeof Module["readBinary"] == "undefined", "Module.readBinary option was removed (modify readBinary in JS)");
-
-assert(typeof Module["setWindowTitle"] == "undefined", "Module.setWindowTitle option was removed (modify emscripten_set_window_title in JS)");
-
-assert(typeof Module["TOTAL_MEMORY"] == "undefined", "Module.TOTAL_MEMORY has been renamed Module.INITIAL_MEMORY");
-
-legacyModuleProp("asm", "wasmExports");
-
-legacyModuleProp("readAsync", "readAsync");
-
-legacyModuleProp("readBinary", "readBinary");
-
-legacyModuleProp("setWindowTitle", "setWindowTitle");
-
-var IDBFS = "IDBFS is no longer included by default; build with -lidbfs.js";
-
-var PROXYFS = "PROXYFS is no longer included by default; build with -lproxyfs.js";
-
-var WORKERFS = "WORKERFS is no longer included by default; build with -lworkerfs.js";
-
-var FETCHFS = "FETCHFS is no longer included by default; build with -lfetchfs.js";
-
-var ICASEFS = "ICASEFS is no longer included by default; build with -licasefs.js";
-
-var JSFILEFS = "JSFILEFS is no longer included by default; build with -ljsfilefs.js";
-
-var OPFS = "OPFS is no longer included by default; build with -lopfs.js";
-
-var NODEFS = "NODEFS is no longer included by default; build with -lnodefs.js";
-
-assert(ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER || ENVIRONMENT_IS_NODE, "Pthreads do not work in this environment yet (need Web Workers, or an alternative to them)");
-
-assert(!ENVIRONMENT_IS_SHELL, "shell environment detected but not enabled at build time.  Add `shell` to `-sENVIRONMENT` to enable.");
-
 // end include: shell.js
 // include: preamble.js
 // === Preamble library stuff ===
@@ -381,12 +300,31 @@ assert(!ENVIRONMENT_IS_SHELL, "shell environment detected but not enabled at bui
 //    is up at http://kripken.github.io/emscripten-site/docs/api_reference/preamble.js.html
 var wasmBinary = Module["wasmBinary"];
 
-legacyModuleProp("wasmBinary", "wasmBinary");
-
-if (typeof WebAssembly != "object") {
-  err("no native wasm support detected");
+// include: base64Utils.js
+// Converts a string of base64 into a byte array (Uint8Array).
+function intArrayFromBase64(s) {
+  if (typeof ENVIRONMENT_IS_NODE != "undefined" && ENVIRONMENT_IS_NODE) {
+    var buf = Buffer.from(s, "base64");
+    return new Uint8Array(buf.buffer, buf.byteOffset, buf.length);
+  }
+  var decoded = atob(s);
+  var bytes = new Uint8Array(decoded.length);
+  for (var i = 0; i < decoded.length; ++i) {
+    bytes[i] = decoded.charCodeAt(i);
+  }
+  return bytes;
 }
 
+// If filename is a base64 data URI, parses and returns data (Buffer on node,
+// Uint8Array otherwise). If filename is not a base64 data URI, returns undefined.
+function tryParseAsDataURI(filename) {
+  if (!isDataURI(filename)) {
+    return;
+  }
+  return intArrayFromBase64(filename.slice(dataURIPrefix.length));
+}
+
+// end include: base64Utils.js
 // Wasm globals
 var wasmMemory;
 
@@ -411,12 +349,13 @@ var EXITSTATUS;
 // TODO(sbc): Make this the default even without STRICT enabled.
 /** @type {function(*, string=)} */ function assert(condition, text) {
   if (!condition) {
-    abort("Assertion failed" + (text ? ": " + text : ""));
+    // This build was created without ASSERTIONS defined.  `assert()` should not
+    // ever be called in this configuration but in case there are callers in
+    // the wild leave this simple abort() implementation here for now.
+    abort(text);
   }
 }
 
-// We used to include malloc/free by default in the past. Show a helpful error in
-// builds with assertions.
 // Memory management
 var HEAP, /** @type {!Int8Array} */ HEAP8, /** @type {!Uint8Array} */ HEAPU8, /** @type {!Int16Array} */ HEAP16, /** @type {!Uint16Array} */ HEAPU16, /** @type {!Int32Array} */ HEAP32, /** @type {!Uint32Array} */ HEAPU32, /** @type {!Float32Array} */ HEAPF32, /* BigInt64Array type is not correctly defined in closure
 /** not-@type {!BigInt64Array} */ HEAP64, /* BigUint64Array type is not correctly defined in closure
@@ -442,10 +381,6 @@ function updateMemoryViews() {
 // Pthread Web Worker handling code.
 // This code runs only on pthread web workers and handles pthread setup
 // and communication with the main thread via postMessage.
-// Unique ID of the current pthread worker (zero on non-pthread-workers
-// including the main thread).
-var workerID = 0;
-
 if (ENVIRONMENT_IS_PTHREAD) {
   var wasmPromiseResolve;
   var wasmPromiseReject;
@@ -462,9 +397,7 @@ if (ENVIRONMENT_IS_PTHREAD) {
       // Dummy importScripts.  The presence of this global is used
       // to detect that we are running on a Worker.
       // TODO(sbc): Find another way?
-      importScripts: () => {
-        assert(false, "dummy importScripts called");
-      },
+      importScripts: () => {},
       postMessage: msg => parentPort.postMessage(msg)
     });
   }
@@ -480,7 +413,6 @@ if (ENVIRONMENT_IS_PTHREAD) {
     console.error(text);
   }
   if (!Module["printErr"]) err = threadPrintErr;
-  dbg = threadPrintErr;
   function threadAlert(...args) {
     var text = args.join(" ");
     postMessage({
@@ -515,7 +447,6 @@ if (ENVIRONMENT_IS_PTHREAD) {
       var cmd = msgData.cmd;
       if (cmd === "load") {
         // Preload command that is called once per worker to parse and load the Emscripten code.
-        workerID = msgData.workerID;
         // Until we initialize the runtime, queue up any further incoming messages.
         let messageQueue = [];
         self.onmessage = e => messageQueue.push(e);
@@ -555,7 +486,6 @@ if (ENVIRONMENT_IS_PTHREAD) {
         updateMemoryViews();
         wasmPromiseResolve(msgData.wasmModule);
       } else if (cmd === "run") {
-        assert(msgData.pthread_ptr);
         // Call inside JS module to set up the stack frame for this pthread in JS module scope.
         // This needs to be the first thing that we do, as we cannot call to any C/C++ functions
         // until the thread stack is initialized.
@@ -596,8 +526,6 @@ if (ENVIRONMENT_IS_PTHREAD) {
         err(msgData);
       }
     } catch (ex) {
-      err(`worker: onmessage() captured an uncaught exception: ${ex}`);
-      if (ex?.stack) err(ex.stack);
       __emscripten_thread_crashed();
       throw ex;
     }
@@ -607,10 +535,6 @@ if (ENVIRONMENT_IS_PTHREAD) {
 
 // ENVIRONMENT_IS_PTHREAD
 // end include: runtime_pthread.js
-assert(!Module["STACK_SIZE"], "STACK_SIZE can no longer be set at runtime.  Use -sSTACK_SIZE at link time");
-
-assert(typeof Int32Array != "undefined" && typeof Float64Array !== "undefined" && Int32Array.prototype.subarray != undefined && Int32Array.prototype.set != undefined, "JS engine does not provide full typed array support");
-
 // In non-standalone/normal mode, we create the memory here.
 // include: runtime_init_memory.js
 // Create the wasm memory. (Note: this only applies if IMPORTED_MEMORY is defined)
@@ -620,8 +544,6 @@ if (!ENVIRONMENT_IS_PTHREAD) {
     wasmMemory = Module["wasmMemory"];
   } else {
     var INITIAL_MEMORY = Module["INITIAL_MEMORY"] || 52428800;
-    legacyModuleProp("INITIAL_MEMORY", "INITIAL_MEMORY");
-    assert(INITIAL_MEMORY >= 5242880, "INITIAL_MEMORY should be larger than STACK_SIZE, was " + INITIAL_MEMORY + "! (STACK_SIZE=" + 5242880 + ")");
     wasmMemory = new WebAssembly.Memory({
       "initial": INITIAL_MEMORY / 65536,
       // In theory we should not need to emit the maximum if we want "unlimited"
@@ -638,43 +560,6 @@ if (!ENVIRONMENT_IS_PTHREAD) {
 
 // end include: runtime_init_memory.js
 // include: runtime_stack_check.js
-// Initializes the stack cookie. Called at the startup of main and at the startup of each thread in pthreads mode.
-function writeStackCookie() {
-  var max = _emscripten_stack_get_end();
-  assert((max & 3) == 0);
-  // If the stack ends at address zero we write our cookies 4 bytes into the
-  // stack.  This prevents interference with SAFE_HEAP and ASAN which also
-  // monitor writes to address zero.
-  if (max == 0) {
-    max += 4;
-  }
-  // The stack grow downwards towards _emscripten_stack_get_end.
-  // We write cookies to the final two words in the stack and detect if they are
-  // ever overwritten.
-  GROWABLE_HEAP_U32()[((max) >>> 2) >>> 0] = 34821223;
-  GROWABLE_HEAP_U32()[(((max) + (4)) >>> 2) >>> 0] = 2310721022;
-  // Also test the global address 0 for integrity.
-  GROWABLE_HEAP_U32()[((0) >>> 2) >>> 0] = 1668509029;
-}
-
-function checkStackCookie() {
-  if (ABORT) return;
-  var max = _emscripten_stack_get_end();
-  // See writeStackCookie().
-  if (max == 0) {
-    max += 4;
-  }
-  var cookie1 = GROWABLE_HEAP_U32()[((max) >>> 2) >>> 0];
-  var cookie2 = GROWABLE_HEAP_U32()[(((max) + (4)) >>> 2) >>> 0];
-  if (cookie1 != 34821223 || cookie2 != 2310721022) {
-    abort(`Stack overflow! Stack cookie has been overwritten at ${ptrToString(max)}, expected hex dwords 0x89BACDFE and 0x2135467, but received ${ptrToString(cookie2)} ${ptrToString(cookie1)}`);
-  }
-  // Also test the global address 0 for integrity.
-  if (GROWABLE_HEAP_U32()[((0) >>> 2) >>> 0] != 1668509029) /* 'emsc' */ {
-    abort("Runtime error: The application has corrupted its heap memory area (address zero)!");
-  }
-}
-
 // end include: runtime_stack_check.js
 var __ATPRERUN__ = [];
 
@@ -694,8 +579,6 @@ var __ATPOSTRUN__ = [];
 var runtimeInitialized = false;
 
 function preRun() {
-  assert(!ENVIRONMENT_IS_PTHREAD);
-  // PThreads reuse the runtime from the main thread.
   var preRuns = Module["preRun"];
   if (preRuns) {
     if (typeof preRuns == "function") preRuns = [ preRuns ];
@@ -705,10 +588,9 @@ function preRun() {
 }
 
 function initRuntime() {
-  assert(!runtimeInitialized);
   runtimeInitialized = true;
   if (ENVIRONMENT_IS_PTHREAD) return;
-  checkStackCookie();
+  SOCKFS.root = FS.mount(SOCKFS, {}, null);
   if (!Module["noFSInit"] && !FS.initialized) FS.init();
   FS.ignorePermissions = false;
   TTY.init();
@@ -716,14 +598,12 @@ function initRuntime() {
 }
 
 function preMain() {
-  checkStackCookie();
   if (ENVIRONMENT_IS_PTHREAD) return;
   // PThreads reuse the runtime from the main thread.
   callRuntimeCallbacks(__ATMAIN__);
 }
 
 function postRun() {
-  checkStackCookie();
   if (ENVIRONMENT_IS_PTHREAD) return;
   // PThreads reuse the runtime from the main thread.
   var postRuns = Module["postRun"];
@@ -757,14 +637,6 @@ function addOnPostRun(cb) {
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/fround
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/clz32
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/trunc
-assert(Math.imul, "This browser does not support Math.imul(), build with LEGACY_VM_SUPPORT or POLYFILL_OLD_MATH_FUNCTIONS to add in a polyfill");
-
-assert(Math.fround, "This browser does not support Math.fround(), build with LEGACY_VM_SUPPORT or POLYFILL_OLD_MATH_FUNCTIONS to add in a polyfill");
-
-assert(Math.clz32, "This browser does not support Math.clz32(), build with LEGACY_VM_SUPPORT or POLYFILL_OLD_MATH_FUNCTIONS to add in a polyfill");
-
-assert(Math.trunc, "This browser does not support Math.trunc(), build with LEGACY_VM_SUPPORT or POLYFILL_OLD_MATH_FUNCTIONS to add in a polyfill");
-
 // end include: runtime_math.js
 // A counter of dependencies for calling run(). If we need to
 // do asynchronous work before running, increment this and
@@ -780,57 +652,18 @@ var runDependencyWatcher = null;
 var dependenciesFulfilled = null;
 
 // overridden to take different actions when all run dependencies are fulfilled
-var runDependencyTracking = {};
-
 function getUniqueRunDependency(id) {
-  var orig = id;
-  while (1) {
-    if (!runDependencyTracking[id]) return id;
-    id = orig + Math.random();
-  }
+  return id;
 }
 
 function addRunDependency(id) {
   runDependencies++;
   Module["monitorRunDependencies"]?.(runDependencies);
-  if (id) {
-    assert(!runDependencyTracking[id]);
-    runDependencyTracking[id] = 1;
-    if (runDependencyWatcher === null && typeof setInterval != "undefined") {
-      // Check for missing dependencies every few seconds
-      runDependencyWatcher = setInterval(() => {
-        if (ABORT) {
-          clearInterval(runDependencyWatcher);
-          runDependencyWatcher = null;
-          return;
-        }
-        var shown = false;
-        for (var dep in runDependencyTracking) {
-          if (!shown) {
-            shown = true;
-            err("still waiting on run dependencies:");
-          }
-          err(`dependency: ${dep}`);
-        }
-        if (shown) {
-          err("(end of list)");
-        }
-      }, 1e4);
-    }
-  } else {
-    err("warning: run dependency added without ID");
-  }
 }
 
 function removeRunDependency(id) {
   runDependencies--;
   Module["monitorRunDependencies"]?.(runDependencies);
-  if (id) {
-    assert(runDependencyTracking[id]);
-    delete runDependencyTracking[id];
-  } else {
-    err("warning: run dependency removed without ID");
-  }
   if (runDependencies == 0) {
     if (runDependencyWatcher !== null) {
       clearInterval(runDependencyWatcher);
@@ -851,6 +684,7 @@ function removeRunDependency(id) {
   // catches the exception?
   err(what);
   ABORT = true;
+  what += ". Build with -sASSERTIONS for more info.";
   // Use a wasm runtime error, because a JS error might be seen as a foreign
   // exception, which means we'd run destructors on it. We need the error to
   // simply make the program stop.
@@ -888,17 +722,6 @@ var dataURIPrefix = "data:application/octet-stream;base64,";
  */ var isFileURI = filename => filename.startsWith("file://");
 
 // end include: URIUtils.js
-function createExportWrapper(name, nargs) {
-  return (...args) => {
-    assert(runtimeInitialized, `native function \`${name}\` called before runtime initialization`);
-    var f = wasmExports[name];
-    assert(f, `exported native function \`${name}\` not found`);
-    // Only assert for too many arguments. Too few can be valid since the missing arguments will be zero filled.
-    assert(args.length <= nargs, `native function \`${name}\` called with ${args.length} args but expects ${nargs}`);
-    return f(...args);
-  };
-}
-
 // include: runtime_exceptions.js
 // end include: runtime_exceptions.js
 function findWasmBinary() {
@@ -935,10 +758,6 @@ function getBinaryPromise(binaryFile) {
 function instantiateArrayBuffer(binaryFile, imports, receiver) {
   return getBinaryPromise(binaryFile).then(binary => WebAssembly.instantiate(binary, imports)).then(receiver, reason => {
     err(`failed to asynchronously prepare wasm: ${reason}`);
-    // Warn on some common problems.
-    if (isFileURI(wasmBinaryFile)) {
-      err(`warning: Loading from a file URI (${wasmBinaryFile}) is not supported in most browsers. See https://emscripten.org/docs/getting_started/FAQ.html#how-do-i-run-a-local-webserver-for-testing-why-does-my-program-stall-in-downloading-or-preparing`);
-    }
     abort(reason);
   });
 }
@@ -989,10 +808,10 @@ function createWasm() {
   // performing other necessary setup
   /** @param {WebAssembly.Module=} module*/ function receiveInstance(instance, module) {
     wasmExports = instance.exports;
+    wasmExports = Asyncify.instrumentWasmExports(wasmExports);
     wasmExports = applySignatureConversions(wasmExports);
     registerTLSInit(wasmExports["_emscripten_tls_init"]);
     wasmTable = wasmExports["__indirect_function_table"];
-    assert(wasmTable, "table not found in wasm exports");
     addOnInit(wasmExports["__wasm_call_ctors"]);
     // We now have the Wasm module loaded up, keep a reference to the compiled module so we can post it to the workers.
     wasmModule = module;
@@ -1002,15 +821,9 @@ function createWasm() {
   // wait for the pthread pool (if any)
   addRunDependency("wasm-instantiate");
   // Prefer streaming instantiation if available.
-  // Async compilation can be confusing when an error on the page overwrites Module
-  // (for example, if the order of elements is wrong, and the one defining Module is
-  // later), so we save Module and check it later.
-  var trueModule = Module;
   function receiveInstantiationResult(result) {
     // 'result' is a ResultObject object which has both the module and instance.
     // receiveInstance() will swap in the exports (to Module.asm) so they can be called
-    assert(Module === trueModule, "the Module object should not be replaced during async compilation - perhaps the order of HTML elements is wrong?");
-    trueModule = null;
     receiveInstance(result["instance"], result["module"]);
   }
   // User shell pages can write their own Module.instantiateWasm = function(imports, successCallback) callback
@@ -1035,116 +848,6 @@ function createWasm() {
 }
 
 // include: runtime_debug.js
-// Endianness check
-(() => {
-  var h16 = new Int16Array(1);
-  var h8 = new Int8Array(h16.buffer);
-  h16[0] = 25459;
-  if (h8[0] !== 115 || h8[1] !== 99) throw "Runtime error: expected the system to be little-endian! (Run with -sSUPPORT_BIG_ENDIAN to bypass)";
-})();
-
-if (Module["ENVIRONMENT"]) {
-  throw new Error("Module.ENVIRONMENT has been deprecated. To force the environment, use the ENVIRONMENT compile-time option (for example, -sENVIRONMENT=web or -sENVIRONMENT=node)");
-}
-
-function legacyModuleProp(prop, newName, incoming = true) {
-  if (!Object.getOwnPropertyDescriptor(Module, prop)) {
-    Object.defineProperty(Module, prop, {
-      configurable: true,
-      get() {
-        let extra = incoming ? " (the initial value can be provided on Module, but after startup the value is only looked for on a local variable of that name)" : "";
-        abort(`\`Module.${prop}\` has been replaced by \`${newName}\`` + extra);
-      }
-    });
-  }
-}
-
-function ignoredModuleProp(prop) {
-  if (Object.getOwnPropertyDescriptor(Module, prop)) {
-    abort(`\`Module.${prop}\` was supplied but \`${prop}\` not included in INCOMING_MODULE_JS_API`);
-  }
-}
-
-// forcing the filesystem exports a few things by default
-function isExportedByForceFilesystem(name) {
-  return name === "FS_createPath" || name === "FS_createDataFile" || name === "FS_createPreloadedFile" || name === "FS_unlink" || name === "addRunDependency" || // The old FS has some functionality that WasmFS lacks.
-  name === "FS_createLazyFile" || name === "FS_createDevice" || name === "removeRunDependency";
-}
-
-/**
- * Intercept access to a global symbol.  This enables us to give informative
- * warnings/errors when folks attempt to use symbols they did not include in
- * their build, or no symbols that no longer exist.
- */ function hookGlobalSymbolAccess(sym, func) {}
-
-// In MODULARIZE mode the generated code runs inside a function scope and not
-// the global scope, and JavaScript does not provide access to function scopes
-// so we cannot dynamically modify the scrope using `defineProperty` in this
-// case.
-// In this mode we simply ignore requests for `hookGlobalSymbolAccess`. Since
-// this is a debug-only feature, skipping it is not major issue.
-function missingGlobal(sym, msg) {
-  hookGlobalSymbolAccess(sym, () => {
-    warnOnce(`\`${sym}\` is not longer defined by emscripten. ${msg}`);
-  });
-}
-
-missingGlobal("buffer", "Please use HEAP8.buffer or wasmMemory.buffer");
-
-missingGlobal("asm", "Please use wasmExports instead");
-
-function missingLibrarySymbol(sym) {
-  hookGlobalSymbolAccess(sym, () => {
-    // Can't `abort()` here because it would break code that does runtime
-    // checks.  e.g. `if (typeof SDL === 'undefined')`.
-    var msg = `\`${sym}\` is a library symbol and not included by default; add it to your library.js __deps or to DEFAULT_LIBRARY_FUNCS_TO_INCLUDE on the command line`;
-    // DEFAULT_LIBRARY_FUNCS_TO_INCLUDE requires the name as it appears in
-    // library.js, which means $name for a JS name with no prefix, or name
-    // for a JS name like _name.
-    var librarySymbol = sym;
-    if (!librarySymbol.startsWith("_")) {
-      librarySymbol = "$" + sym;
-    }
-    msg += ` (e.g. -sDEFAULT_LIBRARY_FUNCS_TO_INCLUDE='${librarySymbol}')`;
-    if (isExportedByForceFilesystem(sym)) {
-      msg += ". Alternatively, forcing filesystem support (-sFORCE_FILESYSTEM) can export this for you";
-    }
-    warnOnce(msg);
-  });
-  // Any symbol that is not included from the JS library is also (by definition)
-  // not exported on the Module object.
-  unexportedRuntimeSymbol(sym);
-}
-
-function unexportedRuntimeSymbol(sym) {
-  if (ENVIRONMENT_IS_PTHREAD) {
-    return;
-  }
-  if (!Object.getOwnPropertyDescriptor(Module, sym)) {
-    Object.defineProperty(Module, sym, {
-      configurable: true,
-      get() {
-        var msg = `'${sym}' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the Emscripten FAQ)`;
-        if (isExportedByForceFilesystem(sym)) {
-          msg += ". Alternatively, forcing filesystem support (-sFORCE_FILESYSTEM) can export this for you";
-        }
-        abort(msg);
-      }
-    });
-  }
-}
-
-// Used by XXXXX_DEBUG settings to output debug messages.
-function dbg(...args) {
-  // Avoid using the console for debugging in multi-threaded node applications
-  // See https://github.com/emscripten-core/emscripten/issues/14804
-  if (ENVIRONMENT_IS_NODE && fs) {
-    fs.writeSync(2, args.join(" ") + "\n");
-  } else // TODO(sbc): Make this configurable somehow.  Its not always convenient for
-  // logging to show up as warnings.
-  console.warn(...args);
-}
-
 // end include: runtime_debug.js
 // === Body ===
 function jsHaveAsyncify() {
@@ -1190,29 +893,20 @@ var terminateWorker = worker => {
   // the worker now dead and we don't want to hear from it again, so we stub
   // out its message handler here.  This avoids having to check in each of
   // the onmessage handlers if the message was coming from valid worker.
-  worker.onmessage = e => {
-    var cmd = e["data"].cmd;
-    err(`received "${cmd}" command from terminated worker: ${worker.workerID}`);
-  };
+  worker.onmessage = e => {};
 };
 
 var cleanupThread = pthread_ptr => {
-  assert(!ENVIRONMENT_IS_PTHREAD, "Internal Error! cleanupThread() can only ever be called from main application thread!");
-  assert(pthread_ptr, "Internal Error! Null pthread_ptr in cleanupThread!");
   var worker = PThread.pthreads[pthread_ptr];
-  assert(worker);
   PThread.returnWorkerToPool(worker);
 };
 
 var spawnThread = threadParams => {
-  assert(!ENVIRONMENT_IS_PTHREAD, "Internal Error! spawnThread() can only ever be called from main application thread!");
-  assert(threadParams.pthread_ptr, "Internal error, no pthread ptr!");
   var worker = PThread.getNewWorker();
   if (!worker) {
     // No available workers in the PThread pool.
     return 6;
   }
-  assert(!worker.pthread_ptr, "Internal error!");
   PThread.runningWorkers.push(worker);
   // Add to pthreads map
   PThread.pthreads[threadParams.pthread_ptr] = worker;
@@ -1309,12 +1003,6 @@ var handleException = e => {
   if (e instanceof ExitStatus || e == "unwind") {
     return EXITSTATUS;
   }
-  checkStackCookie();
-  if (e instanceof WebAssembly.RuntimeError) {
-    if (_emscripten_stack_get_current() <= 0) {
-      err("Stack overflow detected.  You can try increasing -sSTACK_SIZE (currently set to 5242880)");
-    }
-  }
   quit_(1, e);
 };
 
@@ -1325,10 +1013,8 @@ function exitOnMainThread(returnCode) {
 
 /** @suppress {duplicate } */ /** @param {boolean|number=} implicit */ var exitJS = (status, implicit) => {
   EXITSTATUS = status;
-  checkUnflushedContent();
   if (ENVIRONMENT_IS_PTHREAD) {
     // implicit exit can never happen on a pthread
-    assert(!implicit);
     // When running in a pthread we propagate the exit back to the main thread
     // where it can decide if the whole process should be shut down or not.
     // The pthread may have decided not to exit its own runtime, for example
@@ -1336,42 +1022,17 @@ function exitOnMainThread(returnCode) {
     exitOnMainThread(status);
     throw "unwind";
   }
-  // if exit() was called explicitly, warn the user if the runtime isn't actually being shut down
-  if (keepRuntimeAlive() && !implicit) {
-    var msg = `program exited (with status: ${status}), but keepRuntimeAlive() is set (counter=${runtimeKeepaliveCounter}) due to an async operation, so halting execution but not exiting the runtime or preventing further async execution (you can use emscripten_force_exit, if you want to force a true shutdown)`;
-    readyPromiseReject(msg);
-    err(msg);
-  }
   _proc_exit(status);
 };
 
 var _exit = exitJS;
-
-var ptrToString = ptr => {
-  assert(typeof ptr === "number");
-  return "0x" + ptr.toString(16).padStart(8, "0");
-};
 
 var PThread = {
   unusedWorkers: [],
   runningWorkers: [],
   tlsInitFunctions: [],
   pthreads: {},
-  nextWorkerID: 1,
-  debugInit() {
-    function pthreadLogPrefix() {
-      var t = 0;
-      if (runtimeInitialized && typeof _pthread_self != "undefined") {
-        t = _pthread_self();
-      }
-      return `w:${workerID},t:${ptrToString(t)}: `;
-    }
-    // Prefix all err()/dbg() messages with the calling thread ID.
-    var origDbg = dbg;
-    dbg = (...args) => origDbg(pthreadLogPrefix() + args.join(" "));
-  },
   init() {
-    PThread.debugInit();
     if ((!(ENVIRONMENT_IS_PTHREAD))) {
       PThread.initMainThread();
     }
@@ -1390,7 +1051,6 @@ var PThread = {
     });
   },
   terminateAllThreads: () => {
-    assert(!ENVIRONMENT_IS_PTHREAD, "Internal Error! terminateAllThreads() can only ever be called from main application thread!");
     // Attempt to kill all workers.  Sadly (at least on the web) there is no
     // way to terminate a worker synchronously, or to be notified when a
     // worker in actually terminated.  This means there is some risk that
@@ -1482,9 +1142,6 @@ var PThread = {
     };
     worker.onerror = e => {
       var message = "worker sent an error!";
-      if (worker.pthread_ptr) {
-        message = `Pthread ${ptrToString(worker.pthread_ptr)} sent an error!`;
-      }
       err(`${message} ${e.filename}:${e.lineno}: ${e.message}`);
       throw e;
     };
@@ -1494,8 +1151,6 @@ var PThread = {
       }));
       worker.on("error", e => worker.onerror(e));
     }
-    assert(wasmMemory instanceof WebAssembly.Memory, "WebAssembly memory should have been loaded by now!");
-    assert(wasmModule instanceof WebAssembly.Module, "WebAssembly Module should have been loaded by now!");
     // When running on a pthread, none of the incoming parameters on the module
     // object are present. Proxy known handlers back to the main thread if specified.
     var handlers = [];
@@ -1505,14 +1160,12 @@ var PThread = {
         handlers.push(handler);
       }
     }
-    worker.workerID = PThread.nextWorkerID++;
     // Ask the new worker to load up the Emscripten-compiled page. This is a heavy operation.
     worker.postMessage({
       cmd: "load",
       handlers,
       wasmMemory,
-      wasmModule,
-      "workerID": worker.workerID
+      wasmModule
     });
   }),
   loadWasmModuleToAllWorkers(onMaybeReady) {
@@ -1531,7 +1184,7 @@ var PThread = {
       "workerData": "em-pthread",
       // This is the way that we signal to the Web Worker that it is hosting
       // a pthread.
-      "name": "em-pthread-" + PThread.nextWorkerID
+      "name": "em-pthread"
     };
     var pthreadMainJs = _scriptName;
     // We can't use makeModuleReceiveWithVar here since we want to also
@@ -1548,11 +1201,6 @@ var PThread = {
   getNewWorker() {
     if (PThread.unusedWorkers.length == 0) {
       // PTHREAD_POOL_SIZE_STRICT should show a warning and, if set to level `2`, return from the function.
-      // However, if we're in Node.js, then we can create new workers on the fly and PTHREAD_POOL_SIZE_STRICT
-      // should be ignored altogether.
-      if (!ENVIRONMENT_IS_NODE) {
-        err("Tried to spawn a new thread, but the thread pool is exhausted.\n" + "This might result in a deadlock unless some threads eventually exit or the code explicitly breaks out to the event loop.\n" + "If you want to increase the pool size, use setting `-sPTHREAD_POOL_SIZE=...`." + "\nIf you want to throw an explicit error instead of the risk of deadlocking in those cases, use setting `-sPTHREAD_POOL_SIZE_STRICT=2`.");
-      }
       PThread.allocateUnusedWorker();
       PThread.loadWasmModuleToWorker(PThread.unusedWorkers[0]);
     }
@@ -1572,17 +1220,11 @@ var establishStackSpace = pthread_ptr => {
   var stackHigh = GROWABLE_HEAP_U32()[(((pthread_ptr) + (52)) >>> 2) >>> 0];
   var stackSize = GROWABLE_HEAP_U32()[(((pthread_ptr) + (56)) >>> 2) >>> 0];
   var stackLow = stackHigh - stackSize;
-  assert(stackHigh != 0);
-  assert(stackLow != 0);
-  assert(stackHigh > stackLow, "stackHigh must be higher then stackLow");
   // Set stack limits used by `emscripten/stack.h` function.  These limits are
   // cached in wasm-side globals to make checks as fast as possible.
   _emscripten_stack_set_limits(stackHigh, stackLow);
   // Call inside wasm module to set up the stack frame for this pthread in wasm module scope
   stackRestore(stackHigh);
-  // Write the stack cookie last, after we have set up the proper bounds and
-  // current position of the stack.
-  writeStackCookie();
 };
 
 /**
@@ -1620,20 +1262,6 @@ var establishStackSpace = pthread_ptr => {
   }
 }
 
-var wasmTableMirror = [];
-
-/** @type {WebAssembly.Table} */ var wasmTable;
-
-var getWasmTableEntry = funcPtr => {
-  var func = wasmTableMirror[funcPtr];
-  if (!func) {
-    if (funcPtr >= wasmTableMirror.length) wasmTableMirror.length = funcPtr + 1;
-    wasmTableMirror[funcPtr] = func = wasmTable.get(funcPtr);
-  }
-  assert(wasmTable.get(funcPtr) == func, "JavaScript-side Wasm function table mirror is out of date!");
-  return func;
-};
-
 var invokeEntryPoint = (ptr, arg) => {
   // An old thread on this worker may have been canceled without returning the
   // `runtimeKeepaliveCounter` to zero. Reset it now so the new thread won't
@@ -1655,8 +1283,7 @@ var invokeEntryPoint = (ptr, arg) => {
   // *ThreadMain(void *arg) form, or try linking with the Emscripten linker
   // flag -sEMULATE_FUNCTION_POINTER_CASTS to add in emulation for this x86
   // ABI extension.
-  var result = getWasmTableEntry(ptr)(arg);
-  checkStackCookie();
+  var result = (a1 => dynCall_ii(ptr, a1))(arg);
   function finish(result) {
     if (keepRuntimeAlive()) {
       EXITSTATUS = result;
@@ -1715,15 +1342,6 @@ var registerTLSInit = tlsInitFunc => PThread.tlsInitFunctions.push(tlsInitFunc);
   }
 }
 
-var warnOnce = text => {
-  warnOnce.shown ||= {};
-  if (!warnOnce.shown[text]) {
-    warnOnce.shown[text] = 1;
-    if (ENVIRONMENT_IS_NODE) text = "warning: " + text;
-    err(text);
-  }
-};
-
 var UTF8Decoder = typeof TextDecoder != "undefined" ? new TextDecoder : undefined;
 
 /**
@@ -1769,7 +1387,6 @@ var UTF8Decoder = typeof TextDecoder != "undefined" ? new TextDecoder : undefine
     if ((u0 & 240) == 224) {
       u0 = ((u0 & 15) << 12) | (u1 << 6) | u2;
     } else {
-      if ((u0 & 248) != 240) warnOnce("Invalid UTF-8 leading byte " + ptrToString(u0) + " encountered when deserializing a UTF-8 string in wasm memory to a JS string!");
       u0 = ((u0 & 7) << 18) | (u1 << 12) | (u2 << 6) | (heapOrArray[idx++] & 63);
     }
     if (u0 < 65536) {
@@ -1797,7 +1414,6 @@ var UTF8Decoder = typeof TextDecoder != "undefined" ? new TextDecoder : undefine
      *   JS JIT optimizations off, so it is worth to consider consistently using one
      * @return {string}
      */ var UTF8ToString = (ptr, maxBytesToRead) => {
-  assert(typeof ptr == "number", `UTF8ToString expects a number (got ${typeof ptr})`);
   ptr >>>= 0;
   return ptr ? UTF8ArrayToString(GROWABLE_HEAP_U8(), ptr, maxBytesToRead) : "";
 };
@@ -1809,10 +1425,10 @@ function ___assert_fail(condition, filename, line, func) {
   abort(`Assertion failed: ${UTF8ToString(condition)}, at: ` + [ filename ? UTF8ToString(filename) : "unknown filename", line, func ? UTF8ToString(func) : "unknown function" ]);
 }
 
-function ___call_sighandler(fp, sig) {
+var ___call_sighandler = function(fp, sig) {
   fp >>>= 0;
-  return getWasmTableEntry(fp)(sig);
-}
+  return (a1 => dynCall_vi(fp, a1))(sig);
+};
 
 var exceptionCaught = [];
 
@@ -1836,7 +1452,6 @@ var exceptionLast = 0;
 var ___cxa_end_catch = () => {
   // Clear state flag.
   _setThrew(0, 0);
-  assert(exceptionCaught.length > 0);
   // Call destructor if one is registered then clear it.
   var info = exceptionCaught.pop();
   ___cxa_decrement_exception_refcount(info.excPtr);
@@ -1895,7 +1510,7 @@ function ___resumeException(ptr) {
   if (!exceptionLast) {
     exceptionLast = ptr;
   }
-  assert(false, "Exception thrown, but exception catching is not enabled. Compile with -sNO_DISABLE_EXCEPTION_CATCHING or -sEXCEPTION_CATCHING_ALLOWED=[..] to catch.");
+  throw exceptionLast;
 }
 
 var setTempRet0 = val => __emscripten_tempret_set(val);
@@ -1958,7 +1573,7 @@ var ___cxa_rethrow = () => {
     uncaughtExceptionCount++;
   }
   exceptionLast = ptr;
-  assert(false, "Exception thrown, but exception catching is not enabled. Compile with -sNO_DISABLE_EXCEPTION_CATCHING or -sEXCEPTION_CATCHING_ALLOWED=[..] to catch.");
+  throw exceptionLast;
 };
 
 function ___cxa_throw(ptr, type, destructor) {
@@ -1970,7 +1585,7 @@ function ___cxa_throw(ptr, type, destructor) {
   info.init(type, destructor);
   exceptionLast = ptr;
   uncaughtExceptionCount++;
-  assert(false, "Exception thrown, but exception catching is not enabled. Compile with -sNO_DISABLE_EXCEPTION_CATCHING or -sEXCEPTION_CATCHING_ALLOWED=[..] to catch.");
+  throw exceptionLast;
 }
 
 function pthreadCreateProxied(pthread_ptr, attr, startRoutine, arg) {
@@ -1986,7 +1601,6 @@ function ___pthread_create_js(pthread_ptr, attr, startRoutine, arg) {
   startRoutine >>>= 0;
   arg >>>= 0;
   if (!_emscripten_has_threading_support()) {
-    dbg("pthread_create: environment does not support SharedArrayBuffer, pthreads are not available");
     return 6;
   }
   // List of JS objects that will transfer ownership to the Worker hosting the thread
@@ -2021,6 +1635,35 @@ function ___pthread_create_js(pthread_ptr, attr, startRoutine, arg) {
   // thread and can fire off JS thread creation directly ourselves.
   return spawnThread(threadParams);
 }
+
+var initRandomFill = () => {
+  if (typeof crypto == "object" && typeof crypto["getRandomValues"] == "function") {
+    // for modern web browsers
+    // like with most Web APIs, we can't use Web Crypto API directly on shared memory,
+    // so we need to create an intermediate buffer and copy it to the destination
+    return view => (view.set(crypto.getRandomValues(new Uint8Array(view.byteLength))), 
+    // Return the original view to match modern native implementations.
+    view);
+  } else if (ENVIRONMENT_IS_NODE) {
+    // for nodejs with or without crypto support included
+    try {
+      var crypto_module = require("crypto");
+      var randomFillSync = crypto_module["randomFillSync"];
+      if (randomFillSync) {
+        // nodejs with LTS crypto support
+        return view => crypto_module["randomFillSync"](view);
+      }
+      // very old nodejs with the original crypto API
+      var randomBytes = crypto_module["randomBytes"];
+      return view => (view.set(randomBytes(view.byteLength)), // Return the original view to match modern native implementations.
+      view);
+    } catch (e) {}
+  }
+  // we couldn't find a proper implementation, as Math.random() is not suitable for /dev/random, see emscripten-core/emscripten/pull/7096
+  abort("initRandomDevice");
+};
+
+var randomFill = view => (randomFill = initRandomFill())(view);
 
 var PATH = {
   isAbs: path => path.charAt(0) === "/",
@@ -2087,35 +1730,6 @@ var PATH = {
   join: (...paths) => PATH.normalize(paths.join("/")),
   join2: (l, r) => PATH.normalize(l + "/" + r)
 };
-
-var initRandomFill = () => {
-  if (typeof crypto == "object" && typeof crypto["getRandomValues"] == "function") {
-    // for modern web browsers
-    // like with most Web APIs, we can't use Web Crypto API directly on shared memory,
-    // so we need to create an intermediate buffer and copy it to the destination
-    return view => (view.set(crypto.getRandomValues(new Uint8Array(view.byteLength))), 
-    // Return the original view to match modern native implementations.
-    view);
-  } else if (ENVIRONMENT_IS_NODE) {
-    // for nodejs with or without crypto support included
-    try {
-      var crypto_module = require("crypto");
-      var randomFillSync = crypto_module["randomFillSync"];
-      if (randomFillSync) {
-        // nodejs with LTS crypto support
-        return view => crypto_module["randomFillSync"](view);
-      }
-      // very old nodejs with the original crypto API
-      var randomBytes = crypto_module["randomBytes"];
-      return view => (view.set(randomBytes(view.byteLength)), // Return the original view to match modern native implementations.
-      view);
-    } catch (e) {}
-  }
-  // we couldn't find a proper implementation, as Math.random() is not suitable for /dev/random, see emscripten-core/emscripten/pull/7096
-  abort("no cryptographic support found for randomDevice. consider polyfilling it if you want to use something insecure like Math.random(), e.g. put this in a --pre-js: var crypto = { getRandomValues: (array) => { for (var i = 0; i < array.length; i++) array[i] = (Math.random()*256)|0 } };");
-};
-
-var randomFill = view => (randomFill = initRandomFill())(view);
 
 var PATH_FS = {
   resolve: (...args) => {
@@ -2198,7 +1812,6 @@ var lengthBytesUTF8 = str => {
 
 var stringToUTF8Array = (str, heap, outIdx, maxBytesToWrite) => {
   outIdx >>>= 0;
-  assert(typeof str === "string", `stringToUTF8Array expects a string (got ${typeof str})`);
   // Parameter maxBytesToWrite is not optional. Negative values, 0, null,
   // undefined and false each don't write out any bytes.
   if (!(maxBytesToWrite > 0)) return 0;
@@ -2233,7 +1846,6 @@ var stringToUTF8Array = (str, heap, outIdx, maxBytesToWrite) => {
       heap[outIdx++ >>> 0] = 128 | (u & 63);
     } else {
       if (outIdx + 3 >= endIdx) break;
-      if (u > 1114111) warnOnce("Invalid Unicode code point " + ptrToString(u) + " encountered when serializing a JS string to a UTF-8 string in wasm memory! (Valid unicode code points should be in range 0-0x10FFFF).");
       heap[outIdx++ >>> 0] = 240 | (u >> 18);
       heap[outIdx++ >>> 0] = 128 | ((u >> 12) & 63);
       heap[outIdx++ >>> 0] = 128 | ((u >> 6) & 63);
@@ -2440,10 +2052,7 @@ var zeroMemory = (address, size) => {
   GROWABLE_HEAP_U8().fill(0, address, address + size);
 };
 
-var alignMemory = (size, alignment) => {
-  assert(alignment, "alignment argument is required");
-  return Math.ceil(size / alignment) * alignment;
-};
+var alignMemory = (size, alignment) => Math.ceil(size / alignment) * alignment;
 
 var mmapAlloc = size => {
   size = alignMemory(size, 65536);
@@ -2680,7 +2289,6 @@ var MEMFS = {
       var contents = stream.node.contents;
       if (position >= stream.node.usedBytes) return 0;
       var size = Math.min(stream.node.usedBytes - position, length);
-      assert(size >= 0);
       if (size > 8 && contents.subarray) {
         // non-trivial, and typed array
         buffer.set(contents.subarray(position, position + size), offset);
@@ -2690,8 +2298,6 @@ var MEMFS = {
       return size;
     },
     write(stream, buffer, offset, length, position, canOwn) {
-      // The data buffer should be a typed array view
-      assert(!(buffer instanceof ArrayBuffer));
       // If the buffer is located in main memory (HEAP), and if
       // memory can grow, we can't hold on to references of the
       // memory buffer, as they may get invalidated. That means we
@@ -2705,7 +2311,6 @@ var MEMFS = {
       if (buffer.subarray && (!node.contents || node.contents.subarray)) {
         // This write is from a typed array to a typed array?
         if (canOwn) {
-          assert(position === 0, "canOwn must imply no weird position inside the file");
           node.contents = buffer.subarray(offset, offset + length);
           node.usedBytes = length;
           return length;
@@ -2798,7 +2403,6 @@ var MEMFS = {
 /** @param {boolean=} noRunDep */ var asyncLoad = (url, onload, onerror, noRunDep) => {
   var dep = !noRunDep ? getUniqueRunDependency(`al ${url}`) : "";
   readAsync(url).then(arrayBuffer => {
-    assert(arrayBuffer, `Loading data file "${url}" failed (no arrayBuffer).`);
     onload(new Uint8Array(arrayBuffer));
     if (dep) removeRunDependency(dep);
   }, err => {
@@ -2885,130 +2489,358 @@ var FS_getMode = (canRead, canWrite) => {
   return mode;
 };
 
-var strError = errno => UTF8ToString(_strerror(errno));
-
-var ERRNO_CODES = {
-  "EPERM": 63,
-  "ENOENT": 44,
-  "ESRCH": 71,
-  "EINTR": 27,
-  "EIO": 29,
-  "ENXIO": 60,
-  "E2BIG": 1,
-  "ENOEXEC": 45,
-  "EBADF": 8,
-  "ECHILD": 12,
-  "EAGAIN": 6,
-  "EWOULDBLOCK": 6,
-  "ENOMEM": 48,
-  "EACCES": 2,
-  "EFAULT": 21,
-  "ENOTBLK": 105,
-  "EBUSY": 10,
-  "EEXIST": 20,
-  "EXDEV": 75,
-  "ENODEV": 43,
-  "ENOTDIR": 54,
-  "EISDIR": 31,
-  "EINVAL": 28,
-  "ENFILE": 41,
-  "EMFILE": 33,
-  "ENOTTY": 59,
-  "ETXTBSY": 74,
-  "EFBIG": 22,
-  "ENOSPC": 51,
-  "ESPIPE": 70,
-  "EROFS": 69,
-  "EMLINK": 34,
-  "EPIPE": 64,
-  "EDOM": 18,
-  "ERANGE": 68,
-  "ENOMSG": 49,
-  "EIDRM": 24,
-  "ECHRNG": 106,
-  "EL2NSYNC": 156,
-  "EL3HLT": 107,
-  "EL3RST": 108,
-  "ELNRNG": 109,
-  "EUNATCH": 110,
-  "ENOCSI": 111,
-  "EL2HLT": 112,
-  "EDEADLK": 16,
-  "ENOLCK": 46,
-  "EBADE": 113,
-  "EBADR": 114,
-  "EXFULL": 115,
-  "ENOANO": 104,
-  "EBADRQC": 103,
-  "EBADSLT": 102,
-  "EDEADLOCK": 16,
-  "EBFONT": 101,
-  "ENOSTR": 100,
-  "ENODATA": 116,
-  "ETIME": 117,
-  "ENOSR": 118,
-  "ENONET": 119,
-  "ENOPKG": 120,
-  "EREMOTE": 121,
-  "ENOLINK": 47,
-  "EADV": 122,
-  "ESRMNT": 123,
-  "ECOMM": 124,
-  "EPROTO": 65,
-  "EMULTIHOP": 36,
-  "EDOTDOT": 125,
-  "EBADMSG": 9,
-  "ENOTUNIQ": 126,
-  "EBADFD": 127,
-  "EREMCHG": 128,
-  "ELIBACC": 129,
-  "ELIBBAD": 130,
-  "ELIBSCN": 131,
-  "ELIBMAX": 132,
-  "ELIBEXEC": 133,
-  "ENOSYS": 52,
-  "ENOTEMPTY": 55,
-  "ENAMETOOLONG": 37,
-  "ELOOP": 32,
-  "EOPNOTSUPP": 138,
-  "EPFNOSUPPORT": 139,
-  "ECONNRESET": 15,
-  "ENOBUFS": 42,
-  "EAFNOSUPPORT": 5,
-  "EPROTOTYPE": 67,
-  "ENOTSOCK": 57,
-  "ENOPROTOOPT": 50,
-  "ESHUTDOWN": 140,
-  "ECONNREFUSED": 14,
-  "EADDRINUSE": 3,
-  "ECONNABORTED": 13,
-  "ENETUNREACH": 40,
-  "ENETDOWN": 38,
-  "ETIMEDOUT": 73,
-  "EHOSTDOWN": 142,
-  "EHOSTUNREACH": 23,
-  "EINPROGRESS": 26,
-  "EALREADY": 7,
-  "EDESTADDRREQ": 17,
-  "EMSGSIZE": 35,
-  "EPROTONOSUPPORT": 66,
-  "ESOCKTNOSUPPORT": 137,
-  "EADDRNOTAVAIL": 4,
-  "ENETRESET": 39,
-  "EISCONN": 30,
-  "ENOTCONN": 53,
-  "ETOOMANYREFS": 141,
-  "EUSERS": 136,
-  "EDQUOT": 19,
-  "ESTALE": 72,
-  "ENOTSUP": 138,
-  "ENOMEDIUM": 148,
-  "EILSEQ": 25,
-  "EOVERFLOW": 61,
-  "ECANCELED": 11,
-  "ENOTRECOVERABLE": 56,
-  "EOWNERDEAD": 62,
-  "ESTRPIPE": 135
+var IDBFS = {
+  dbs: {},
+  indexedDB: () => {
+    if (typeof indexedDB != "undefined") return indexedDB;
+    var ret = null;
+    if (typeof window == "object") ret = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+    return ret;
+  },
+  DB_VERSION: 21,
+  DB_STORE_NAME: "FILE_DATA",
+  queuePersist: mount => {
+    function onPersistComplete() {
+      if (mount.idbPersistState === "again") startPersist(); else // If a new sync request has appeared in between, kick off a new sync
+      mount.idbPersistState = 0;
+    }
+    // Otherwise reset sync state back to idle to wait for a new sync later
+    function startPersist() {
+      mount.idbPersistState = "idb";
+      // Mark that we are currently running a sync operation
+      IDBFS.syncfs(mount, /*populate:*/ false, onPersistComplete);
+    }
+    if (!mount.idbPersistState) {
+      // Programs typically write/copy/move multiple files in the in-memory
+      // filesystem within a single app frame, so when a filesystem sync
+      // command is triggered, do not start it immediately, but only after
+      // the current frame is finished. This way all the modified files
+      // inside the main loop tick will be batched up to the same sync.
+      mount.idbPersistState = setTimeout(startPersist, 0);
+    } else if (mount.idbPersistState === "idb") {
+      // There is an active IndexedDB sync operation in-flight, but we now
+      // have accumulated more files to sync. We should therefore queue up
+      // a new sync after the current one finishes so that all writes
+      // will be properly persisted.
+      mount.idbPersistState = "again";
+    }
+  },
+  mount: mount => {
+    // reuse core MEMFS functionality
+    var mnt = MEMFS.mount(mount);
+    // If the automatic IDBFS persistence option has been selected, then automatically persist
+    // all modifications to the filesystem as they occur.
+    if (mount?.opts?.autoPersist) {
+      mnt.idbPersistState = 0;
+      // IndexedDB sync starts in idle state
+      var memfs_node_ops = mnt.node_ops;
+      mnt.node_ops = Object.assign({}, mnt.node_ops);
+      // Clone node_ops to inject write tracking
+      mnt.node_ops.mknod = (parent, name, mode, dev) => {
+        var node = memfs_node_ops.mknod(parent, name, mode, dev);
+        // Propagate injected node_ops to the newly created child node
+        node.node_ops = mnt.node_ops;
+        // Remember for each IDBFS node which IDBFS mount point they came from so we know which mount to persist on modification.
+        node.idbfs_mount = mnt.mount;
+        // Remember original MEMFS stream_ops for this node
+        node.memfs_stream_ops = node.stream_ops;
+        // Clone stream_ops to inject write tracking
+        node.stream_ops = Object.assign({}, node.stream_ops);
+        // Track all file writes
+        node.stream_ops.write = (stream, buffer, offset, length, position, canOwn) => {
+          // This file has been modified, we must persist IndexedDB when this file closes
+          stream.node.isModified = true;
+          return node.memfs_stream_ops.write(stream, buffer, offset, length, position, canOwn);
+        };
+        // Persist IndexedDB on file close
+        node.stream_ops.close = stream => {
+          var n = stream.node;
+          if (n.isModified) {
+            IDBFS.queuePersist(n.idbfs_mount);
+            n.isModified = false;
+          }
+          if (n.memfs_stream_ops.close) return n.memfs_stream_ops.close(stream);
+        };
+        return node;
+      };
+      // Also kick off persisting the filesystem on other operations that modify the filesystem.
+      mnt.node_ops.mkdir = (...args) => (IDBFS.queuePersist(mnt.mount), memfs_node_ops.mkdir(...args));
+      mnt.node_ops.rmdir = (...args) => (IDBFS.queuePersist(mnt.mount), memfs_node_ops.rmdir(...args));
+      mnt.node_ops.symlink = (...args) => (IDBFS.queuePersist(mnt.mount), memfs_node_ops.symlink(...args));
+      mnt.node_ops.unlink = (...args) => (IDBFS.queuePersist(mnt.mount), memfs_node_ops.unlink(...args));
+      mnt.node_ops.rename = (...args) => (IDBFS.queuePersist(mnt.mount), memfs_node_ops.rename(...args));
+    }
+    return mnt;
+  },
+  syncfs: (mount, populate, callback) => {
+    IDBFS.getLocalSet(mount, (err, local) => {
+      if (err) return callback(err);
+      IDBFS.getRemoteSet(mount, (err, remote) => {
+        if (err) return callback(err);
+        var src = populate ? remote : local;
+        var dst = populate ? local : remote;
+        IDBFS.reconcile(src, dst, callback);
+      });
+    });
+  },
+  quit: () => {
+    Object.values(IDBFS.dbs).forEach(value => value.close());
+    IDBFS.dbs = {};
+  },
+  getDB: (name, callback) => {
+    // check the cache first
+    var db = IDBFS.dbs[name];
+    if (db) {
+      return callback(null, db);
+    }
+    var req;
+    try {
+      req = IDBFS.indexedDB().open(name, IDBFS.DB_VERSION);
+    } catch (e) {
+      return callback(e);
+    }
+    if (!req) {
+      return callback("Unable to connect to IndexedDB");
+    }
+    req.onupgradeneeded = e => {
+      var db = /** @type {IDBDatabase} */ (e.target.result);
+      var transaction = e.target.transaction;
+      var fileStore;
+      if (db.objectStoreNames.contains(IDBFS.DB_STORE_NAME)) {
+        fileStore = transaction.objectStore(IDBFS.DB_STORE_NAME);
+      } else {
+        fileStore = db.createObjectStore(IDBFS.DB_STORE_NAME);
+      }
+      if (!fileStore.indexNames.contains("timestamp")) {
+        fileStore.createIndex("timestamp", "timestamp", {
+          unique: false
+        });
+      }
+    };
+    req.onsuccess = () => {
+      db = /** @type {IDBDatabase} */ (req.result);
+      // add to the cache
+      IDBFS.dbs[name] = db;
+      callback(null, db);
+    };
+    req.onerror = e => {
+      callback(e.target.error);
+      e.preventDefault();
+    };
+  },
+  getLocalSet: (mount, callback) => {
+    var entries = {};
+    function isRealDir(p) {
+      return p !== "." && p !== "..";
+    }
+    function toAbsolute(root) {
+      return p => PATH.join2(root, p);
+    }
+    var check = FS.readdir(mount.mountpoint).filter(isRealDir).map(toAbsolute(mount.mountpoint));
+    while (check.length) {
+      var path = check.pop();
+      var stat;
+      try {
+        stat = FS.stat(path);
+      } catch (e) {
+        return callback(e);
+      }
+      if (FS.isDir(stat.mode)) {
+        check.push(...FS.readdir(path).filter(isRealDir).map(toAbsolute(path)));
+      }
+      entries[path] = {
+        "timestamp": stat.mtime
+      };
+    }
+    return callback(null, {
+      type: "local",
+      entries
+    });
+  },
+  getRemoteSet: (mount, callback) => {
+    var entries = {};
+    IDBFS.getDB(mount.mountpoint, (err, db) => {
+      if (err) return callback(err);
+      try {
+        var transaction = db.transaction([ IDBFS.DB_STORE_NAME ], "readonly");
+        transaction.onerror = e => {
+          callback(e.target.error);
+          e.preventDefault();
+        };
+        var store = transaction.objectStore(IDBFS.DB_STORE_NAME);
+        var index = store.index("timestamp");
+        index.openKeyCursor().onsuccess = event => {
+          var cursor = event.target.result;
+          if (!cursor) {
+            return callback(null, {
+              type: "remote",
+              db,
+              entries
+            });
+          }
+          entries[cursor.primaryKey] = {
+            "timestamp": cursor.key
+          };
+          cursor.continue();
+        };
+      } catch (e) {
+        return callback(e);
+      }
+    });
+  },
+  loadLocalEntry: (path, callback) => {
+    var stat, node;
+    try {
+      var lookup = FS.lookupPath(path);
+      node = lookup.node;
+      stat = FS.stat(path);
+    } catch (e) {
+      return callback(e);
+    }
+    if (FS.isDir(stat.mode)) {
+      return callback(null, {
+        "timestamp": stat.mtime,
+        "mode": stat.mode
+      });
+    } else if (FS.isFile(stat.mode)) {
+      // Performance consideration: storing a normal JavaScript array to a IndexedDB is much slower than storing a typed array.
+      // Therefore always convert the file contents to a typed array first before writing the data to IndexedDB.
+      node.contents = MEMFS.getFileDataAsTypedArray(node);
+      return callback(null, {
+        "timestamp": stat.mtime,
+        "mode": stat.mode,
+        "contents": node.contents
+      });
+    } else {
+      return callback(new Error("node type not supported"));
+    }
+  },
+  storeLocalEntry: (path, entry, callback) => {
+    try {
+      if (FS.isDir(entry["mode"])) {
+        FS.mkdirTree(path, entry["mode"]);
+      } else if (FS.isFile(entry["mode"])) {
+        FS.writeFile(path, entry["contents"], {
+          canOwn: true
+        });
+      } else {
+        return callback(new Error("node type not supported"));
+      }
+      FS.chmod(path, entry["mode"]);
+      FS.utime(path, entry["timestamp"], entry["timestamp"]);
+    } catch (e) {
+      return callback(e);
+    }
+    callback(null);
+  },
+  removeLocalEntry: (path, callback) => {
+    try {
+      var stat = FS.stat(path);
+      if (FS.isDir(stat.mode)) {
+        FS.rmdir(path);
+      } else if (FS.isFile(stat.mode)) {
+        FS.unlink(path);
+      }
+    } catch (e) {
+      return callback(e);
+    }
+    callback(null);
+  },
+  loadRemoteEntry: (store, path, callback) => {
+    var req = store.get(path);
+    req.onsuccess = event => callback(null, event.target.result);
+    req.onerror = e => {
+      callback(e.target.error);
+      e.preventDefault();
+    };
+  },
+  storeRemoteEntry: (store, path, entry, callback) => {
+    try {
+      var req = store.put(entry, path);
+    } catch (e) {
+      callback(e);
+      return;
+    }
+    req.onsuccess = event => callback();
+    req.onerror = e => {
+      callback(e.target.error);
+      e.preventDefault();
+    };
+  },
+  removeRemoteEntry: (store, path, callback) => {
+    var req = store.delete(path);
+    req.onsuccess = event => callback();
+    req.onerror = e => {
+      callback(e.target.error);
+      e.preventDefault();
+    };
+  },
+  reconcile: (src, dst, callback) => {
+    var total = 0;
+    var create = [];
+    Object.keys(src.entries).forEach(key => {
+      var e = src.entries[key];
+      var e2 = dst.entries[key];
+      if (!e2 || e["timestamp"].getTime() != e2["timestamp"].getTime()) {
+        create.push(key);
+        total++;
+      }
+    });
+    var remove = [];
+    Object.keys(dst.entries).forEach(key => {
+      if (!src.entries[key]) {
+        remove.push(key);
+        total++;
+      }
+    });
+    if (!total) {
+      return callback(null);
+    }
+    var errored = false;
+    var db = src.type === "remote" ? src.db : dst.db;
+    var transaction = db.transaction([ IDBFS.DB_STORE_NAME ], "readwrite");
+    var store = transaction.objectStore(IDBFS.DB_STORE_NAME);
+    function done(err) {
+      if (err && !errored) {
+        errored = true;
+        return callback(err);
+      }
+    }
+    // transaction may abort if (for example) there is a QuotaExceededError
+    transaction.onerror = transaction.onabort = e => {
+      done(e.target.error);
+      e.preventDefault();
+    };
+    transaction.oncomplete = e => {
+      if (!errored) {
+        callback(null);
+      }
+    };
+    // sort paths in ascending order so directory entries are created
+    // before the files inside them
+    create.sort().forEach(path => {
+      if (dst.type === "local") {
+        IDBFS.loadRemoteEntry(store, path, (err, entry) => {
+          if (err) return done(err);
+          IDBFS.storeLocalEntry(path, entry, done);
+        });
+      } else {
+        IDBFS.loadLocalEntry(path, (err, entry) => {
+          if (err) return done(err);
+          IDBFS.storeRemoteEntry(store, path, entry, done);
+        });
+      }
+    });
+    // sort paths in descending order so files are deleted before their
+    // parent directories
+    remove.sort().reverse().forEach(path => {
+      if (dst.type === "local") {
+        IDBFS.removeLocalEntry(path, done);
+      } else {
+        IDBFS.removeRemoteEntry(store, path, done);
+      }
+    });
+  }
 };
 
 var FS = {
@@ -3021,7 +2853,7 @@ var FS = {
   currentPath: "/",
   initialized: false,
   ignorePermissions: true,
-  ErrnoError: class extends Error {
+  ErrnoError: class {
     // We set the `name` property to be able to identify `FS.ErrnoError`
     // - the `name` is a standard ECMA-262 property of error objects. Kind of good to have it anyway.
     // - when using PROXYFS, an error can come from an underlying FS
@@ -3029,17 +2861,10 @@ var FS = {
     // the test `err instanceof FS.ErrnoError` won't detect an error coming from another filesystem, causing bugs.
     // we'll use the reliable test `err.name == "ErrnoError"` instead
     constructor(errno) {
-      super(runtimeInitialized ? strError(errno) : "");
       // TODO(sbc): Use the inline member declaration syntax once we
       // support it in acorn and closure.
       this.name = "ErrnoError";
       this.errno = errno;
-      for (var key in ERRNO_CODES) {
-        if (ERRNO_CODES[key] === errno) {
-          this.code = key;
-          break;
-        }
-      }
     }
   },
   genericErrors: {},
@@ -3229,7 +3054,6 @@ var FS = {
     return FS.lookup(parent, name);
   },
   createNode(parent, name, mode, rdev) {
-    assert(typeof parent == "object");
     var node = new FS.FSNode(parent, name, mode, rdev);
     FS.hashAddNode(node);
     return node;
@@ -3357,7 +3181,6 @@ var FS = {
   },
   getStream: fd => FS.streams[fd],
   createStream(stream, fd = -1) {
-    assert(fd >= -1);
     // clone it, so we can return an instance of FSStream
     stream = Object.assign(new FS.FSStream, stream);
     if (fd == -1) {
@@ -3418,7 +3241,6 @@ var FS = {
     var mounts = FS.getMounts(FS.root.mount);
     var completed = 0;
     function doCallback(errCode) {
-      assert(FS.syncFSRequests > 0);
       FS.syncFSRequests--;
       return callback(errCode);
     }
@@ -3443,11 +3265,6 @@ var FS = {
     });
   },
   mount(type, opts, mountpoint) {
-    if (typeof type == "string") {
-      // The filesystem was not included, and instead we have an error
-      // message stored in the variable.
-      throw type;
-    }
     var root = mountpoint === "/";
     var pseudo = !mountpoint;
     var node;
@@ -3514,7 +3331,6 @@ var FS = {
     node.mounted = null;
     // remove this mount from the child mounts
     var idx = node.mount.mounts.indexOf(mount);
-    assert(idx !== -1);
     node.mount.mounts.splice(idx, 1);
   },
   lookup(parent, name) {
@@ -3977,7 +3793,6 @@ var FS = {
     return stream.position;
   },
   read(stream, buffer, offset, length, position) {
-    assert(offset >= 0);
     if (length < 0 || position < 0) {
       throw new FS.ErrnoError(28);
     }
@@ -4004,7 +3819,6 @@ var FS = {
     return bytesRead;
   },
   write(stream, buffer, offset, length, position, canOwn) {
-    assert(offset >= 0);
     if (length < 0 || position < 0) {
       throw new FS.ErrnoError(28);
     }
@@ -4074,7 +3888,6 @@ var FS = {
     return stream.stream_ops.mmap(stream, length, position, prot, flags);
   },
   msync(stream, buffer, offset, length, mmapFlags) {
-    assert(offset >= 0);
     if (!stream.stream_ops.msync) {
       return 0;
     }
@@ -4232,9 +4045,6 @@ var FS = {
     var stdin = FS.open("/dev/stdin", 0);
     var stdout = FS.open("/dev/stdout", 1);
     var stderr = FS.open("/dev/stderr", 1);
-    assert(stdin.fd === 0, `invalid handle for stdin (${stdin.fd})`);
-    assert(stdout.fd === 1, `invalid handle for stdout (${stdout.fd})`);
-    assert(stderr.fd === 2, `invalid handle for stderr (${stderr.fd})`);
   },
   staticInit() {
     // Some errors may happen quite a bit, to avoid overhead we reuse them (and suffer a lack of stack info)
@@ -4248,11 +4058,11 @@ var FS = {
     FS.createDefaultDevices();
     FS.createSpecialDirectories();
     FS.filesystems = {
-      "MEMFS": MEMFS
+      "MEMFS": MEMFS,
+      "IDBFS": IDBFS
     };
   },
   init(input, output, error) {
-    assert(!FS.initialized, "FS.init was previously called. If you want to initialize later with custom parameters, remove any earlier calls (note that one is automatically added to the generated code)");
     FS.initialized = true;
     // Allow Module.stdin etc. to provide defaults, if none explicitly passed to us here
     input ??= Module["stdin"];
@@ -4263,7 +4073,6 @@ var FS = {
   quit() {
     FS.initialized = false;
     // force-flush all streams, so we get musl std streams printed out
-    _fflush(0);
     // close all of our streams
     for (var i = 0; i < FS.streams.length; i++) {
       var stream = FS.streams[i];
@@ -4566,7 +4375,6 @@ var FS = {
       var contents = stream.node.contents;
       if (position >= contents.length) return 0;
       var size = Math.min(contents.length - position, length);
-      assert(size >= 0);
       if (contents.slice) {
         // normal array
         for (var i = 0; i < size; i++) {
@@ -4600,26 +4408,913 @@ var FS = {
     };
     node.stream_ops = stream_ops;
     return node;
-  },
-  absolutePath() {
-    abort("FS.absolutePath has been removed; use PATH_FS.resolve instead");
-  },
-  createFolder() {
-    abort("FS.createFolder has been removed; use FS.mkdir instead");
-  },
-  createLink() {
-    abort("FS.createLink has been removed; use FS.symlink instead");
-  },
-  joinPath() {
-    abort("FS.joinPath has been removed; use PATH.join instead");
-  },
-  mmapAlloc() {
-    abort("FS.mmapAlloc has been replaced by the top level function mmapAlloc");
-  },
-  standardizePath() {
-    abort("FS.standardizePath has been removed; use PATH.normalize instead");
   }
 };
+
+var SOCKFS = {
+  mount(mount) {
+    // If Module['websocket'] has already been defined (e.g. for configuring
+    // the subprotocol/url) use that, if not initialise it to a new object.
+    Module["websocket"] = (Module["websocket"] && ("object" === typeof Module["websocket"])) ? Module["websocket"] : {};
+    // Add the Event registration mechanism to the exported websocket configuration
+    // object so we can register network callbacks from native JavaScript too.
+    // For more documentation see system/include/emscripten/emscripten.h
+    Module["websocket"]._callbacks = {};
+    Module["websocket"]["on"] = /** @this{Object} */ function(event, callback) {
+      if ("function" === typeof callback) {
+        this._callbacks[event] = callback;
+      }
+      return this;
+    };
+    Module["websocket"].emit = /** @this{Object} */ function(event, param) {
+      if ("function" === typeof this._callbacks[event]) {
+        this._callbacks[event].call(this, param);
+      }
+    };
+    // If debug is enabled register simple default logging callbacks for each Event.
+    return FS.createNode(null, "/", 16384 | 511, /* 0777 */ 0);
+  },
+  createSocket(family, type, protocol) {
+    type &= ~526336;
+    // Some applications may pass it; it makes no sense for a single process.
+    var streaming = type == 1;
+    if (streaming && protocol && protocol != 6) {
+      throw new FS.ErrnoError(66);
+    }
+    // create our internal socket structure
+    var sock = {
+      family,
+      type,
+      protocol,
+      server: null,
+      error: null,
+      // Used in getsockopt for SOL_SOCKET/SO_ERROR test
+      peers: {},
+      pending: [],
+      recv_queue: [],
+      sock_ops: SOCKFS.websocket_sock_ops
+    };
+    // create the filesystem node to store the socket structure
+    var name = SOCKFS.nextname();
+    var node = FS.createNode(SOCKFS.root, name, 49152, 0);
+    node.sock = sock;
+    // and the wrapping stream that enables library functions such
+    // as read and write to indirectly interact with the socket
+    var stream = FS.createStream({
+      path: name,
+      node,
+      flags: 2,
+      seekable: false,
+      stream_ops: SOCKFS.stream_ops
+    });
+    // map the new stream to the socket structure (sockets have a 1:1
+    // relationship with a stream)
+    sock.stream = stream;
+    return sock;
+  },
+  getSocket(fd) {
+    var stream = FS.getStream(fd);
+    if (!stream || !FS.isSocket(stream.node.mode)) {
+      return null;
+    }
+    return stream.node.sock;
+  },
+  stream_ops: {
+    poll(stream) {
+      var sock = stream.node.sock;
+      return sock.sock_ops.poll(sock);
+    },
+    ioctl(stream, request, varargs) {
+      var sock = stream.node.sock;
+      return sock.sock_ops.ioctl(sock, request, varargs);
+    },
+    read(stream, buffer, offset, length, position) {
+      /* ignored */ var sock = stream.node.sock;
+      var msg = sock.sock_ops.recvmsg(sock, length);
+      if (!msg) {
+        // socket is closed
+        return 0;
+      }
+      buffer.set(msg.buffer, offset);
+      return msg.buffer.length;
+    },
+    write(stream, buffer, offset, length, position) {
+      /* ignored */ var sock = stream.node.sock;
+      return sock.sock_ops.sendmsg(sock, buffer, offset, length);
+    },
+    close(stream) {
+      var sock = stream.node.sock;
+      sock.sock_ops.close(sock);
+    }
+  },
+  nextname() {
+    if (!SOCKFS.nextname.current) {
+      SOCKFS.nextname.current = 0;
+    }
+    return "socket[" + (SOCKFS.nextname.current++) + "]";
+  },
+  websocket_sock_ops: {
+    createPeer(sock, addr, port) {
+      var ws;
+      if (typeof addr == "object") {
+        ws = addr;
+        addr = null;
+        port = null;
+      }
+      if (ws) {
+        // for sockets that've already connected (e.g. we're the server)
+        // we can inspect the _socket property for the address
+        if (ws._socket) {
+          addr = ws._socket.remoteAddress;
+          port = ws._socket.remotePort;
+        } else // if we're just now initializing a connection to the remote,
+        // inspect the url property
+        {
+          var result = /ws[s]?:\/\/([^:]+):(\d+)/.exec(ws.url);
+          if (!result) {
+            throw new Error("WebSocket URL must be in the format ws(s)://address:port");
+          }
+          addr = result[1];
+          port = parseInt(result[2], 10);
+        }
+      } else {
+        // create the actual websocket object and connect
+        try {
+          // runtimeConfig gets set to true if WebSocket runtime configuration is available.
+          var runtimeConfig = (Module["websocket"] && ("object" === typeof Module["websocket"]));
+          // The default value is 'ws://' the replace is needed because the compiler replaces '//' comments with '#'
+          // comments without checking context, so we'd end up with ws:#, the replace swaps the '#' for '//' again.
+          var url = "ws:#".replace("#", "//");
+          if (runtimeConfig) {
+            if ("string" === typeof Module["websocket"]["url"]) {
+              url = Module["websocket"]["url"];
+            }
+          }
+          if (url === "ws://" || url === "wss://") {
+            // Is the supplied URL config just a prefix, if so complete it.
+            var parts = addr.split("/");
+            url = url + parts[0] + ":" + port + "/" + parts.slice(1).join("/");
+          }
+          // Make the WebSocket subprotocol (Sec-WebSocket-Protocol) default to binary if no configuration is set.
+          var subProtocols = "binary";
+          // The default value is 'binary'
+          if (runtimeConfig) {
+            if ("string" === typeof Module["websocket"]["subprotocol"]) {
+              subProtocols = Module["websocket"]["subprotocol"];
+            }
+          }
+          // The default WebSocket options
+          var opts = undefined;
+          if (subProtocols !== "null") {
+            // The regex trims the string (removes spaces at the beginning and end, then splits the string by
+            // <any space>,<any space> into an Array. Whitespace removal is important for Websockify and ws.
+            subProtocols = subProtocols.replace(/^ +| +$/g, "").split(/ *, */);
+            opts = subProtocols;
+          }
+          // some webservers (azure) does not support subprotocol header
+          if (runtimeConfig && null === Module["websocket"]["subprotocol"]) {
+            subProtocols = "null";
+            opts = undefined;
+          }
+          // If node we use the ws library.
+          var WebSocketConstructor;
+          if (ENVIRONMENT_IS_NODE) {
+            WebSocketConstructor = /** @type{(typeof WebSocket)} */ (require("ws"));
+          } else {
+            WebSocketConstructor = WebSocket;
+          }
+          ws = new WebSocketConstructor(url, opts);
+          ws.binaryType = "arraybuffer";
+        } catch (e) {
+          throw new FS.ErrnoError(23);
+        }
+      }
+      var peer = {
+        addr,
+        port,
+        socket: ws,
+        msg_send_queue: []
+      };
+      SOCKFS.websocket_sock_ops.addPeer(sock, peer);
+      SOCKFS.websocket_sock_ops.handlePeerEvents(sock, peer);
+      // if this is a bound dgram socket, send the port number first to allow
+      // us to override the ephemeral port reported to us by remotePort on the
+      // remote end.
+      if (sock.type === 2 && typeof sock.sport != "undefined") {
+        peer.msg_send_queue.push(new Uint8Array([ 255, 255, 255, 255, "p".charCodeAt(0), "o".charCodeAt(0), "r".charCodeAt(0), "t".charCodeAt(0), ((sock.sport & 65280) >> 8), (sock.sport & 255) ]));
+      }
+      return peer;
+    },
+    getPeer(sock, addr, port) {
+      return sock.peers[addr + ":" + port];
+    },
+    addPeer(sock, peer) {
+      sock.peers[peer.addr + ":" + peer.port] = peer;
+    },
+    removePeer(sock, peer) {
+      delete sock.peers[peer.addr + ":" + peer.port];
+    },
+    handlePeerEvents(sock, peer) {
+      var first = true;
+      var handleOpen = function() {
+        Module["websocket"].emit("open", sock.stream.fd);
+        try {
+          var queued = peer.msg_send_queue.shift();
+          while (queued) {
+            peer.socket.send(queued);
+            queued = peer.msg_send_queue.shift();
+          }
+        } catch (e) {
+          // not much we can do here in the way of proper error handling as we've already
+          // lied and said this data was sent. shut it down.
+          peer.socket.close();
+        }
+      };
+      function handleMessage(data) {
+        if (typeof data == "string") {
+          var encoder = new TextEncoder;
+          // should be utf-8
+          data = encoder.encode(data);
+        } else // make a typed array from the string
+        {
+          assert(data.byteLength !== undefined);
+          // must receive an ArrayBuffer
+          if (data.byteLength == 0) {
+            // An empty ArrayBuffer will emit a pseudo disconnect event
+            // as recv/recvmsg will return zero which indicates that a socket
+            // has performed a shutdown although the connection has not been disconnected yet.
+            return;
+          }
+          data = new Uint8Array(data);
+        }
+        // if this is the port message, override the peer's port with it
+        var wasfirst = first;
+        first = false;
+        if (wasfirst && data.length === 10 && data[0] === 255 && data[1] === 255 && data[2] === 255 && data[3] === 255 && data[4] === "p".charCodeAt(0) && data[5] === "o".charCodeAt(0) && data[6] === "r".charCodeAt(0) && data[7] === "t".charCodeAt(0)) {
+          // update the peer's port and it's key in the peer map
+          var newport = ((data[8] << 8) | data[9]);
+          SOCKFS.websocket_sock_ops.removePeer(sock, peer);
+          peer.port = newport;
+          SOCKFS.websocket_sock_ops.addPeer(sock, peer);
+          return;
+        }
+        sock.recv_queue.push({
+          addr: peer.addr,
+          port: peer.port,
+          data
+        });
+        Module["websocket"].emit("message", sock.stream.fd);
+      }
+      if (ENVIRONMENT_IS_NODE) {
+        peer.socket.on("open", handleOpen);
+        peer.socket.on("message", function(data, isBinary) {
+          if (!isBinary) {
+            return;
+          }
+          handleMessage((new Uint8Array(data)).buffer);
+        });
+        // copy from node Buffer -> ArrayBuffer
+        peer.socket.on("close", function() {
+          Module["websocket"].emit("close", sock.stream.fd);
+        });
+        peer.socket.on("error", function(error) {
+          // Although the ws library may pass errors that may be more descriptive than
+          // ECONNREFUSED they are not necessarily the expected error code e.g.
+          // ENOTFOUND on getaddrinfo seems to be node.js specific, so using ECONNREFUSED
+          // is still probably the most useful thing to do.
+          sock.error = 14;
+          // Used in getsockopt for SOL_SOCKET/SO_ERROR test.
+          Module["websocket"].emit("error", [ sock.stream.fd, sock.error, "ECONNREFUSED: Connection refused" ]);
+        });
+      } else {
+        peer.socket.onopen = handleOpen;
+        peer.socket.onclose = function() {
+          Module["websocket"].emit("close", sock.stream.fd);
+        };
+        peer.socket.onmessage = function peer_socket_onmessage(event) {
+          handleMessage(event.data);
+        };
+        peer.socket.onerror = function(error) {
+          // The WebSocket spec only allows a 'simple event' to be thrown on error,
+          // so we only really know as much as ECONNREFUSED.
+          sock.error = 14;
+          // Used in getsockopt for SOL_SOCKET/SO_ERROR test.
+          Module["websocket"].emit("error", [ sock.stream.fd, sock.error, "ECONNREFUSED: Connection refused" ]);
+        };
+      }
+    },
+    poll(sock) {
+      if (sock.type === 1 && sock.server) {
+        // listen sockets should only say they're available for reading
+        // if there are pending clients.
+        return sock.pending.length ? (64 | 1) : 0;
+      }
+      var mask = 0;
+      var dest = sock.type === 1 ? // we only care about the socket state for connection-based sockets
+      SOCKFS.websocket_sock_ops.getPeer(sock, sock.daddr, sock.dport) : null;
+      if (sock.recv_queue.length || !dest || // connection-less sockets are always ready to read
+      (dest && dest.socket.readyState === dest.socket.CLOSING) || (dest && dest.socket.readyState === dest.socket.CLOSED)) {
+        // let recv return 0 once closed
+        mask |= (64 | 1);
+      }
+      if (!dest || // connection-less sockets are always ready to write
+      (dest && dest.socket.readyState === dest.socket.OPEN)) {
+        mask |= 4;
+      }
+      if ((dest && dest.socket.readyState === dest.socket.CLOSING) || (dest && dest.socket.readyState === dest.socket.CLOSED)) {
+        mask |= 16;
+      }
+      return mask;
+    },
+    ioctl(sock, request, arg) {
+      switch (request) {
+       case 21531:
+        var bytes = 0;
+        if (sock.recv_queue.length) {
+          bytes = sock.recv_queue[0].data.length;
+        }
+        GROWABLE_HEAP_I32()[((arg) >>> 2) >>> 0] = bytes;
+        return 0;
+
+       default:
+        return 28;
+      }
+    },
+    close(sock) {
+      // if we've spawned a listen server, close it
+      if (sock.server) {
+        try {
+          sock.server.close();
+        } catch (e) {}
+        sock.server = null;
+      }
+      // close any peer connections
+      var peers = Object.keys(sock.peers);
+      for (var i = 0; i < peers.length; i++) {
+        var peer = sock.peers[peers[i]];
+        try {
+          peer.socket.close();
+        } catch (e) {}
+        SOCKFS.websocket_sock_ops.removePeer(sock, peer);
+      }
+      return 0;
+    },
+    bind(sock, addr, port) {
+      if (typeof sock.saddr != "undefined" || typeof sock.sport != "undefined") {
+        throw new FS.ErrnoError(28);
+      }
+      // already bound
+      sock.saddr = addr;
+      sock.sport = port;
+      // in order to emulate dgram sockets, we need to launch a listen server when
+      // binding on a connection-less socket
+      // note: this is only required on the server side
+      if (sock.type === 2) {
+        // close the existing server if it exists
+        if (sock.server) {
+          sock.server.close();
+          sock.server = null;
+        }
+        // swallow error operation not supported error that occurs when binding in the
+        // browser where this isn't supported
+        try {
+          sock.sock_ops.listen(sock, 0);
+        } catch (e) {
+          if (!(e.name === "ErrnoError")) throw e;
+          if (e.errno !== 138) throw e;
+        }
+      }
+    },
+    connect(sock, addr, port) {
+      if (sock.server) {
+        throw new FS.ErrnoError(138);
+      }
+      // TODO autobind
+      // if (!sock.addr && sock.type == 2) {
+      // }
+      // early out if we're already connected / in the middle of connecting
+      if (typeof sock.daddr != "undefined" && typeof sock.dport != "undefined") {
+        var dest = SOCKFS.websocket_sock_ops.getPeer(sock, sock.daddr, sock.dport);
+        if (dest) {
+          if (dest.socket.readyState === dest.socket.CONNECTING) {
+            throw new FS.ErrnoError(7);
+          } else {
+            throw new FS.ErrnoError(30);
+          }
+        }
+      }
+      // add the socket to our peer list and set our
+      // destination address / port to match
+      var peer = SOCKFS.websocket_sock_ops.createPeer(sock, addr, port);
+      sock.daddr = peer.addr;
+      sock.dport = peer.port;
+    },
+    // because we cannot synchronously block to wait for the WebSocket
+    // connection to complete, we return here pretending that the connection
+    // was a success.
+    listen(sock, backlog) {
+      if (!ENVIRONMENT_IS_NODE) {
+        throw new FS.ErrnoError(138);
+      }
+      if (sock.server) {
+        throw new FS.ErrnoError(28);
+      }
+      // already listening
+      var WebSocketServer = require("ws").Server;
+      var host = sock.saddr;
+      sock.server = new WebSocketServer({
+        host,
+        port: sock.sport
+      });
+      // TODO support backlog
+      Module["websocket"].emit("listen", sock.stream.fd);
+      // Send Event with listen fd.
+      sock.server.on("connection", function(ws) {
+        if (sock.type === 1) {
+          var newsock = SOCKFS.createSocket(sock.family, sock.type, sock.protocol);
+          // create a peer on the new socket
+          var peer = SOCKFS.websocket_sock_ops.createPeer(newsock, ws);
+          newsock.daddr = peer.addr;
+          newsock.dport = peer.port;
+          // push to queue for accept to pick up
+          sock.pending.push(newsock);
+          Module["websocket"].emit("connection", newsock.stream.fd);
+        } else {
+          // create a peer on the listen socket so calling sendto
+          // with the listen socket and an address will resolve
+          // to the correct client
+          SOCKFS.websocket_sock_ops.createPeer(sock, ws);
+          Module["websocket"].emit("connection", sock.stream.fd);
+        }
+      });
+      sock.server.on("close", function() {
+        Module["websocket"].emit("close", sock.stream.fd);
+        sock.server = null;
+      });
+      sock.server.on("error", function(error) {
+        // Although the ws library may pass errors that may be more descriptive than
+        // ECONNREFUSED they are not necessarily the expected error code e.g.
+        // ENOTFOUND on getaddrinfo seems to be node.js specific, so using EHOSTUNREACH
+        // is still probably the most useful thing to do. This error shouldn't
+        // occur in a well written app as errors should get trapped in the compiled
+        // app's own getaddrinfo call.
+        sock.error = 23;
+        // Used in getsockopt for SOL_SOCKET/SO_ERROR test.
+        Module["websocket"].emit("error", [ sock.stream.fd, sock.error, "EHOSTUNREACH: Host is unreachable" ]);
+      });
+    },
+    // don't throw
+    accept(listensock) {
+      if (!listensock.server || !listensock.pending.length) {
+        throw new FS.ErrnoError(28);
+      }
+      var newsock = listensock.pending.shift();
+      newsock.stream.flags = listensock.stream.flags;
+      return newsock;
+    },
+    getname(sock, peer) {
+      var addr, port;
+      if (peer) {
+        if (sock.daddr === undefined || sock.dport === undefined) {
+          throw new FS.ErrnoError(53);
+        }
+        addr = sock.daddr;
+        port = sock.dport;
+      } else {
+        // TODO saddr and sport will be set for bind()'d UDP sockets, but what
+        // should we be returning for TCP sockets that've been connect()'d?
+        addr = sock.saddr || 0;
+        port = sock.sport || 0;
+      }
+      return {
+        addr,
+        port
+      };
+    },
+    sendmsg(sock, buffer, offset, length, addr, port) {
+      if (sock.type === 2) {
+        // connection-less sockets will honor the message address,
+        // and otherwise fall back to the bound destination address
+        if (addr === undefined || port === undefined) {
+          addr = sock.daddr;
+          port = sock.dport;
+        }
+        // if there was no address to fall back to, error out
+        if (addr === undefined || port === undefined) {
+          throw new FS.ErrnoError(17);
+        }
+      } else {
+        // connection-based sockets will only use the bound
+        addr = sock.daddr;
+        port = sock.dport;
+      }
+      // find the peer for the destination address
+      var dest = SOCKFS.websocket_sock_ops.getPeer(sock, addr, port);
+      // early out if not connected with a connection-based socket
+      if (sock.type === 1) {
+        if (!dest || dest.socket.readyState === dest.socket.CLOSING || dest.socket.readyState === dest.socket.CLOSED) {
+          throw new FS.ErrnoError(53);
+        }
+      }
+      // create a copy of the incoming data to send, as the WebSocket API
+      // doesn't work entirely with an ArrayBufferView, it'll just send
+      // the entire underlying buffer
+      if (ArrayBuffer.isView(buffer)) {
+        offset += buffer.byteOffset;
+        buffer = buffer.buffer;
+      }
+      var data;
+      // WebSockets .send() does not allow passing a SharedArrayBuffer, so clone the portion of the SharedArrayBuffer as a regular
+      // ArrayBuffer that we want to send.
+      if (buffer instanceof SharedArrayBuffer) {
+        data = new Uint8Array(new Uint8Array(buffer.slice(offset, offset + length))).buffer;
+      } else {
+        data = buffer.slice(offset, offset + length);
+      }
+      // if we don't have a cached connectionless UDP datagram connection, or
+      // the TCP socket is still connecting, queue the message to be sent upon
+      // connect, and lie, saying the data was sent now.
+      if (!dest || dest.socket.readyState !== dest.socket.OPEN) {
+        // if we're not connected, open a new connection
+        if (sock.type === 2) {
+          if (!dest || dest.socket.readyState === dest.socket.CLOSING || dest.socket.readyState === dest.socket.CLOSED) {
+            dest = SOCKFS.websocket_sock_ops.createPeer(sock, addr, port);
+          }
+        }
+        dest.msg_send_queue.push(data);
+        return length;
+      }
+      try {
+        // send the actual data
+        dest.socket.send(data);
+        return length;
+      } catch (e) {
+        throw new FS.ErrnoError(28);
+      }
+    },
+    recvmsg(sock, length) {
+      // http://pubs.opengroup.org/onlinepubs/7908799/xns/recvmsg.html
+      if (sock.type === 1 && sock.server) {
+        // tcp servers should not be recv()'ing on the listen socket
+        throw new FS.ErrnoError(53);
+      }
+      var queued = sock.recv_queue.shift();
+      if (!queued) {
+        if (sock.type === 1) {
+          var dest = SOCKFS.websocket_sock_ops.getPeer(sock, sock.daddr, sock.dport);
+          if (!dest) {
+            // if we have a destination address but are not connected, error out
+            throw new FS.ErrnoError(53);
+          }
+          if (dest.socket.readyState === dest.socket.CLOSING || dest.socket.readyState === dest.socket.CLOSED) {
+            // return null if the socket has closed
+            return null;
+          }
+          // else, our socket is in a valid state but truly has nothing available
+          throw new FS.ErrnoError(6);
+        }
+        throw new FS.ErrnoError(6);
+      }
+      // queued.data will be an ArrayBuffer if it's unadulterated, but if it's
+      // requeued TCP data it'll be an ArrayBufferView
+      var queuedLength = queued.data.byteLength || queued.data.length;
+      var queuedOffset = queued.data.byteOffset || 0;
+      var queuedBuffer = queued.data.buffer || queued.data;
+      var bytesRead = Math.min(length, queuedLength);
+      var res = {
+        buffer: new Uint8Array(queuedBuffer, queuedOffset, bytesRead),
+        addr: queued.addr,
+        port: queued.port
+      };
+      // push back any unread data for TCP connections
+      if (sock.type === 1 && bytesRead < queuedLength) {
+        var bytesRemaining = queuedLength - bytesRead;
+        queued.data = new Uint8Array(queuedBuffer, queuedOffset + bytesRead, bytesRemaining);
+        sock.recv_queue.unshift(queued);
+      }
+      return res;
+    }
+  }
+};
+
+var getSocketFromFD = fd => {
+  var socket = SOCKFS.getSocket(fd);
+  if (!socket) throw new FS.ErrnoError(8);
+  return socket;
+};
+
+var Sockets = {
+  BUFFER_SIZE: 10240,
+  MAX_BUFFER_SIZE: 10485760,
+  nextFd: 1,
+  fds: {},
+  nextport: 1,
+  maxport: 65535,
+  peer: null,
+  connections: {},
+  portmap: {},
+  localAddr: 4261412874,
+  addrPool: [ 33554442, 50331658, 67108874, 83886090, 100663306, 117440522, 134217738, 150994954, 167772170, 184549386, 201326602, 218103818, 234881034 ]
+};
+
+var inetPton4 = str => {
+  var b = str.split(".");
+  for (var i = 0; i < 4; i++) {
+    var tmp = Number(b[i]);
+    if (isNaN(tmp)) return null;
+    b[i] = tmp;
+  }
+  return (b[0] | (b[1] << 8) | (b[2] << 16) | (b[3] << 24)) >>> 0;
+};
+
+/** @suppress {checkTypes} */ var jstoi_q = str => parseInt(str);
+
+var inetPton6 = str => {
+  var words;
+  var w, offset, z, i;
+  /* http://home.deds.nl/~aeron/regex/ */ var valid6regx = /^((?=.*::)(?!.*::.+::)(::)?([\dA-F]{1,4}:(:|\b)|){5}|([\dA-F]{1,4}:){6})((([\dA-F]{1,4}((?!\3)::|:\b|$))|(?!\2\3)){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4})$/i;
+  var parts = [];
+  if (!valid6regx.test(str)) {
+    return null;
+  }
+  if (str === "::") {
+    return [ 0, 0, 0, 0, 0, 0, 0, 0 ];
+  }
+  // Z placeholder to keep track of zeros when splitting the string on ":"
+  if (str.startsWith("::")) {
+    str = str.replace("::", "Z:");
+  } else // leading zeros case
+  {
+    str = str.replace("::", ":Z:");
+  }
+  if (str.indexOf(".") > 0) {
+    // parse IPv4 embedded stress
+    str = str.replace(new RegExp("[.]", "g"), ":");
+    words = str.split(":");
+    words[words.length - 4] = jstoi_q(words[words.length - 4]) + jstoi_q(words[words.length - 3]) * 256;
+    words[words.length - 3] = jstoi_q(words[words.length - 2]) + jstoi_q(words[words.length - 1]) * 256;
+    words = words.slice(0, words.length - 2);
+  } else {
+    words = str.split(":");
+  }
+  offset = 0;
+  z = 0;
+  for (w = 0; w < words.length; w++) {
+    if (typeof words[w] == "string") {
+      if (words[w] === "Z") {
+        // compressed zeros - write appropriate number of zero words
+        for (z = 0; z < (8 - words.length + 1); z++) {
+          parts[w + z] = 0;
+        }
+        offset = z - 1;
+      } else {
+        // parse hex to field to 16-bit value and write it in network byte-order
+        parts[w + offset] = _htons(parseInt(words[w], 16));
+      }
+    } else {
+      // parsed IPv4 words
+      parts[w + offset] = words[w];
+    }
+  }
+  return [ (parts[1] << 16) | parts[0], (parts[3] << 16) | parts[2], (parts[5] << 16) | parts[4], (parts[7] << 16) | parts[6] ];
+};
+
+/** @param {number=} addrlen */ var writeSockaddr = (sa, family, addr, port, addrlen) => {
+  switch (family) {
+   case 2:
+    addr = inetPton4(addr);
+    zeroMemory(sa, 16);
+    if (addrlen) {
+      GROWABLE_HEAP_I32()[((addrlen) >>> 2) >>> 0] = 16;
+    }
+    GROWABLE_HEAP_I16()[((sa) >>> 1) >>> 0] = family;
+    GROWABLE_HEAP_I32()[(((sa) + (4)) >>> 2) >>> 0] = addr;
+    GROWABLE_HEAP_I16()[(((sa) + (2)) >>> 1) >>> 0] = _htons(port);
+    break;
+
+   case 10:
+    addr = inetPton6(addr);
+    zeroMemory(sa, 28);
+    if (addrlen) {
+      GROWABLE_HEAP_I32()[((addrlen) >>> 2) >>> 0] = 28;
+    }
+    GROWABLE_HEAP_I32()[((sa) >>> 2) >>> 0] = family;
+    GROWABLE_HEAP_I32()[(((sa) + (8)) >>> 2) >>> 0] = addr[0];
+    GROWABLE_HEAP_I32()[(((sa) + (12)) >>> 2) >>> 0] = addr[1];
+    GROWABLE_HEAP_I32()[(((sa) + (16)) >>> 2) >>> 0] = addr[2];
+    GROWABLE_HEAP_I32()[(((sa) + (20)) >>> 2) >>> 0] = addr[3];
+    GROWABLE_HEAP_I16()[(((sa) + (2)) >>> 1) >>> 0] = _htons(port);
+    break;
+
+   default:
+    return 5;
+  }
+  return 0;
+};
+
+var DNS = {
+  address_map: {
+    id: 1,
+    addrs: {},
+    names: {}
+  },
+  lookup_name(name) {
+    // If the name is already a valid ipv4 / ipv6 address, don't generate a fake one.
+    var res = inetPton4(name);
+    if (res !== null) {
+      return name;
+    }
+    res = inetPton6(name);
+    if (res !== null) {
+      return name;
+    }
+    // See if this name is already mapped.
+    var addr;
+    if (DNS.address_map.addrs[name]) {
+      addr = DNS.address_map.addrs[name];
+    } else {
+      var id = DNS.address_map.id++;
+      assert(id < 65535, "exceeded max address mappings of 65535");
+      addr = "172.29." + (id & 255) + "." + (id & 65280);
+      DNS.address_map.names[addr] = name;
+      DNS.address_map.addrs[name] = addr;
+    }
+    return addr;
+  },
+  lookup_addr(addr) {
+    if (DNS.address_map.names[addr]) {
+      return DNS.address_map.names[addr];
+    }
+    return null;
+  }
+};
+
+function ___syscall_accept4(fd, addr, addrlen, flags, d1, d2) {
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(3, 0, 1, fd, addr, addrlen, flags, d1, d2);
+  addr >>>= 0;
+  addrlen >>>= 0;
+  try {
+    var sock = getSocketFromFD(fd);
+    var newsock = sock.sock_ops.accept(sock);
+    if (addr) {
+      var errno = writeSockaddr(addr, newsock.family, DNS.lookup_name(newsock.daddr), newsock.dport, addrlen);
+    }
+    return newsock.stream.fd;
+  } catch (e) {
+    if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
+    return -e.errno;
+  }
+}
+
+var inetNtop4 = addr => (addr & 255) + "." + ((addr >> 8) & 255) + "." + ((addr >> 16) & 255) + "." + ((addr >> 24) & 255);
+
+var inetNtop6 = ints => {
+  //  ref:  http://www.ietf.org/rfc/rfc2373.txt - section 2.5.4
+  //  Format for IPv4 compatible and mapped  128-bit IPv6 Addresses
+  //  128-bits are split into eight 16-bit words
+  //  stored in network byte order (big-endian)
+  //  |                80 bits               | 16 |      32 bits        |
+  //  +-----------------------------------------------------------------+
+  //  |               10 bytes               |  2 |      4 bytes        |
+  //  +--------------------------------------+--------------------------+
+  //  +               5 words                |  1 |      2 words        |
+  //  +--------------------------------------+--------------------------+
+  //  |0000..............................0000|0000|    IPv4 ADDRESS     | (compatible)
+  //  +--------------------------------------+----+---------------------+
+  //  |0000..............................0000|FFFF|    IPv4 ADDRESS     | (mapped)
+  //  +--------------------------------------+----+---------------------+
+  var str = "";
+  var word = 0;
+  var longest = 0;
+  var lastzero = 0;
+  var zstart = 0;
+  var len = 0;
+  var i = 0;
+  var parts = [ ints[0] & 65535, (ints[0] >> 16), ints[1] & 65535, (ints[1] >> 16), ints[2] & 65535, (ints[2] >> 16), ints[3] & 65535, (ints[3] >> 16) ];
+  // Handle IPv4-compatible, IPv4-mapped, loopback and any/unspecified addresses
+  var hasipv4 = true;
+  var v4part = "";
+  // check if the 10 high-order bytes are all zeros (first 5 words)
+  for (i = 0; i < 5; i++) {
+    if (parts[i] !== 0) {
+      hasipv4 = false;
+      break;
+    }
+  }
+  if (hasipv4) {
+    // low-order 32-bits store an IPv4 address (bytes 13 to 16) (last 2 words)
+    v4part = inetNtop4(parts[6] | (parts[7] << 16));
+    // IPv4-mapped IPv6 address if 16-bit value (bytes 11 and 12) == 0xFFFF (6th word)
+    if (parts[5] === -1) {
+      str = "::ffff:";
+      str += v4part;
+      return str;
+    }
+    // IPv4-compatible IPv6 address if 16-bit value (bytes 11 and 12) == 0x0000 (6th word)
+    if (parts[5] === 0) {
+      str = "::";
+      //special case IPv6 addresses
+      if (v4part === "0.0.0.0") v4part = "";
+      // any/unspecified address
+      if (v4part === "0.0.0.1") v4part = "1";
+      // loopback address
+      str += v4part;
+      return str;
+    }
+  }
+  // Handle all other IPv6 addresses
+  // first run to find the longest contiguous zero words
+  for (word = 0; word < 8; word++) {
+    if (parts[word] === 0) {
+      if (word - lastzero > 1) {
+        len = 0;
+      }
+      lastzero = word;
+      len++;
+    }
+    if (len > longest) {
+      longest = len;
+      zstart = word - longest + 1;
+    }
+  }
+  for (word = 0; word < 8; word++) {
+    if (longest > 1) {
+      // compress contiguous zeros - to produce "::"
+      if (parts[word] === 0 && word >= zstart && word < (zstart + longest)) {
+        if (word === zstart) {
+          str += ":";
+          if (zstart === 0) str += ":";
+        }
+        //leading zeros case
+        continue;
+      }
+    }
+    // converts 16-bit words from big-endian to little-endian before converting to hex string
+    str += Number(_ntohs(parts[word] & 65535)).toString(16);
+    str += word < 7 ? ":" : "";
+  }
+  return str;
+};
+
+var readSockaddr = (sa, salen) => {
+  // family / port offsets are common to both sockaddr_in and sockaddr_in6
+  var family = GROWABLE_HEAP_I16()[((sa) >>> 1) >>> 0];
+  var port = _ntohs(GROWABLE_HEAP_U16()[(((sa) + (2)) >>> 1) >>> 0]);
+  var addr;
+  switch (family) {
+   case 2:
+    if (salen !== 16) {
+      return {
+        errno: 28
+      };
+    }
+    addr = GROWABLE_HEAP_I32()[(((sa) + (4)) >>> 2) >>> 0];
+    addr = inetNtop4(addr);
+    break;
+
+   case 10:
+    if (salen !== 28) {
+      return {
+        errno: 28
+      };
+    }
+    addr = [ GROWABLE_HEAP_I32()[(((sa) + (8)) >>> 2) >>> 0], GROWABLE_HEAP_I32()[(((sa) + (12)) >>> 2) >>> 0], GROWABLE_HEAP_I32()[(((sa) + (16)) >>> 2) >>> 0], GROWABLE_HEAP_I32()[(((sa) + (20)) >>> 2) >>> 0] ];
+    addr = inetNtop6(addr);
+    break;
+
+   default:
+    return {
+      errno: 5
+    };
+  }
+  return {
+    family,
+    addr,
+    port
+  };
+};
+
+var getSocketAddress = (addrp, addrlen) => {
+  var info = readSockaddr(addrp, addrlen);
+  if (info.errno) throw new FS.ErrnoError(info.errno);
+  info.addr = DNS.lookup_addr(info.addr) || info.addr;
+  return info;
+};
+
+function ___syscall_bind(fd, addr, addrlen, d1, d2, d3) {
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(4, 0, 1, fd, addr, addrlen, d1, d2, d3);
+  addr >>>= 0;
+  addrlen >>>= 0;
+  try {
+    var sock = getSocketFromFD(fd);
+    var info = getSocketAddress(addr, addrlen);
+    sock.sock_ops.bind(sock, info.addr, info.port);
+    return 0;
+  } catch (e) {
+    if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
+    return -e.errno;
+  }
+}
 
 var SYSCALLS = {
   DEFAULT_POLLMASK: 5,
@@ -4689,7 +5384,7 @@ var SYSCALLS = {
 };
 
 function ___syscall_chmod(path, mode) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(3, 0, 1, path, mode);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(5, 0, 1, path, mode);
   path >>>= 0;
   try {
     path = SYSCALLS.getStr(path);
@@ -4701,12 +5396,26 @@ function ___syscall_chmod(path, mode) {
   }
 }
 
+function ___syscall_connect(fd, addr, addrlen, d1, d2, d3) {
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(6, 0, 1, fd, addr, addrlen, d1, d2, d3);
+  addr >>>= 0;
+  addrlen >>>= 0;
+  try {
+    var sock = getSocketFromFD(fd);
+    var info = getSocketAddress(addr, addrlen);
+    sock.sock_ops.connect(sock, info.addr, info.port);
+    return 0;
+  } catch (e) {
+    if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
+    return -e.errno;
+  }
+}
+
 function ___syscall_faccessat(dirfd, path, amode, flags) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(4, 0, 1, dirfd, path, amode, flags);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(7, 0, 1, dirfd, path, amode, flags);
   path >>>= 0;
   try {
     path = SYSCALLS.getStr(path);
-    assert(flags === 0 || flags == 512);
     path = SYSCALLS.calculateAt(dirfd, path);
     if (amode & ~7) {
       // need a valid mode
@@ -4734,7 +5443,7 @@ function ___syscall_faccessat(dirfd, path, amode, flags) {
 }
 
 function ___syscall_fchmod(fd, mode) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(5, 0, 1, fd, mode);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(8, 0, 1, fd, mode);
   try {
     FS.fchmod(fd, mode);
     return 0;
@@ -4745,7 +5454,6 @@ function ___syscall_fchmod(fd, mode) {
 }
 
 /** @suppress {duplicate } */ function syscallGetVarargI() {
-  assert(SYSCALLS.varargs != undefined);
   // the `+` prepended here is necessary to convince the JSCompiler that varargs is indeed a number.
   var ret = GROWABLE_HEAP_I32()[((+SYSCALLS.varargs) >>> 2) >>> 0];
   SYSCALLS.varargs += 4;
@@ -4755,7 +5463,7 @@ function ___syscall_fchmod(fd, mode) {
 var syscallGetVarargP = syscallGetVarargI;
 
 function ___syscall_fcntl64(fd, cmd, varargs) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(6, 0, 1, fd, cmd, varargs);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(9, 0, 1, fd, cmd, varargs);
   varargs >>>= 0;
   SYSCALLS.varargs = varargs;
   try {
@@ -4812,7 +5520,7 @@ function ___syscall_fcntl64(fd, cmd, varargs) {
 }
 
 function ___syscall_fstat64(fd, buf) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(7, 0, 1, fd, buf);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(10, 0, 1, fd, buf);
   buf >>>= 0;
   try {
     var stream = SYSCALLS.getStreamFromFD(fd);
@@ -4824,7 +5532,7 @@ function ___syscall_fstat64(fd, buf) {
 }
 
 function ___syscall_ftruncate64(fd, length) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(8, 0, 1, fd, length);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(11, 0, 1, fd, length);
   length = bigintToI53Checked(length);
   try {
     if (isNaN(length)) return 61;
@@ -4836,13 +5544,10 @@ function ___syscall_ftruncate64(fd, length) {
   }
 }
 
-var stringToUTF8 = (str, outPtr, maxBytesToWrite) => {
-  assert(typeof maxBytesToWrite == "number", "stringToUTF8(str, outPtr, maxBytesToWrite) is missing the third parameter that specifies the length of the output buffer!");
-  return stringToUTF8Array(str, GROWABLE_HEAP_U8(), outPtr, maxBytesToWrite);
-};
+var stringToUTF8 = (str, outPtr, maxBytesToWrite) => stringToUTF8Array(str, GROWABLE_HEAP_U8(), outPtr, maxBytesToWrite);
 
 function ___syscall_getcwd(buf, size) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(9, 0, 1, buf, size);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(12, 0, 1, buf, size);
   buf >>>= 0;
   size >>>= 0;
   try {
@@ -4859,7 +5564,7 @@ function ___syscall_getcwd(buf, size) {
 }
 
 function ___syscall_getdents64(fd, dirp, count) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(10, 0, 1, fd, dirp, count);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(13, 0, 1, fd, dirp, count);
   dirp >>>= 0;
   count >>>= 0;
   try {
@@ -4893,7 +5598,6 @@ function ___syscall_getdents64(fd, dirp, count) {
         8;
       }
       // DT_REG, regular file.
-      assert(id);
       HEAP64[((dirp + pos) >>> 3)] = BigInt(id);
       HEAP64[(((dirp + pos) + (8)) >>> 3)] = BigInt((idx + 1) * struct_size);
       GROWABLE_HEAP_I16()[(((dirp + pos) + (16)) >>> 1) >>> 0] = 280;
@@ -4910,8 +5614,66 @@ function ___syscall_getdents64(fd, dirp, count) {
   }
 }
 
+function ___syscall_getpeername(fd, addr, addrlen, d1, d2, d3) {
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(14, 0, 1, fd, addr, addrlen, d1, d2, d3);
+  addr >>>= 0;
+  addrlen >>>= 0;
+  try {
+    var sock = getSocketFromFD(fd);
+    if (!sock.daddr) {
+      return -53;
+    }
+    // The socket is not connected.
+    var errno = writeSockaddr(addr, sock.family, DNS.lookup_name(sock.daddr), sock.dport, addrlen);
+    return 0;
+  } catch (e) {
+    if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
+    return -e.errno;
+  }
+}
+
+function ___syscall_getsockname(fd, addr, addrlen, d1, d2, d3) {
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(15, 0, 1, fd, addr, addrlen, d1, d2, d3);
+  addr >>>= 0;
+  addrlen >>>= 0;
+  try {
+    var sock = getSocketFromFD(fd);
+    // TODO: sock.saddr should never be undefined, see TODO in websocket_sock_ops.getname
+    var errno = writeSockaddr(addr, sock.family, DNS.lookup_name(sock.saddr || "0.0.0.0"), sock.sport, addrlen);
+    return 0;
+  } catch (e) {
+    if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
+    return -e.errno;
+  }
+}
+
+function ___syscall_getsockopt(fd, level, optname, optval, optlen, d1) {
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(16, 0, 1, fd, level, optname, optval, optlen, d1);
+  optval >>>= 0;
+  optlen >>>= 0;
+  try {
+    var sock = getSocketFromFD(fd);
+    // Minimal getsockopt aimed at resolving https://github.com/emscripten-core/emscripten/issues/2211
+    // so only supports SOL_SOCKET with SO_ERROR.
+    if (level === 1) {
+      if (optname === 4) {
+        GROWABLE_HEAP_I32()[((optval) >>> 2) >>> 0] = sock.error;
+        GROWABLE_HEAP_I32()[((optlen) >>> 2) >>> 0] = 4;
+        sock.error = null;
+        // Clear the error (The SO_ERROR option obtains and then clears this field).
+        return 0;
+      }
+    }
+    return -50;
+  } // The option is unknown at the level indicated.
+  catch (e) {
+    if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
+    return -e.errno;
+  }
+}
+
 function ___syscall_ioctl(fd, op, varargs) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(11, 0, 1, fd, op, varargs);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(17, 0, 1, fd, op, varargs);
   varargs >>>= 0;
   SYSCALLS.varargs = varargs;
   try {
@@ -5037,8 +5799,20 @@ function ___syscall_ioctl(fd, op, varargs) {
   }
 }
 
+function ___syscall_listen(fd, backlog) {
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(18, 0, 1, fd, backlog);
+  try {
+    var sock = getSocketFromFD(fd);
+    sock.sock_ops.listen(sock, backlog);
+    return 0;
+  } catch (e) {
+    if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
+    return -e.errno;
+  }
+}
+
 function ___syscall_lstat64(path, buf) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(12, 0, 1, path, buf);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(19, 0, 1, path, buf);
   path >>>= 0;
   buf >>>= 0;
   try {
@@ -5051,7 +5825,7 @@ function ___syscall_lstat64(path, buf) {
 }
 
 function ___syscall_mkdirat(dirfd, path, mode) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(13, 0, 1, dirfd, path, mode);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(20, 0, 1, dirfd, path, mode);
   path >>>= 0;
   try {
     path = SYSCALLS.getStr(path);
@@ -5069,7 +5843,7 @@ function ___syscall_mkdirat(dirfd, path, mode) {
 }
 
 function ___syscall_newfstatat(dirfd, path, buf, flags) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(14, 0, 1, dirfd, path, buf, flags);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(21, 0, 1, dirfd, path, buf, flags);
   path >>>= 0;
   buf >>>= 0;
   try {
@@ -5077,7 +5851,6 @@ function ___syscall_newfstatat(dirfd, path, buf, flags) {
     var nofollow = flags & 256;
     var allowEmpty = flags & 4096;
     flags = flags & (~6400);
-    assert(!flags, `unknown flags in __syscall_newfstatat: ${flags}`);
     path = SYSCALLS.calculateAt(dirfd, path, allowEmpty);
     return SYSCALLS.doStat(nofollow ? FS.lstat : FS.stat, path, buf);
   } catch (e) {
@@ -5087,7 +5860,7 @@ function ___syscall_newfstatat(dirfd, path, buf, flags) {
 }
 
 function ___syscall_openat(dirfd, path, flags, varargs) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(15, 0, 1, dirfd, path, flags, varargs);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(22, 0, 1, dirfd, path, flags, varargs);
   path >>>= 0;
   varargs >>>= 0;
   SYSCALLS.varargs = varargs;
@@ -5103,7 +5876,7 @@ function ___syscall_openat(dirfd, path, flags, varargs) {
 }
 
 function ___syscall_readlinkat(dirfd, path, buf, bufsize) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(16, 0, 1, dirfd, path, buf, bufsize);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(23, 0, 1, dirfd, path, buf, bufsize);
   path >>>= 0;
   buf >>>= 0;
   bufsize >>>= 0;
@@ -5125,8 +5898,88 @@ function ___syscall_readlinkat(dirfd, path, buf, bufsize) {
   }
 }
 
+function ___syscall_recvfrom(fd, buf, len, flags, addr, addrlen) {
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(24, 0, 1, fd, buf, len, flags, addr, addrlen);
+  buf >>>= 0;
+  len >>>= 0;
+  addr >>>= 0;
+  addrlen >>>= 0;
+  try {
+    var sock = getSocketFromFD(fd);
+    var msg = sock.sock_ops.recvmsg(sock, len);
+    if (!msg) return 0;
+    // socket is closed
+    if (addr) {
+      var errno = writeSockaddr(addr, sock.family, DNS.lookup_name(msg.addr), msg.port, addrlen);
+    }
+    GROWABLE_HEAP_U8().set(msg.buffer, buf >>> 0);
+    return msg.buffer.byteLength;
+  } catch (e) {
+    if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
+    return -e.errno;
+  }
+}
+
+function ___syscall_recvmsg(fd, message, flags, d1, d2, d3) {
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(25, 0, 1, fd, message, flags, d1, d2, d3);
+  message >>>= 0;
+  try {
+    var sock = getSocketFromFD(fd);
+    var iov = GROWABLE_HEAP_U32()[(((message) + (8)) >>> 2) >>> 0];
+    var num = GROWABLE_HEAP_I32()[(((message) + (12)) >>> 2) >>> 0];
+    // get the total amount of data we can read across all arrays
+    var total = 0;
+    for (var i = 0; i < num; i++) {
+      total += GROWABLE_HEAP_I32()[(((iov) + ((8 * i) + 4)) >>> 2) >>> 0];
+    }
+    // try to read total data
+    var msg = sock.sock_ops.recvmsg(sock, total);
+    if (!msg) return 0;
+    // socket is closed
+    // TODO honor flags:
+    // MSG_OOB
+    // Requests out-of-band data. The significance and semantics of out-of-band data are protocol-specific.
+    // MSG_PEEK
+    // Peeks at the incoming message.
+    // MSG_WAITALL
+    // Requests that the function block until the full amount of data requested can be returned. The function may return a smaller amount of data if a signal is caught, if the connection is terminated, if MSG_PEEK was specified, or if an error is pending for the socket.
+    // write the source address out
+    var name = GROWABLE_HEAP_U32()[((message) >>> 2) >>> 0];
+    if (name) {
+      var errno = writeSockaddr(name, sock.family, DNS.lookup_name(msg.addr), msg.port);
+    }
+    // write the buffer out to the scatter-gather arrays
+    var bytesRead = 0;
+    var bytesRemaining = msg.buffer.byteLength;
+    for (var i = 0; bytesRemaining > 0 && i < num; i++) {
+      var iovbase = GROWABLE_HEAP_U32()[(((iov) + ((8 * i) + 0)) >>> 2) >>> 0];
+      var iovlen = GROWABLE_HEAP_I32()[(((iov) + ((8 * i) + 4)) >>> 2) >>> 0];
+      if (!iovlen) {
+        continue;
+      }
+      var length = Math.min(iovlen, bytesRemaining);
+      var buf = msg.buffer.subarray(bytesRead, bytesRead + length);
+      GROWABLE_HEAP_U8().set(buf, iovbase + bytesRead >>> 0);
+      bytesRead += length;
+      bytesRemaining -= length;
+    }
+    // TODO set msghdr.msg_flags
+    // MSG_EOR
+    // End of record was received (if supported by the protocol).
+    // MSG_OOB
+    // Out-of-band data was received.
+    // MSG_TRUNC
+    // Normal data was truncated.
+    // MSG_CTRUNC
+    return bytesRead;
+  } catch (e) {
+    if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
+    return -e.errno;
+  }
+}
+
 function ___syscall_renameat(olddirfd, oldpath, newdirfd, newpath) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(17, 0, 1, olddirfd, oldpath, newdirfd, newpath);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(26, 0, 1, olddirfd, oldpath, newdirfd, newpath);
   oldpath >>>= 0;
   newpath >>>= 0;
   try {
@@ -5143,7 +5996,7 @@ function ___syscall_renameat(olddirfd, oldpath, newdirfd, newpath) {
 }
 
 function ___syscall_rmdir(path) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(18, 0, 1, path);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(27, 0, 1, path);
   path >>>= 0;
   try {
     path = SYSCALLS.getStr(path);
@@ -5155,8 +6008,59 @@ function ___syscall_rmdir(path) {
   }
 }
 
+function ___syscall_sendmsg(fd, message, flags, d1, d2, d3) {
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(28, 0, 1, fd, message, flags, d1, d2, d3);
+  message >>>= 0;
+  d1 >>>= 0;
+  d2 >>>= 0;
+  try {
+    var sock = getSocketFromFD(fd);
+    var iov = GROWABLE_HEAP_U32()[(((message) + (8)) >>> 2) >>> 0];
+    var num = GROWABLE_HEAP_I32()[(((message) + (12)) >>> 2) >>> 0];
+    // read the address and port to send to
+    var addr, port;
+    var name = GROWABLE_HEAP_U32()[((message) >>> 2) >>> 0];
+    var namelen = GROWABLE_HEAP_I32()[(((message) + (4)) >>> 2) >>> 0];
+    if (name) {
+      var info = getSocketAddress(name, namelen);
+      port = info.port;
+      addr = info.addr;
+    }
+    // concatenate scatter-gather arrays into one message buffer
+    var total = 0;
+    for (var i = 0; i < num; i++) {
+      total += GROWABLE_HEAP_I32()[(((iov) + ((8 * i) + 4)) >>> 2) >>> 0];
+    }
+    var view = new Uint8Array(total);
+    var offset = 0;
+    for (var i = 0; i < num; i++) {
+      var iovbase = GROWABLE_HEAP_U32()[(((iov) + ((8 * i) + 0)) >>> 2) >>> 0];
+      var iovlen = GROWABLE_HEAP_I32()[(((iov) + ((8 * i) + 4)) >>> 2) >>> 0];
+      for (var j = 0; j < iovlen; j++) {
+        view[offset++] = GROWABLE_HEAP_I8()[(iovbase) + (j) >>> 0];
+      }
+    }
+    // write the buffer
+    return sock.sock_ops.sendmsg(sock, view, 0, total, addr, port);
+  } catch (e) {
+    if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
+    return -e.errno;
+  }
+}
+
+function ___syscall_socket(domain, type, protocol) {
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(29, 0, 1, domain, type, protocol);
+  try {
+    var sock = SOCKFS.createSocket(domain, type, protocol);
+    return sock.stream.fd;
+  } catch (e) {
+    if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
+    return -e.errno;
+  }
+}
+
 function ___syscall_stat64(path, buf) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(19, 0, 1, path, buf);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(30, 0, 1, path, buf);
   path >>>= 0;
   buf >>>= 0;
   try {
@@ -5169,7 +6073,7 @@ function ___syscall_stat64(path, buf) {
 }
 
 function ___syscall_symlink(target, linkpath) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(20, 0, 1, target, linkpath);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(31, 0, 1, target, linkpath);
   target >>>= 0;
   linkpath >>>= 0;
   try {
@@ -5184,7 +6088,7 @@ function ___syscall_symlink(target, linkpath) {
 }
 
 function ___syscall_truncate64(path, length) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(21, 0, 1, path, length);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(32, 0, 1, path, length);
   path >>>= 0;
   length = bigintToI53Checked(length);
   try {
@@ -5199,7 +6103,7 @@ function ___syscall_truncate64(path, length) {
 }
 
 function ___syscall_unlinkat(dirfd, path, flags) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(22, 0, 1, dirfd, path, flags);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(33, 0, 1, dirfd, path, flags);
   path >>>= 0;
   try {
     path = SYSCALLS.getStr(path);
@@ -5221,12 +6125,11 @@ function ___syscall_unlinkat(dirfd, path, flags) {
 var readI53FromI64 = ptr => GROWABLE_HEAP_U32()[((ptr) >>> 2) >>> 0] + GROWABLE_HEAP_I32()[(((ptr) + (4)) >>> 2) >>> 0] * 4294967296;
 
 function ___syscall_utimensat(dirfd, path, times, flags) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(23, 0, 1, dirfd, path, times, flags);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(34, 0, 1, dirfd, path, times, flags);
   path >>>= 0;
   times >>>= 0;
   try {
     path = SYSCALLS.getStr(path);
-    assert(flags === 0);
     path = SYSCALLS.calculateAt(dirfd, path, true);
     var now = Date.now(), atime, mtime;
     if (!times) {
@@ -5267,7 +6170,7 @@ function ___syscall_utimensat(dirfd, path, times, flags) {
 }
 
 var __abort_js = () => {
-  abort("native code called abort()");
+  abort("");
 };
 
 var embindRepr = v => {
@@ -5377,9 +6280,6 @@ var whenDependentTypesAreResolved = (myTypes, dependentTypes, getTypeConverters)
 }
 
 /** @param {Object=} options */ function registerType(rawType, registeredInstance, options = {}) {
-  if (registeredInstance.argPackAdvance === undefined) {
-    throw new TypeError("registerType registeredInstance requires argPackAdvance");
-  }
   return sharedRegisterType(rawType, registeredInstance, options);
 }
 
@@ -5422,9 +6322,6 @@ var integerReadValueFromPointer = (name, width, signed) => {
       }
       if (typeof value == "number") {
         value = BigInt(value);
-      }
-      if (value < minRange || value > maxRange) {
-        throw new TypeError(`Passing a number "${embindRepr(value)}" from JS side to C/C++ side to an argument of type "${name}", which is outside the valid range [${minRange}, ${maxRange}]!`);
       }
       return value;
     },
@@ -5628,7 +6525,6 @@ var attachFinalizer = handle => {
   // for class handles.  We check for the presence of FinalizationRegistry
   // at run-time, not build-time.
   finalizationRegistry = new FinalizationRegistry(info => {
-    console.warn(info.leakWarning);
     releaseClassHandle(info.$$);
   });
   attachFinalizer = handle => {
@@ -5639,17 +6535,6 @@ var attachFinalizer = handle => {
       var info = {
         $$
       };
-      // Create a warning as an Error instance in advance so that we can store
-      // the current stacktrace and point to it when / if a leak is detected.
-      // This is more useful than the empty stacktrace of `FinalizationRegistry`
-      // callback.
-      var cls = $$.ptrType.registeredClass;
-      var err = new Error(`Embind found a leaked C++ instance ${cls.name} <${ptrToString($$.ptr)}>.\n` + "We'll free it automatically in this case, but this functionality is not reliable across various environments.\n" + "Make sure to invoke .delete() manually once you're done with the instance instead.\n" + "Originally allocated");
-      // `.stack` will add "at ..." after this sentence
-      if ("captureStackTrace" in Error) {
-        Error.captureStackTrace(err, RegisteredPointer_fromWireType);
-      }
-      info.leakWarning = err.stack.replace(/^Error: /, "");
       finalizationRegistry.register(handle, info, handle);
     }
     return handle;
@@ -5793,7 +6678,6 @@ var char_0 = 48;
 var char_9 = 57;
 
 var makeLegalFunctionName = name => {
-  assert(typeof name === "string");
   name = name.replace(/[^a-zA-Z0-9_]/g, "$");
   var f = name.charCodeAt(0);
   if (f >= char_0 && f <= char_9) {
@@ -6002,24 +6886,27 @@ isSmartPointer, pointeeType, sharingPolicy, rawGetPointee, rawConstructor, rawSh
   }
 };
 
+var dynCallLegacy = (sig, ptr, args) => {
+  sig = sig.replace(/p/g, "i");
+  var f = Module["dynCall_" + sig];
+  return f(ptr, ...args);
+};
+
+/** @type {WebAssembly.Table} */ var wasmTable;
+
+var getWasmTableEntry = funcPtr => wasmTable.get(funcPtr);
+
 var dynCall = (sig, ptr, args = []) => {
-  assert(getWasmTableEntry(ptr), `missing table entry in dynCall: ${ptr}`);
-  var rtn = getWasmTableEntry(ptr)(...args);
+  var rtn = dynCallLegacy(sig, ptr, args);
   return sig[0] == "p" ? rtn >>> 0 : rtn;
 };
 
-var getDynCaller = (sig, ptr) => {
-  assert(sig.includes("j") || sig.includes("p"), "getDynCaller should only be called with i64 sigs");
-  return (...args) => dynCall(sig, ptr, args);
-};
+var getDynCaller = (sig, ptr) => (...args) => dynCall(sig, ptr, args);
 
 var embind__requireFunction = (signature, rawFunction) => {
   signature = readLatin1String(signature);
   function makeDynCaller() {
-    if (signature.includes("p")) {
-      return getDynCaller(signature, rawFunction);
-    }
-    return getWasmTableEntry(rawFunction);
+    return getDynCaller(signature, rawFunction);
   }
   var fp = makeDynCaller();
   if (typeof fp != "function") {
@@ -6199,13 +7086,6 @@ function newFunc(constructor, argumentList) {
   return (r instanceof Object) ? r : obj;
 }
 
-function checkArgCount(numArgs, minArgs, maxArgs, humanName, throwBindingError) {
-  if (numArgs < minArgs || numArgs > maxArgs) {
-    var argCountMessage = minArgs == maxArgs ? minArgs : `${minArgs} to ${maxArgs}`;
-    throwBindingError(`function ${humanName} called with ${numArgs} arguments, expected ${argCountMessage}`);
-  }
-}
-
 function createJsInvoker(argTypes, isClassMethodFunc, returns, isAsync) {
   var needsDestructorStack = usesDestructorStack(argTypes);
   var argCount = argTypes.length - 2;
@@ -6221,7 +7101,6 @@ function createJsInvoker(argTypes, isClassMethodFunc, returns, isAsync) {
   argsList = argsList.join(",");
   argsListWired = argsListWired.join(",");
   var invokerFnBody = `return function (${argsList}) {\n`;
-  invokerFnBody += "checkArgCount(arguments.length, minArgs, maxArgs, humanName, throwBindingError);\n";
   if (needsDestructorStack) {
     invokerFnBody += "var destructors = [];\n";
   }
@@ -6236,6 +7115,8 @@ function createJsInvoker(argTypes, isClassMethodFunc, returns, isAsync) {
   }
   invokerFnBody += (returns || isAsync ? "var rv = " : "") + `invoker(${argsListWired});\n`;
   var returnVal = returns ? "rv" : "";
+  args1.push("Asyncify");
+  invokerFnBody += `function onDone(${returnVal}) {\n`;
   if (needsDestructorStack) {
     invokerFnBody += "runDestructors(destructors);\n";
   } else {
@@ -6252,21 +7133,274 @@ function createJsInvoker(argTypes, isClassMethodFunc, returns, isAsync) {
     invokerFnBody += "var ret = retType['fromWireType'](rv);\n" + "return ret;\n";
   } else {}
   invokerFnBody += "}\n";
-  args1.push("checkArgCount", "minArgs", "maxArgs");
-  invokerFnBody = `if (arguments.length !== ${args1.length}){ throw new Error(humanName + "Expected ${args1.length} closure arguments " + arguments.length + " given."); }\n${invokerFnBody}`;
+  invokerFnBody += `return Asyncify.currData ? Asyncify.whenDone().then(onDone) : onDone(${returnVal});\n`;
+  invokerFnBody += "}\n";
   return [ args1, invokerFnBody ];
 }
 
-function getRequiredArgCount(argTypes) {
-  var requiredArgCount = argTypes.length - 2;
-  for (var i = argTypes.length - 1; i >= 2; --i) {
-    if (!argTypes[i].optional) {
-      break;
-    }
-    requiredArgCount--;
+var runAndAbortIfError = func => {
+  try {
+    return func();
+  } catch (e) {
+    abort(e);
   }
-  return requiredArgCount;
-}
+};
+
+var maybeExit = () => {
+  if (!keepRuntimeAlive()) {
+    try {
+      if (ENVIRONMENT_IS_PTHREAD) __emscripten_thread_exit(EXITSTATUS); else _exit(EXITSTATUS);
+    } catch (e) {
+      handleException(e);
+    }
+  }
+};
+
+var callUserCallback = func => {
+  if (ABORT) {
+    return;
+  }
+  try {
+    func();
+    maybeExit();
+  } catch (e) {
+    handleException(e);
+  }
+};
+
+var sigToWasmTypes = sig => {
+  var typeNames = {
+    "i": "i32",
+    "j": "i64",
+    "f": "f32",
+    "d": "f64",
+    "e": "externref",
+    "p": "i32"
+  };
+  var type = {
+    parameters: [],
+    results: sig[0] == "v" ? [] : [ typeNames[sig[0]] ]
+  };
+  for (var i = 1; i < sig.length; ++i) {
+    type.parameters.push(typeNames[sig[i]]);
+  }
+  return type;
+};
+
+var runtimeKeepalivePush = () => {
+  runtimeKeepaliveCounter += 1;
+};
+
+var runtimeKeepalivePop = () => {
+  runtimeKeepaliveCounter -= 1;
+};
+
+var Asyncify = {
+  instrumentWasmImports(imports) {
+    var importPattern = /^(invoke_.*|__asyncjs__.*)$/;
+    for (let [x, original] of Object.entries(imports)) {
+      if (typeof original == "function") {
+        let isAsyncifyImport = original.isAsync || importPattern.test(x);
+      }
+    }
+  },
+  instrumentWasmExports(exports) {
+    var ret = {};
+    for (let [x, original] of Object.entries(exports)) {
+      if (typeof original == "function") {
+        ret[x] = (...args) => {
+          Asyncify.exportCallStack.push(x);
+          try {
+            return original(...args);
+          } finally {
+            if (!ABORT) {
+              var y = Asyncify.exportCallStack.pop();
+              Asyncify.maybeStopUnwind();
+            }
+          }
+        };
+      } else {
+        ret[x] = original;
+      }
+    }
+    return ret;
+  },
+  State: {
+    Normal: 0,
+    Unwinding: 1,
+    Rewinding: 2,
+    Disabled: 3
+  },
+  state: 0,
+  StackSize: 4096,
+  currData: null,
+  handleSleepReturnValue: 0,
+  exportCallStack: [],
+  callStackNameToId: {},
+  callStackIdToName: {},
+  callStackId: 0,
+  asyncPromiseHandlers: null,
+  sleepCallbacks: [],
+  getCallStackId(funcName) {
+    var id = Asyncify.callStackNameToId[funcName];
+    if (id === undefined) {
+      id = Asyncify.callStackId++;
+      Asyncify.callStackNameToId[funcName] = id;
+      Asyncify.callStackIdToName[id] = funcName;
+    }
+    return id;
+  },
+  maybeStopUnwind() {
+    if (Asyncify.currData && Asyncify.state === Asyncify.State.Unwinding && Asyncify.exportCallStack.length === 0) {
+      // We just finished unwinding.
+      // Be sure to set the state before calling any other functions to avoid
+      // possible infinite recursion here (For example in debug pthread builds
+      // the dbg() function itself can call back into WebAssembly to get the
+      // current pthread_self() pointer).
+      Asyncify.state = Asyncify.State.Normal;
+      runtimeKeepalivePush();
+      // Keep the runtime alive so that a re-wind can be done later.
+      runAndAbortIfError(_asyncify_stop_unwind);
+      if (typeof Fibers != "undefined") {
+        Fibers.trampoline();
+      }
+    }
+  },
+  whenDone() {
+    return new Promise((resolve, reject) => {
+      Asyncify.asyncPromiseHandlers = {
+        resolve,
+        reject
+      };
+    });
+  },
+  allocateData() {
+    // An asyncify data structure has three fields:
+    //  0  current stack pos
+    //  4  max stack pos
+    //  8  id of function at bottom of the call stack (callStackIdToName[id] == name of js function)
+    // The Asyncify ABI only interprets the first two fields, the rest is for the runtime.
+    // We also embed a stack in the same memory region here, right next to the structure.
+    // This struct is also defined as asyncify_data_t in emscripten/fiber.h
+    var ptr = _malloc(12 + Asyncify.StackSize);
+    Asyncify.setDataHeader(ptr, ptr + 12, Asyncify.StackSize);
+    Asyncify.setDataRewindFunc(ptr);
+    return ptr;
+  },
+  setDataHeader(ptr, stack, stackSize) {
+    GROWABLE_HEAP_U32()[((ptr) >>> 2) >>> 0] = stack;
+    GROWABLE_HEAP_U32()[(((ptr) + (4)) >>> 2) >>> 0] = stack + stackSize;
+  },
+  setDataRewindFunc(ptr) {
+    var bottomOfCallStack = Asyncify.exportCallStack[0];
+    var rewindId = Asyncify.getCallStackId(bottomOfCallStack);
+    GROWABLE_HEAP_I32()[(((ptr) + (8)) >>> 2) >>> 0] = rewindId;
+  },
+  getDataRewindFuncName(ptr) {
+    var id = GROWABLE_HEAP_I32()[(((ptr) + (8)) >>> 2) >>> 0];
+    var name = Asyncify.callStackIdToName[id];
+    return name;
+  },
+  getDataRewindFunc(name) {
+    var func = wasmExports[name];
+    return func;
+  },
+  doRewind(ptr) {
+    var name = Asyncify.getDataRewindFuncName(ptr);
+    var func = Asyncify.getDataRewindFunc(name);
+    // Once we have rewound and the stack we no longer need to artificially
+    // keep the runtime alive.
+    runtimeKeepalivePop();
+    return func();
+  },
+  handleSleep(startAsync) {
+    if (ABORT) return;
+    if (Asyncify.state === Asyncify.State.Normal) {
+      // Prepare to sleep. Call startAsync, and see what happens:
+      // if the code decided to call our callback synchronously,
+      // then no async operation was in fact begun, and we don't
+      // need to do anything.
+      var reachedCallback = false;
+      var reachedAfterCallback = false;
+      startAsync((handleSleepReturnValue = 0) => {
+        if (ABORT) return;
+        Asyncify.handleSleepReturnValue = handleSleepReturnValue;
+        reachedCallback = true;
+        if (!reachedAfterCallback) {
+          // We are happening synchronously, so no need for async.
+          return;
+        }
+        Asyncify.state = Asyncify.State.Rewinding;
+        runAndAbortIfError(() => _asyncify_start_rewind(Asyncify.currData));
+        if (typeof MainLoop != "undefined" && MainLoop.func) {
+          MainLoop.resume();
+        }
+        var asyncWasmReturnValue, isError = false;
+        try {
+          asyncWasmReturnValue = Asyncify.doRewind(Asyncify.currData);
+        } catch (err) {
+          asyncWasmReturnValue = err;
+          isError = true;
+        }
+        // Track whether the return value was handled by any promise handlers.
+        var handled = false;
+        if (!Asyncify.currData) {
+          // All asynchronous execution has finished.
+          // `asyncWasmReturnValue` now contains the final
+          // return value of the exported async WASM function.
+          // Note: `asyncWasmReturnValue` is distinct from
+          // `Asyncify.handleSleepReturnValue`.
+          // `Asyncify.handleSleepReturnValue` contains the return
+          // value of the last C function to have executed
+          // `Asyncify.handleSleep()`, where as `asyncWasmReturnValue`
+          // contains the return value of the exported WASM function
+          // that may have called C functions that
+          // call `Asyncify.handleSleep()`.
+          var asyncPromiseHandlers = Asyncify.asyncPromiseHandlers;
+          if (asyncPromiseHandlers) {
+            Asyncify.asyncPromiseHandlers = null;
+            (isError ? asyncPromiseHandlers.reject : asyncPromiseHandlers.resolve)(asyncWasmReturnValue);
+            handled = true;
+          }
+        }
+        if (isError && !handled) {
+          // If there was an error and it was not handled by now, we have no choice but to
+          // rethrow that error into the global scope where it can be caught only by
+          // `onerror` or `onunhandledpromiserejection`.
+          throw asyncWasmReturnValue;
+        }
+      });
+      reachedAfterCallback = true;
+      if (!reachedCallback) {
+        // A true async operation was begun; start a sleep.
+        Asyncify.state = Asyncify.State.Unwinding;
+        // TODO: reuse, don't alloc/free every sleep
+        Asyncify.currData = Asyncify.allocateData();
+        if (typeof MainLoop != "undefined" && MainLoop.func) {
+          MainLoop.pause();
+        }
+        runAndAbortIfError(() => _asyncify_start_unwind(Asyncify.currData));
+      }
+    } else if (Asyncify.state === Asyncify.State.Rewinding) {
+      // Stop a resume.
+      Asyncify.state = Asyncify.State.Normal;
+      runAndAbortIfError(_asyncify_stop_rewind);
+      _free(Asyncify.currData);
+      Asyncify.currData = null;
+      // Call all sleep callbacks now that the sleep-resume is all done.
+      Asyncify.sleepCallbacks.forEach(callUserCallback);
+    } else {
+      abort(`invalid state: ${Asyncify.state}`);
+    }
+    return Asyncify.handleSleepReturnValue;
+  },
+  handleAsync(startAsync) {
+    return Asyncify.handleSleep(wakeUp => {
+      // TODO: add error handling as a second param when handleSleep implements it.
+      startAsync().then(wakeUp);
+    });
+  }
+};
 
 function craftInvokerFunction(humanName, argTypes, classType, cppInvokerFunc, cppTargetFunc, /** boolean= */ isAsync) {
   // humanName: a human-readable string name for the function to be generated.
@@ -6282,7 +7416,6 @@ function craftInvokerFunction(humanName, argTypes, classType, cppInvokerFunc, cp
   if (argCount < 2) {
     throwBindingError("argTypes array size mismatch! Must at least get return value and 'this' types!");
   }
-  assert(!isAsync, "Async bindings are only supported with JSPI.");
   var isClassMethodFunc = (argTypes[1] !== null && classType !== null);
   // Free functions with signature "void function()" do not need an invoker that marshalls between wire types.
   // TODO: This omits argument count check - enable only at -O3 or similar.
@@ -6294,13 +7427,13 @@ function craftInvokerFunction(humanName, argTypes, classType, cppInvokerFunc, cp
   var needsDestructorStack = usesDestructorStack(argTypes);
   var returns = (argTypes[0].name !== "void");
   var expectedArgCount = argCount - 2;
-  var minArgs = getRequiredArgCount(argTypes);
   // Builld the arguments that will be passed into the closure around the invoker
   // function.
   var closureArgs = [ humanName, throwBindingError, cppInvokerFunc, cppTargetFunc, runDestructors, argTypes[0], argTypes[1] ];
   for (var i = 0; i < argCount - 2; ++i) {
     closureArgs.push(argTypes[i + 2]);
   }
+  closureArgs.push(Asyncify);
   if (!needsDestructorStack) {
     for (var i = isClassMethodFunc ? 1 : 2; i < argTypes.length; ++i) {
       // Skip return value at index 0 - it's not deleted here. Also skip class type if not a method.
@@ -6309,7 +7442,6 @@ function craftInvokerFunction(humanName, argTypes, classType, cppInvokerFunc, cp
       }
     }
   }
-  closureArgs.push(checkArgCount, minArgs, expectedArgCount);
   let [args, invokerFnBody] = createJsInvoker(argTypes, isClassMethodFunc, returns, isAsync);
   args.push(invokerFnBody);
   var invokerFn = newFunc(Function, args)(...closureArgs);
@@ -6322,7 +7454,6 @@ var __embind_register_class_constructor = function(rawClassType, argCount, rawAr
   invokerSignature >>>= 0;
   invoker >>>= 0;
   rawConstructor >>>= 0;
-  assert(argCount > 0);
   var rawArgTypes = heap32VectorToArray(argCount, rawArgTypesAddr);
   invoker = embind__requireFunction(invokerSignature, invoker);
   var args = [ rawConstructor ];
@@ -6353,7 +7484,6 @@ var getFunctionName = signature => {
   signature = signature.trim();
   const argsIndex = signature.indexOf("(");
   if (argsIndex !== -1) {
-    assert(signature[signature.length - 1] == ")", "Parentheses for argument names should match.");
     return signature.substr(0, argsIndex);
   } else {
     return signature;
@@ -6424,7 +7554,6 @@ var emval_handles = [];
 function __emval_decref(handle) {
   handle >>>= 0;
   if (handle > 9 && 0 === --emval_handles[handle + 1]) {
-    assert(emval_handles[handle] !== undefined, `Decref for unallocated handle.`);
     emval_handles[handle] = undefined;
     emval_freelist.push(handle);
   }
@@ -6435,7 +7564,6 @@ var count_emval_handles = () => emval_handles.length / 2 - 5 - emval_freelist.le
 var init_emval = () => {
   // reserve 0 and some special values. These never get de-allocated.
   emval_handles.push(0, 1, undefined, 1, null, 1, true, 1, false, 1);
-  assert(emval_handles.length === 5 * 2);
   Module["count_emval_handles"] = count_emval_handles;
 };
 
@@ -6444,8 +7572,6 @@ var Emval = {
     if (!handle) {
       throwBindingError("Cannot use deleted val. handle = " + handle);
     }
-    // handle 2 is supposed to be `undefined`.
-    assert(handle === 2 || emval_handles[handle] !== undefined && handle % 2 === 0, `invalid handle: ${handle}`);
     return emval_handles[handle];
   },
   toHandle: value => {
@@ -6519,14 +7645,7 @@ var __embind_register_float = function(rawType, name, size) {
   registerType(rawType, {
     name,
     "fromWireType": value => value,
-    "toWireType": (destructors, value) => {
-      if (typeof value != "number" && typeof value != "boolean") {
-        throw new TypeError(`Cannot convert ${embindRepr(value)} to ${this.name}`);
-      }
-      // The VM will perform JS to Wasm value conversion, according to the spec:
-      // https://www.w3.org/TR/wasm-js-api-1/#towebassemblyvalue
-      return value;
-    },
+    "toWireType": (destructors, value) => value,
     argPackAdvance: GenericWireTypeSize,
     "readValueFromPointer": floatReadValueFromPointer(name, size),
     destructorFunction: null
@@ -6569,14 +7688,7 @@ function __embind_register_function(name, argCount, rawArgTypesAddr, signature, 
     fromWireType = value => (value << bitshift) >>> bitshift;
   }
   var isUnsignedType = (name.includes("unsigned"));
-  var checkAssertions = (value, toTypeName) => {
-    if (typeof value != "number" && typeof value != "boolean") {
-      throw new TypeError(`Cannot convert "${embindRepr(value)}" to ${toTypeName}`);
-    }
-    if (value < minRange || value > maxRange) {
-      throw new TypeError(`Passing a number "${embindRepr(value)}" from JS side to C/C++ side to an argument of type "${name}", which is outside the valid range [${minRange}, ${maxRange}]!`);
-    }
-  };
+  var checkAssertions = (value, toTypeName) => {};
   var toWireType;
   if (isUnsignedType) {
     toWireType = function(destructors, value) {
@@ -6715,7 +7827,6 @@ function __embind_register_std_string(rawType, name) {
 var UTF16Decoder = typeof TextDecoder != "undefined" ? new TextDecoder("utf-16le") : undefined;
 
 var UTF16ToString = (ptr, maxBytesToRead) => {
-  assert(ptr % 2 == 0, "Pointer passed to UTF16ToString must be aligned to two bytes!");
   var endPtr = ptr;
   // TextDecoder needs to know the byte length in advance, it doesn't stop on
   // null terminator by itself.
@@ -6744,8 +7855,6 @@ var UTF16ToString = (ptr, maxBytesToRead) => {
 };
 
 var stringToUTF16 = (str, outPtr, maxBytesToWrite) => {
-  assert(outPtr % 2 == 0, "Pointer passed to stringToUTF16 must be aligned to two bytes!");
-  assert(typeof maxBytesToWrite == "number", "stringToUTF16(str, outPtr, maxBytesToWrite) is missing the third parameter that specifies the length of the output buffer!");
   // Backwards compatibility: if max bytes is not specified, assume unsafe unbounded write is allowed.
   maxBytesToWrite ??= 2147483647;
   if (maxBytesToWrite < 2) return 0;
@@ -6768,7 +7877,6 @@ var stringToUTF16 = (str, outPtr, maxBytesToWrite) => {
 var lengthBytesUTF16 = str => str.length * 2;
 
 var UTF32ToString = (ptr, maxBytesToRead) => {
-  assert(ptr % 4 == 0, "Pointer passed to UTF32ToString must be aligned to four bytes!");
   var i = 0;
   var str = "";
   // If maxBytesToRead is not passed explicitly, it will be undefined, and this
@@ -6791,8 +7899,6 @@ var UTF32ToString = (ptr, maxBytesToRead) => {
 
 var stringToUTF32 = (str, outPtr, maxBytesToWrite) => {
   outPtr >>>= 0;
-  assert(outPtr % 4 == 0, "Pointer passed to stringToUTF32 must be aligned to four bytes!");
-  assert(typeof maxBytesToWrite == "number", "stringToUTF32(str, outPtr, maxBytesToWrite) is missing the third parameter that specifies the length of the output buffer!");
   // Backwards compatibility: if max bytes is not specified, assume unsafe unbounded write is allowed.
   maxBytesToWrite ??= 2147483647;
   if (maxBytesToWrite < 4) return 0;
@@ -6908,6 +8014,30 @@ var __embind_register_void = function(rawType, name) {
   });
 };
 
+function __emscripten_fetch_free(id) {
+  if (Fetch.xhrs.has(id)) {
+    var xhr = Fetch.xhrs.get(id);
+    Fetch.xhrs.free(id);
+    // check if fetch is still in progress and should be aborted
+    if (xhr.readyState > 0 && xhr.readyState < 4) {
+      xhr.abort();
+    }
+  }
+}
+
+function __emscripten_fetch_get_response_headers(id, dst, dstSizeBytes) {
+  dst >>>= 0;
+  dstSizeBytes >>>= 0;
+  var responseHeaders = Fetch.xhrs.get(id).getAllResponseHeaders();
+  var lengthBytes = lengthBytesUTF8(responseHeaders) + 1;
+  stringToUTF8(responseHeaders, dst, dstSizeBytes);
+  return Math.min(lengthBytes, dstSizeBytes);
+}
+
+function __emscripten_fetch_get_response_headers_length(id) {
+  return lengthBytesUTF8(Fetch.xhrs.get(id).getAllResponseHeaders()) + 1;
+}
+
 var nowIsMonotonic = 1;
 
 var __emscripten_get_now_is_monotonic = () => nowIsMonotonic;
@@ -6921,29 +8051,6 @@ function __emscripten_init_main_thread_js(tb) {
   PThread.threadInitTLS();
 }
 
-var maybeExit = () => {
-  if (!keepRuntimeAlive()) {
-    try {
-      if (ENVIRONMENT_IS_PTHREAD) __emscripten_thread_exit(EXITSTATUS); else _exit(EXITSTATUS);
-    } catch (e) {
-      handleException(e);
-    }
-  }
-};
-
-var callUserCallback = func => {
-  if (ABORT) {
-    err("user callback triggered after runtime exited or application aborted.  Ignoring.");
-    return;
-  }
-  try {
-    func();
-    maybeExit();
-  } catch (e) {
-    handleException(e);
-  }
-};
-
 function __emscripten_thread_mailbox_await(pthread_ptr) {
   pthread_ptr >>>= 0;
   if (typeof Atomics.waitAsync === "function") {
@@ -6952,7 +8059,6 @@ function __emscripten_thread_mailbox_await(pthread_ptr) {
     // thread.
     // TODO: How to make this work with wasm64?
     var wait = Atomics.waitAsync(GROWABLE_HEAP_I32(), ((pthread_ptr) >>> 2), pthread_ptr);
-    assert(wait.async);
     wait.value.then(checkMailbox);
     var waitingAsync = pthread_ptr + 128;
     Atomics.store(GROWABLE_HEAP_I32(), ((waitingAsync) >>> 2), 1);
@@ -6986,7 +8092,6 @@ function __emscripten_notify_mailbox_postmessage(targetThread, currThreadId) {
   } else {
     var worker = PThread.pthreads[targetThread];
     if (!worker) {
-      err(`Cannot send message to thread with ID ${targetThread}, unknown thread ID!`);
       return;
     }
     worker.postMessage({
@@ -7018,17 +8123,10 @@ function __emscripten_receive_on_main_thread_js(funcIndex, emAsmAddr, callingThr
     }
   }
   // Proxied JS library funcs use funcIndex and EM_ASM functions use emAsmAddr
-  assert(!emAsmAddr);
   var func = proxiedFunctionTable[funcIndex];
-  assert(!(funcIndex && emAsmAddr));
-  assert(func.length == numCallArgs, "Call args mismatch in _emscripten_receive_on_main_thread_js");
   PThread.currentProxiedOperationCallerThread = callingThread;
   var rtn = func(...proxiedJSCallArgs);
   PThread.currentProxiedOperationCallerThread = 0;
-  // Proxied functions can return any type except bigint.  All other types
-  // cooerce to f64/double (the return type of this function in C) but not
-  // bigint.
-  assert(typeof rtn != "bigint");
   return rtn;
 }
 
@@ -7367,7 +8465,7 @@ var __mktime_js = function(tmPtr) {
 };
 
 function __mmap_js(len, prot, flags, fd, offset, allocated, addr) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(24, 0, 1, len, prot, flags, fd, offset, allocated, addr);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(35, 0, 1, len, prot, flags, fd, offset, allocated, addr);
   len >>>= 0;
   offset = bigintToI53Checked(offset);
   allocated >>>= 0;
@@ -7387,7 +8485,7 @@ function __mmap_js(len, prot, flags, fd, offset, allocated, addr) {
 }
 
 function __munmap_js(addr, len, prot, flags, fd, offset) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(25, 0, 1, addr, len, prot, flags, fd, offset);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(36, 0, 1, addr, len, prot, flags, fd, offset);
   addr >>>= 0;
   len >>>= 0;
   offset = bigintToI53Checked(offset);
@@ -7438,10 +8536,6 @@ var __tzset_js = function(timezone, daylight, std_name, dst_name) {
   };
   var winterName = extractZone(winterOffset);
   var summerName = extractZone(summerOffset);
-  assert(winterName);
-  assert(summerName);
-  assert(lengthBytesUTF8(winterName) <= 16, `timezone name truncated to fit in TZNAME_MAX (${winterName})`);
-  assert(lengthBytesUTF8(summerName) <= 16, `timezone name truncated to fit in TZNAME_MAX (${summerName})`);
   if (summerOffset < winterOffset) {
     // Northern hemisphere
     stringToUTF8(winterName, std_name, 17);
@@ -7450,15 +8544,6 @@ var __tzset_js = function(timezone, daylight, std_name, dst_name) {
     stringToUTF8(winterName, dst_name, 17);
     stringToUTF8(summerName, std_name, 17);
   }
-};
-
-var runtimeKeepalivePush = () => {
-  runtimeKeepaliveCounter += 1;
-};
-
-var runtimeKeepalivePop = () => {
-  assert(runtimeKeepaliveCounter > 0);
-  runtimeKeepaliveCounter -= 1;
 };
 
 /** @param {number=} timeout */ var safeSetTimeout = (func, timeout) => {
@@ -7473,7 +8558,6 @@ var _emscripten_set_main_loop_timing = (mode, value) => {
   MainLoop.timingMode = mode;
   MainLoop.timingValue = value;
   if (!MainLoop.func) {
-    err("emscripten_set_main_loop_timing: Cannot set timing mode for main loop since a main loop does not exist! Call emscripten_set_main_loop first to set one up.");
     return 1;
   }
   // Return non-zero on failure, can't set timing mode when there is no main loop.
@@ -7537,7 +8621,6 @@ var _emscripten_get_now = () => performance.timeOrigin + performance.now();
      * @param {number=} arg
      * @param {boolean=} noSetTiming
      */ var setMainLoop = (iterFunc, fps, simulateInfiniteLoop, arg, noSetTiming) => {
-  assert(!MainLoop.func, "emscripten_set_main_loop: there can only be one main loop function at once: call emscripten_cancel_main_loop to cancel the previous one before setting a new one with different parameters.");
   MainLoop.func = iterFunc;
   MainLoop.arg = arg;
   var thisMainLoopId = MainLoop.currentlyRunningMainloop;
@@ -7590,11 +8673,6 @@ var _emscripten_get_now = () => performance.timeOrigin + performance.now();
     } else if (MainLoop.timingMode == 0) {
       MainLoop.tickStartTime = _emscripten_get_now();
     }
-    if (MainLoop.method === "timeout" && Module.ctx) {
-      warnOnce("Looks like you are rendering without using requestAnimationFrame for the main loop. You should use 0 for the frame rate in emscripten_set_main_loop in order to use requestAnimationFrame, as that can greatly improve your frame rates!");
-      MainLoop.method = "";
-    }
-    // just warn once per call to set main loop
     MainLoop.runIter(iterFunc);
     // catch pauses from the main loop itself
     if (!checkIsRunning()) return;
@@ -7674,7 +8752,6 @@ var MainLoop = {
     for (var post of MainLoop.postMainLoop) {
       post();
     }
-    checkStackCookie();
   },
   nextRAF: 0,
   fakeRequestAnimationFrame(func) {
@@ -7698,6 +8775,15 @@ var MainLoop = {
     }
     var RAF = MainLoop.fakeRequestAnimationFrame;
     RAF(func);
+  }
+};
+
+var warnOnce = text => {
+  warnOnce.shown ||= {};
+  if (!warnOnce.shown[text]) {
+    warnOnce.shown[text] = 1;
+    if (ENVIRONMENT_IS_NODE) text = "warning: " + text;
+    err(text);
   }
 };
 
@@ -7732,10 +8818,8 @@ var Browser = {
         });
       }
       var url = URL.createObjectURL(b);
-      assert(typeof url == "string", "createObjectURL must return a url as a string");
       var img = new Image;
       img.onload = () => {
-        assert(img.complete, `Image ${name} could not be decoded`);
         var canvas = /** @type {!HTMLCanvasElement} */ (document.createElement("canvas"));
         canvas.width = img.width;
         canvas.height = img.height;
@@ -7780,7 +8864,6 @@ var Browser = {
       });
       var url = URL.createObjectURL(b);
       // XXX we never revoke this!
-      assert(typeof url == "string", "createObjectURL must return a url as a string");
       var audio = new Audio;
       audio.addEventListener("canplaythrough", () => finish(audio), false);
       // use addEventListener due to chromium bug 124926
@@ -7880,7 +8963,6 @@ var Browser = {
     }
     if (!ctx) return null;
     if (setInModule) {
-      if (!useWebGL) assert(typeof GLctx == "undefined", "cannot set in module if GLctx is used, but we are a non-GL context that would replace it");
       Module.ctx = ctx;
       if (useWebGL) GL.makeContextCurrent(contextHandle);
       Browser.useWebGL = useWebGL;
@@ -7937,9 +9019,6 @@ var Browser = {
     // use parent of canvas as full screen root to allow aspect ratio correction (Firefox stretches the root to screen size)
     canvasContainer.requestFullscreen = canvasContainer["requestFullscreen"] || canvasContainer["mozRequestFullScreen"] || canvasContainer["msRequestFullscreen"] || (canvasContainer["webkitRequestFullscreen"] ? () => canvasContainer["webkitRequestFullscreen"](Element["ALLOW_KEYBOARD_INPUT"]) : null) || (canvasContainer["webkitRequestFullScreen"] ? () => canvasContainer["webkitRequestFullScreen"](Element["ALLOW_KEYBOARD_INPUT"]) : null);
     canvasContainer.requestFullscreen();
-  },
-  requestFullScreen() {
-    abort("Module.requestFullScreen has been replaced by Module.requestFullscreen (without a capital S)");
   },
   exitFullscreen() {
     // This is workaround for chrome. Trying to exit from fullscreen
@@ -8037,9 +9116,6 @@ var Browser = {
     // (see: http://www.w3.org/TR/2013/WD-cssom-view-20131217/)
     var scrollX = ((typeof window.scrollX != "undefined") ? window.scrollX : window.pageXOffset);
     var scrollY = ((typeof window.scrollY != "undefined") ? window.scrollY : window.pageYOffset);
-    // If this assert lands, it's likely because the browser doesn't support scrollX or pageXOffset
-    // and we have no viable fallback.
-    assert((typeof scrollX != "undefined") && (typeof scrollY != "undefined"), "Unable to retrieve scroll position, mouse positions likely broken.");
     var adjustedX = pageX - (scrollX + rect.left);
     var adjustedY = pageY - (scrollY + rect.top);
     // the canvas might be CSS-scaled compared to its backbuffer;
@@ -8183,11 +9259,11 @@ var safeRequestAnimationFrame = func => {
   });
 };
 
-function _emscripten_async_call(func, arg, millis) {
+var _emscripten_async_call = function(func, arg, millis) {
   func >>>= 0;
   arg >>>= 0;
   function wrapper() {
-    getWasmTableEntry(func)(arg);
+    (a1 => dynCall_vi(func, a1))(arg);
   }
   if (millis >= 0 || // node does not support requestAnimationFrame
   ENVIRONMENT_IS_NODE) {
@@ -8195,25 +9271,15 @@ function _emscripten_async_call(func, arg, millis) {
   } else {
     safeRequestAnimationFrame(wrapper);
   }
-}
+};
 
 var _emscripten_cancel_animation_frame = id => cancelAnimationFrame(id);
 
-var _emscripten_check_blocking_allowed = () => {
-  if (ENVIRONMENT_IS_NODE) return;
-  if (ENVIRONMENT_IS_WORKER) return;
-  // Blocking in a worker/pthread is fine.
-  warnOnce("Blocking on the main thread is very dangerous, see https://emscripten.org/docs/porting/pthreads.html#blocking-on-the-main-browser-thread");
-};
+var _emscripten_check_blocking_allowed = () => {};
 
 var _emscripten_clear_timeout = clearTimeout;
 
 var _emscripten_date_now = () => Date.now();
-
-function _emscripten_err(str) {
-  str >>>= 0;
-  return err(UTF8ToString(str));
-}
 
 var _emscripten_exit_with_live_runtime = () => {
   runtimeKeepalivePush();
@@ -8289,8 +9355,6 @@ var JSEvents = {
   },
   registerOrRemoveHandler(eventHandler) {
     if (!eventHandler.target) {
-      err("registerOrRemoveHandler: the target element for event handler registration does not exist, when processing the following event handler registration:");
-      console.dir(eventHandler);
       return -4;
     }
     if (eventHandler.callbackfunc) {
@@ -8368,7 +9432,7 @@ var getBoundingClientRect = e => specialHTMLTargets.indexOf(e) < 0 ? e.getBoundi
 };
 
 function _emscripten_get_element_css_size(target, width, height) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(26, 0, 1, target, width, height);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(37, 0, 1, target, width, height);
   target >>>= 0;
   width >>>= 0;
   height >>>= 0;
@@ -9529,15 +10593,10 @@ var _emscripten_glGetAttachedShaders = _glGetAttachedShaders;
 
 var _emscripten_glGetAttribLocation = _glGetAttribLocation;
 
-var readI53FromU64 = ptr => GROWABLE_HEAP_U32()[((ptr) >>> 2) >>> 0] + GROWABLE_HEAP_U32()[(((ptr) + (4)) >>> 2) >>> 0] * 4294967296;
-
 var writeI53ToI64 = (ptr, num) => {
   GROWABLE_HEAP_U32()[((ptr) >>> 2) >>> 0] = num;
   var lower = GROWABLE_HEAP_U32()[((ptr) >>> 2) >>> 0];
   GROWABLE_HEAP_U32()[(((ptr) + (4)) >>> 2) >>> 0] = (num - lower) / 4294967296;
-  var deserialized = (num >= 0) ? readI53FromU64(ptr) : readI53FromI64(ptr);
-  var offset = ((ptr) >>> 2);
-  if (deserialized != num) warnOnce(`writeI53ToI64() out of range: serialized JS Number ${num} to Wasm heap as bytes lo=${ptrToString(GROWABLE_HEAP_U32()[offset >>> 0])}, hi=${ptrToString(GROWABLE_HEAP_U32()[offset + 1 >>> 0])}, which deserializes back to ${deserialized} instead!`);
 };
 
 var webglGetExtensions = function $webglGetExtensions() {
@@ -10402,8 +11461,6 @@ var _emscripten_glGetUniformBlockIndex = _glGetUniformBlockIndex;
 }
 
 var _emscripten_glGetUniformIndices = _glGetUniformIndices;
-
-/** @suppress {checkTypes} */ var jstoi_q = str => parseInt(str);
 
 /** @noinline */ var webglGetLeftBracePos = name => name.slice(-1) == "]" && name.lastIndexOf("[");
 
@@ -11742,37 +12799,76 @@ var IDBStore = {
   }
 };
 
-function _emscripten_idb_delete(db, id, perror) {
+var _emscripten_idb_delete = function(db, id, perror) {
   db >>>= 0;
   id >>>= 0;
   perror >>>= 0;
-  throw "Please compile your program with async support in order to use synchronous operations like emscripten_idb_delete, etc.";
-}
+  return Asyncify.handleSleep(wakeUp => {
+    IDBStore.deleteFile(UTF8ToString(db), UTF8ToString(id), error => {
+      GROWABLE_HEAP_I32()[((perror) >>> 2) >>> 0] = !!error;
+      wakeUp();
+    });
+  });
+};
 
-function _emscripten_idb_exists(db, id, pexists, perror) {
+_emscripten_idb_delete.isAsync = true;
+
+var _emscripten_idb_exists = function(db, id, pexists, perror) {
   db >>>= 0;
   id >>>= 0;
   pexists >>>= 0;
   perror >>>= 0;
-  throw "Please compile your program with async support in order to use synchronous operations like emscripten_idb_exists, etc.";
-}
+  return Asyncify.handleSleep(wakeUp => {
+    IDBStore.existsFile(UTF8ToString(db), UTF8ToString(id), (error, exists) => {
+      GROWABLE_HEAP_I32()[((pexists) >>> 2) >>> 0] = !!exists;
+      GROWABLE_HEAP_I32()[((perror) >>> 2) >>> 0] = !!error;
+      wakeUp();
+    });
+  });
+};
 
-function _emscripten_idb_load(db, id, pbuffer, pnum, perror) {
+_emscripten_idb_exists.isAsync = true;
+
+var _emscripten_idb_load = function(db, id, pbuffer, pnum, perror) {
   db >>>= 0;
   id >>>= 0;
   pbuffer >>>= 0;
   pnum >>>= 0;
   perror >>>= 0;
-  throw "Please compile your program with async support in order to use synchronous operations like emscripten_idb_load, etc.";
-}
+  return Asyncify.handleSleep(wakeUp => {
+    IDBStore.getFile(UTF8ToString(db), UTF8ToString(id), (error, byteArray) => {
+      if (error) {
+        GROWABLE_HEAP_I32()[((perror) >>> 2) >>> 0] = 1;
+        wakeUp();
+        return;
+      }
+      var buffer = _malloc(byteArray.length);
+      // must be freed by the caller!
+      GROWABLE_HEAP_U8().set(byteArray, buffer >>> 0);
+      GROWABLE_HEAP_U32()[((pbuffer) >>> 2) >>> 0] = buffer;
+      GROWABLE_HEAP_I32()[((pnum) >>> 2) >>> 0] = byteArray.length;
+      GROWABLE_HEAP_I32()[((perror) >>> 2) >>> 0] = 0;
+      wakeUp();
+    });
+  });
+};
 
-function _emscripten_idb_store(db, id, ptr, num, perror) {
+_emscripten_idb_load.isAsync = true;
+
+var _emscripten_idb_store = function(db, id, ptr, num, perror) {
   db >>>= 0;
   id >>>= 0;
   ptr >>>= 0;
   perror >>>= 0;
-  throw "Please compile your program with async support in order to use synchronous operations like emscripten_idb_store, etc.";
-}
+  return Asyncify.handleSleep(wakeUp => {
+    IDBStore.setFile(UTF8ToString(db), UTF8ToString(id), new Uint8Array(GROWABLE_HEAP_U8().subarray(ptr >>> 0, ptr + num >>> 0)), error => {
+      GROWABLE_HEAP_I32()[((perror) >>> 2) >>> 0] = !!error;
+      wakeUp();
+    });
+  });
+};
+
+_emscripten_idb_store.isAsync = true;
 
 function _emscripten_is_webgl_context_lost(contextHandle) {
   contextHandle >>>= 0;
@@ -11781,13 +12877,7 @@ function _emscripten_is_webgl_context_lost(contextHandle) {
 
 var reallyNegative = x => x < 0 || (x === 0 && (1 / x) === -Infinity);
 
-var convertI32PairToI53 = (lo, hi) => {
-  // This function should not be getting called with too large unsigned numbers
-  // in high part (if hi >= 0x7FFFFFFFF, one should have been calling
-  // convertU32PairToI53())
-  assert(hi === (hi | 0));
-  return (lo >>> 0) + hi * 4294967296;
-};
+var convertI32PairToI53 = (lo, hi) => (lo >>> 0) + hi * 4294967296;
 
 var convertU32PairToI53 = (lo, hi) => (lo >>> 0) + (hi >>> 0) * 4294967296;
 
@@ -11825,7 +12915,6 @@ var strLen = ptr => {
 };
 
 var formatString = (format, varargs) => {
-  assert((varargs & 3) === 0);
   var textIndex = format;
   var argIndex = varargs;
   // This must be called before reading a double or i64 vararg. It will bump the pointer properly.
@@ -11834,12 +12923,9 @@ var formatString = (format, varargs) => {
     if (type === "double" || type === "i64") {
       // move so the load is aligned
       if (ptr & 7) {
-        assert((ptr & 7) === 4);
         ptr += 4;
       }
-    } else {
-      assert((ptr & 3) === 0);
-    }
+    } else {}
     return ptr;
   }
   function getNextArg(type) {
@@ -11854,7 +12940,6 @@ var formatString = (format, varargs) => {
       ret = [ GROWABLE_HEAP_I32()[((argIndex) >>> 2) >>> 0], GROWABLE_HEAP_I32()[(((argIndex) + (4)) >>> 2) >>> 0] ];
       argIndex += 8;
     } else {
-      assert((argIndex & 3) === 0);
       type = "i32";
       // varargs are always i32, i64, or double
       ret = GROWABLE_HEAP_I32()[((argIndex) >>> 2) >>> 0];
@@ -12383,7 +13468,7 @@ var _emscripten_performance_now = () => performance.now();
 var _emscripten_request_animation_frame = function(cb, userData) {
   cb >>>= 0;
   userData >>>= 0;
-  return requestAnimationFrame(timeStamp => getWasmTableEntry(cb)(timeStamp, userData));
+  return requestAnimationFrame(timeStamp => ((a1, a2) => dynCall_idi(cb, a1, a2))(timeStamp, userData));
 };
 
 var growMemory = size => {
@@ -12395,9 +13480,7 @@ var growMemory = size => {
     // .grow() takes a delta compared to the previous size
     updateMemoryViews();
     return 1;
-  } /*success*/ catch (e) {
-    err(`growMemory: Attempted to grow heap from ${b.byteLength} bytes to ${size} bytes, but got error: ${e}`);
-  }
+  } /*success*/ catch (e) {}
 };
 
 // implicit 0 return to save code size (caller will cast "undefined" into 0
@@ -12430,7 +13513,6 @@ function _emscripten_resize_heap(requestedSize) {
   // (the wasm binary specifies it, so if we tried, we'd fail anyhow).
   var maxHeapSize = getHeapMax();
   if (requestedSize > maxHeapSize) {
-    err(`Cannot enlarge memory, requested ${requestedSize} bytes, but the limit is ${maxHeapSize} bytes!`);
     return false;
   }
   // Loop through potential heap size increases. If we attempt a too eager
@@ -12447,15 +13529,14 @@ function _emscripten_resize_heap(requestedSize) {
       return true;
     }
   }
-  err(`Failed to grow the heap from ${oldSize} bytes to ${newSize} bytes, not enough memory!`);
   return false;
 }
 
-function _emscripten_set_main_loop(func, fps, simulateInfiniteLoop) {
+var _emscripten_set_main_loop = function(func, fps, simulateInfiniteLoop) {
   func >>>= 0;
-  var iterFunc = getWasmTableEntry(func);
+  var iterFunc = (() => dynCall_v(func));
   setMainLoop(iterFunc, fps, simulateInfiniteLoop);
-}
+};
 
 var registerUiEventCallback = (target, userData, useCapture, callbackfunc, eventTypeId, eventTypeString, targetThread) => {
   targetThread = JSEvents.getTargetThreadForEventCallback(targetThread);
@@ -12487,7 +13568,7 @@ var registerUiEventCallback = (target, userData, useCapture, callbackfunc, event
     GROWABLE_HEAP_I32()[(((uiEvent) + (28)) >>> 2) >>> 0] = pageXOffset | 0;
     // scroll offsets are float
     GROWABLE_HEAP_I32()[(((uiEvent) + (32)) >>> 2) >>> 0] = pageYOffset | 0;
-    if (targetThread) __emscripten_run_callback_on_thread(targetThread, callbackfunc, eventTypeId, uiEvent, userData); else if (getWasmTableEntry(callbackfunc)(eventTypeId, uiEvent, userData)) e.preventDefault();
+    if (targetThread) __emscripten_run_callback_on_thread(targetThread, callbackfunc, eventTypeId, uiEvent, userData); else if (((a1, a2, a3) => dynCall_iiii(callbackfunc, a1, a2, a3))(eventTypeId, uiEvent, userData)) e.preventDefault();
   };
   var eventHandler = {
     target,
@@ -12500,7 +13581,7 @@ var registerUiEventCallback = (target, userData, useCapture, callbackfunc, event
 };
 
 function _emscripten_set_resize_callback_on_thread(target, userData, useCapture, callbackfunc, targetThread) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(27, 0, 1, target, userData, useCapture, callbackfunc, targetThread);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(38, 0, 1, target, userData, useCapture, callbackfunc, targetThread);
   target >>>= 0;
   userData >>>= 0;
   callbackfunc >>>= 0;
@@ -12521,10 +13602,10 @@ var _setNetworkCallback = (event, userData, callback) => {
       if (event === "error") {
         var sp = stackSave();
         var msg = stringToUTF8OnStack(data[2]);
-        getWasmTableEntry(callback)(data[0], data[1], msg, userData);
+        ((a1, a2, a3, a4) => dynCall_viiii(callback, a1, a2, a3, a4))(data[0], data[1], msg, userData);
         stackRestore(sp);
       } else {
-        getWasmTableEntry(callback)(data, userData);
+        ((a1, a2) => dynCall_vii(callback, a1, a2))(data, userData);
       }
     } catch (e) {
       if (!(e instanceof ExitStatus)) {
@@ -12578,11 +13659,10 @@ function _emscripten_set_socket_open_callback(userData, callback) {
 var _emscripten_set_timeout = function(cb, msecs, userData) {
   cb >>>= 0;
   userData >>>= 0;
-  return safeSetTimeout(() => getWasmTableEntry(cb)(userData), msecs);
+  return safeSetTimeout(() => (a1 => dynCall_vi(cb, a1))(userData), msecs);
 };
 
 var fillMouseEventData = (eventStruct, e, target) => {
-  assert(eventStruct % 4 == 0);
   GROWABLE_HEAP_F64()[((eventStruct) >>> 3) >>> 0] = e.timeStamp;
   var idx = ((eventStruct) >>> 2);
   GROWABLE_HEAP_I32()[idx + 2 >>> 0] = e.screenX;
@@ -12615,7 +13695,7 @@ var registerWheelEventCallback = (target, userData, useCapture, callbackfunc, ev
     GROWABLE_HEAP_F64()[(((wheelEvent) + (72)) >>> 3) >>> 0] = e["deltaY"];
     GROWABLE_HEAP_F64()[(((wheelEvent) + (80)) >>> 3) >>> 0] = e["deltaZ"];
     GROWABLE_HEAP_I32()[(((wheelEvent) + (88)) >>> 2) >>> 0] = e["deltaMode"];
-    if (targetThread) __emscripten_run_callback_on_thread(targetThread, callbackfunc, eventTypeId, wheelEvent, userData); else if (getWasmTableEntry(callbackfunc)(eventTypeId, wheelEvent, userData)) e.preventDefault();
+    if (targetThread) __emscripten_run_callback_on_thread(targetThread, callbackfunc, eventTypeId, wheelEvent, userData); else if (((a1, a2, a3) => dynCall_iiii(callbackfunc, a1, a2, a3))(eventTypeId, wheelEvent, userData)) e.preventDefault();
   };
   var eventHandler = {
     target,
@@ -12629,7 +13709,7 @@ var registerWheelEventCallback = (target, userData, useCapture, callbackfunc, ev
 };
 
 function _emscripten_set_wheel_callback_on_thread(target, userData, useCapture, callbackfunc, targetThread) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(28, 0, 1, target, userData, useCapture, callbackfunc, targetThread);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(39, 0, 1, target, userData, useCapture, callbackfunc, targetThread);
   target >>>= 0;
   userData >>>= 0;
   callbackfunc >>>= 0;
@@ -12643,9 +13723,435 @@ function _emscripten_set_wheel_callback_on_thread(target, userData, useCapture, 
   }
 }
 
-var _emscripten_sleep = () => {
-  throw "Please compile your program with async support in order to use asynchronous operations like emscripten_sleep";
+var _emscripten_sleep = ms => Asyncify.handleSleep(wakeUp => safeSetTimeout(wakeUp, ms));
+
+_emscripten_sleep.isAsync = true;
+
+class HandleAllocator {
+  constructor() {
+    // TODO(https://github.com/emscripten-core/emscripten/issues/21414):
+    // Use inline field declarations.
+    this.allocated = [ undefined ];
+    this.freelist = [];
+  }
+  get(id) {
+    return this.allocated[id];
+  }
+  has(id) {
+    return this.allocated[id] !== undefined;
+  }
+  allocate(handle) {
+    var id = this.freelist.pop() || this.allocated.length;
+    this.allocated[id] = handle;
+    return id;
+  }
+  free(id) {
+    // Set the slot to `undefined` rather than using `delete` here since
+    // apparently arrays with holes in them can be less efficient.
+    this.allocated[id] = undefined;
+    this.freelist.push(id);
+  }
+}
+
+var Fetch = {
+  openDatabase(dbname, dbversion, onsuccess, onerror) {
+    try {
+      var openRequest = indexedDB.open(dbname, dbversion);
+    } catch (e) {
+      return onerror(e);
+    }
+    openRequest.onupgradeneeded = event => {
+      var db = /** @type {IDBDatabase} */ (event.target.result);
+      if (db.objectStoreNames.contains("FILES")) {
+        db.deleteObjectStore("FILES");
+      }
+      db.createObjectStore("FILES");
+    };
+    openRequest.onsuccess = event => onsuccess(event.target.result);
+    openRequest.onerror = onerror;
+  },
+  init() {
+    Fetch.xhrs = new HandleAllocator;
+    if (ENVIRONMENT_IS_PTHREAD) return;
+    var onsuccess = db => {
+      Fetch.dbInstance = db;
+      removeRunDependency("library_fetch_init");
+    };
+    var onerror = () => {
+      Fetch.dbInstance = false;
+      removeRunDependency("library_fetch_init");
+    };
+    addRunDependency("library_fetch_init");
+    Fetch.openDatabase("emscripten_filesystem", 1, onsuccess, onerror);
+  }
 };
+
+function fetchXHR(fetch, onsuccess, onerror, onprogress, onreadystatechange) {
+  var url = GROWABLE_HEAP_U32()[(((fetch) + (8)) >>> 2) >>> 0];
+  if (!url) {
+    onerror(fetch, 0, "no url specified!");
+    return;
+  }
+  var url_ = UTF8ToString(url);
+  var fetch_attr = fetch + 108;
+  var requestMethod = UTF8ToString(fetch_attr + 0);
+  requestMethod ||= "GET";
+  var timeoutMsecs = GROWABLE_HEAP_U32()[(((fetch_attr) + (56)) >>> 2) >>> 0];
+  var userName = GROWABLE_HEAP_U32()[(((fetch_attr) + (68)) >>> 2) >>> 0];
+  var password = GROWABLE_HEAP_U32()[(((fetch_attr) + (72)) >>> 2) >>> 0];
+  var requestHeaders = GROWABLE_HEAP_U32()[(((fetch_attr) + (76)) >>> 2) >>> 0];
+  var overriddenMimeType = GROWABLE_HEAP_U32()[(((fetch_attr) + (80)) >>> 2) >>> 0];
+  var dataPtr = GROWABLE_HEAP_U32()[(((fetch_attr) + (84)) >>> 2) >>> 0];
+  var dataLength = GROWABLE_HEAP_U32()[(((fetch_attr) + (88)) >>> 2) >>> 0];
+  var fetchAttributes = GROWABLE_HEAP_U32()[(((fetch_attr) + (52)) >>> 2) >>> 0];
+  var fetchAttrLoadToMemory = !!(fetchAttributes & 1);
+  var fetchAttrStreamData = !!(fetchAttributes & 2);
+  var fetchAttrSynchronous = !!(fetchAttributes & 64);
+  var userNameStr = userName ? UTF8ToString(userName) : undefined;
+  var passwordStr = password ? UTF8ToString(password) : undefined;
+  var xhr = new XMLHttpRequest;
+  xhr.withCredentials = !!GROWABLE_HEAP_U8()[(fetch_attr) + (60) >>> 0];
+  xhr.open(requestMethod, url_, !fetchAttrSynchronous, userNameStr, passwordStr);
+  if (!fetchAttrSynchronous) xhr.timeout = timeoutMsecs;
+  // XHR timeout field is only accessible in async XHRs, and must be set after .open() but before .send().
+  xhr.url_ = url_;
+  // Save the url for debugging purposes (and for comparing to the responseURL that server side advertised)
+  xhr.responseType = "arraybuffer";
+  if (overriddenMimeType) {
+    var overriddenMimeTypeStr = UTF8ToString(overriddenMimeType);
+    xhr.overrideMimeType(overriddenMimeTypeStr);
+  }
+  if (requestHeaders) {
+    for (;;) {
+      var key = GROWABLE_HEAP_U32()[((requestHeaders) >>> 2) >>> 0];
+      if (!key) break;
+      var value = GROWABLE_HEAP_U32()[(((requestHeaders) + (4)) >>> 2) >>> 0];
+      if (!value) break;
+      requestHeaders += 8;
+      var keyStr = UTF8ToString(key);
+      var valueStr = UTF8ToString(value);
+      xhr.setRequestHeader(keyStr, valueStr);
+    }
+  }
+  var id = Fetch.xhrs.allocate(xhr);
+  GROWABLE_HEAP_U32()[((fetch) >>> 2) >>> 0] = id;
+  var data = (dataPtr && dataLength) ? GROWABLE_HEAP_U8().slice(dataPtr, dataPtr + dataLength) : null;
+  // TODO: Support specifying custom headers to the request.
+  // Share the code to save the response, as we need to do so both on success
+  // and on error (despite an error, there may be a response, like a 404 page).
+  // This receives a condition, which determines whether to save the xhr's
+  // response, or just 0.
+  function saveResponseAndStatus() {
+    var ptr = 0;
+    var ptrLen = 0;
+    if (xhr.response && fetchAttrLoadToMemory && GROWABLE_HEAP_U32()[(((fetch) + (12)) >>> 2) >>> 0] === 0) {
+      ptrLen = xhr.response.byteLength;
+    }
+    if (ptrLen > 0) {
+      // The data pointer malloc()ed here has the same lifetime as the emscripten_fetch_t structure itself has, and is
+      // freed when emscripten_fetch_close() is called.
+      ptr = _malloc(ptrLen);
+      GROWABLE_HEAP_U8().set(new Uint8Array(/** @type{Array<number>} */ (xhr.response)), ptr >>> 0);
+    }
+    GROWABLE_HEAP_U32()[(((fetch) + (12)) >>> 2) >>> 0] = ptr;
+    writeI53ToI64(fetch + 16, ptrLen);
+    writeI53ToI64(fetch + 24, 0);
+    var len = xhr.response ? xhr.response.byteLength : 0;
+    if (len) {
+      // If the final XHR.onload handler receives the bytedata to compute total length, report that,
+      // otherwise don't write anything out here, which will retain the latest byte size reported in
+      // the most recent XHR.onprogress handler.
+      writeI53ToI64(fetch + 32, len);
+    }
+    GROWABLE_HEAP_I16()[(((fetch) + (40)) >>> 1) >>> 0] = xhr.readyState;
+    GROWABLE_HEAP_I16()[(((fetch) + (42)) >>> 1) >>> 0] = xhr.status;
+    if (xhr.statusText) stringToUTF8(xhr.statusText, fetch + 44, 64);
+  }
+  xhr.onload = e => {
+    // check if xhr was aborted by user and don't try to call back
+    if (!Fetch.xhrs.has(id)) {
+      return;
+    }
+    saveResponseAndStatus();
+    if (xhr.status >= 200 && xhr.status < 300) {
+      onsuccess?.(fetch, xhr, e);
+    } else {
+      onerror?.(fetch, xhr, e);
+    }
+  };
+  xhr.onerror = e => {
+    // check if xhr was aborted by user and don't try to call back
+    if (!Fetch.xhrs.has(id)) {
+      return;
+    }
+    saveResponseAndStatus();
+    onerror?.(fetch, xhr, e);
+  };
+  xhr.ontimeout = e => {
+    // check if xhr was aborted by user and don't try to call back
+    if (!Fetch.xhrs.has(id)) {
+      return;
+    }
+    onerror?.(fetch, xhr, e);
+  };
+  xhr.onprogress = e => {
+    // check if xhr was aborted by user and don't try to call back
+    if (!Fetch.xhrs.has(id)) {
+      return;
+    }
+    var ptrLen = (fetchAttrLoadToMemory && fetchAttrStreamData && xhr.response) ? xhr.response.byteLength : 0;
+    var ptr = 0;
+    if (ptrLen > 0 && fetchAttrLoadToMemory && fetchAttrStreamData) {
+      // Allocate byte data in Emscripten heap for the streamed memory block (freed immediately after onprogress call)
+      ptr = _malloc(ptrLen);
+      GROWABLE_HEAP_U8().set(new Uint8Array(/** @type{Array<number>} */ (xhr.response)), ptr >>> 0);
+    }
+    GROWABLE_HEAP_U32()[(((fetch) + (12)) >>> 2) >>> 0] = ptr;
+    writeI53ToI64(fetch + 16, ptrLen);
+    writeI53ToI64(fetch + 24, e.loaded - ptrLen);
+    writeI53ToI64(fetch + 32, e.total);
+    GROWABLE_HEAP_I16()[(((fetch) + (40)) >>> 1) >>> 0] = xhr.readyState;
+    // If loading files from a source that does not give HTTP status code, assume success if we get data bytes
+    if (xhr.readyState >= 3 && xhr.status === 0 && e.loaded > 0) xhr.status = 200;
+    GROWABLE_HEAP_I16()[(((fetch) + (42)) >>> 1) >>> 0] = xhr.status;
+    if (xhr.statusText) stringToUTF8(xhr.statusText, fetch + 44, 64);
+    onprogress?.(fetch, xhr, e);
+    if (ptr) {
+      _free(ptr);
+    }
+  };
+  xhr.onreadystatechange = e => {
+    // check if xhr was aborted by user and don't try to call back
+    if (!Fetch.xhrs.has(id)) {
+      runtimeKeepalivePop();
+      return;
+    }
+    GROWABLE_HEAP_I16()[(((fetch) + (40)) >>> 1) >>> 0] = xhr.readyState;
+    if (xhr.readyState >= 2) {
+      GROWABLE_HEAP_I16()[(((fetch) + (42)) >>> 1) >>> 0] = xhr.status;
+    }
+    onreadystatechange?.(fetch, xhr, e);
+  };
+  try {
+    xhr.send(data);
+  } catch (e) {
+    onerror?.(fetch, xhr, e);
+  }
+}
+
+function fetchCacheData(/** @type {IDBDatabase} */ db, fetch, data, onsuccess, onerror) {
+  if (!db) {
+    onerror(fetch, 0, "IndexedDB not available!");
+    return;
+  }
+  var fetch_attr = fetch + 108;
+  var destinationPath = GROWABLE_HEAP_U32()[(((fetch_attr) + (64)) >>> 2) >>> 0];
+  destinationPath ||= GROWABLE_HEAP_U32()[(((fetch) + (8)) >>> 2) >>> 0];
+  var destinationPathStr = UTF8ToString(destinationPath);
+  try {
+    var transaction = db.transaction([ "FILES" ], "readwrite");
+    var packages = transaction.objectStore("FILES");
+    var putRequest = packages.put(data, destinationPathStr);
+    putRequest.onsuccess = event => {
+      GROWABLE_HEAP_I16()[(((fetch) + (40)) >>> 1) >>> 0] = 4;
+      // Mimic XHR readyState 4 === 'DONE: The operation is complete'
+      GROWABLE_HEAP_I16()[(((fetch) + (42)) >>> 1) >>> 0] = 200;
+      // Mimic XHR HTTP status code 200 "OK"
+      stringToUTF8("OK", fetch + 44, 64);
+      onsuccess(fetch, 0, destinationPathStr);
+    };
+    putRequest.onerror = error => {
+      // Most likely we got an error if IndexedDB is unwilling to store any more data for this page.
+      // TODO: Can we identify and break down different IndexedDB-provided errors and convert those
+      // to more HTTP status codes for more information?
+      GROWABLE_HEAP_I16()[(((fetch) + (40)) >>> 1) >>> 0] = 4;
+      // Mimic XHR readyState 4 === 'DONE: The operation is complete'
+      GROWABLE_HEAP_I16()[(((fetch) + (42)) >>> 1) >>> 0] = 413;
+      // Mimic XHR HTTP status code 413 "Payload Too Large"
+      stringToUTF8("Payload Too Large", fetch + 44, 64);
+      onerror(fetch, 0, error);
+    };
+  } catch (e) {
+    onerror(fetch, 0, e);
+  }
+}
+
+function fetchLoadCachedData(db, fetch, onsuccess, onerror) {
+  if (!db) {
+    onerror(fetch, 0, "IndexedDB not available!");
+    return;
+  }
+  var fetch_attr = fetch + 108;
+  var path = GROWABLE_HEAP_U32()[(((fetch_attr) + (64)) >>> 2) >>> 0];
+  path ||= GROWABLE_HEAP_U32()[(((fetch) + (8)) >>> 2) >>> 0];
+  var pathStr = UTF8ToString(path);
+  try {
+    var transaction = db.transaction([ "FILES" ], "readonly");
+    var packages = transaction.objectStore("FILES");
+    var getRequest = packages.get(pathStr);
+    getRequest.onsuccess = event => {
+      if (event.target.result) {
+        var value = event.target.result;
+        var len = value.byteLength || value.length;
+        // The data pointer malloc()ed here has the same lifetime as the emscripten_fetch_t structure itself has, and is
+        // freed when emscripten_fetch_close() is called.
+        var ptr = _malloc(len);
+        GROWABLE_HEAP_U8().set(new Uint8Array(value), ptr >>> 0);
+        GROWABLE_HEAP_U32()[(((fetch) + (12)) >>> 2) >>> 0] = ptr;
+        writeI53ToI64(fetch + 16, len);
+        writeI53ToI64(fetch + 24, 0);
+        writeI53ToI64(fetch + 32, len);
+        GROWABLE_HEAP_I16()[(((fetch) + (40)) >>> 1) >>> 0] = 4;
+        // Mimic XHR readyState 4 === 'DONE: The operation is complete'
+        GROWABLE_HEAP_I16()[(((fetch) + (42)) >>> 1) >>> 0] = 200;
+        // Mimic XHR HTTP status code 200 "OK"
+        stringToUTF8("OK", fetch + 44, 64);
+        onsuccess(fetch, 0, value);
+      } else {
+        // Succeeded to load, but the load came back with the value of undefined, treat that as an error since we never store undefined in db.
+        GROWABLE_HEAP_I16()[(((fetch) + (40)) >>> 1) >>> 0] = 4;
+        // Mimic XHR readyState 4 === 'DONE: The operation is complete'
+        GROWABLE_HEAP_I16()[(((fetch) + (42)) >>> 1) >>> 0] = 404;
+        // Mimic XHR HTTP status code 404 "Not Found"
+        stringToUTF8("Not Found", fetch + 44, 64);
+        onerror(fetch, 0, "no data");
+      }
+    };
+    getRequest.onerror = error => {
+      GROWABLE_HEAP_I16()[(((fetch) + (40)) >>> 1) >>> 0] = 4;
+      // Mimic XHR readyState 4 === 'DONE: The operation is complete'
+      GROWABLE_HEAP_I16()[(((fetch) + (42)) >>> 1) >>> 0] = 404;
+      // Mimic XHR HTTP status code 404 "Not Found"
+      stringToUTF8("Not Found", fetch + 44, 64);
+      onerror(fetch, 0, error);
+    };
+  } catch (e) {
+    onerror(fetch, 0, e);
+  }
+}
+
+function fetchDeleteCachedData(db, fetch, onsuccess, onerror) {
+  if (!db) {
+    onerror(fetch, 0, "IndexedDB not available!");
+    return;
+  }
+  var fetch_attr = fetch + 108;
+  var path = GROWABLE_HEAP_U32()[(((fetch_attr) + (64)) >>> 2) >>> 0];
+  path ||= GROWABLE_HEAP_U32()[(((fetch) + (8)) >>> 2) >>> 0];
+  var pathStr = UTF8ToString(path);
+  try {
+    var transaction = db.transaction([ "FILES" ], "readwrite");
+    var packages = transaction.objectStore("FILES");
+    var request = packages.delete(pathStr);
+    request.onsuccess = event => {
+      var value = event.target.result;
+      GROWABLE_HEAP_U32()[(((fetch) + (12)) >>> 2) >>> 0] = 0;
+      writeI53ToI64(fetch + 16, 0);
+      writeI53ToI64(fetch + 24, 0);
+      writeI53ToI64(fetch + 32, 0);
+      // Mimic XHR readyState 4 === 'DONE: The operation is complete'
+      GROWABLE_HEAP_I16()[(((fetch) + (40)) >>> 1) >>> 0] = 4;
+      // Mimic XHR HTTP status code 200 "OK"
+      GROWABLE_HEAP_I16()[(((fetch) + (42)) >>> 1) >>> 0] = 200;
+      stringToUTF8("OK", fetch + 44, 64);
+      onsuccess(fetch, 0, value);
+    };
+    request.onerror = error => {
+      GROWABLE_HEAP_I16()[(((fetch) + (40)) >>> 1) >>> 0] = 4;
+      // Mimic XHR readyState 4 === 'DONE: The operation is complete'
+      GROWABLE_HEAP_I16()[(((fetch) + (42)) >>> 1) >>> 0] = 404;
+      // Mimic XHR HTTP status code 404 "Not Found"
+      stringToUTF8("Not Found", fetch + 44, 64);
+      onerror(fetch, 0, error);
+    };
+  } catch (e) {
+    onerror(fetch, 0, e);
+  }
+}
+
+function _emscripten_start_fetch(fetch, successcb, errorcb, progresscb, readystatechangecb) {
+  fetch >>>= 0;
+  // Avoid shutting down the runtime since we want to wait for the async
+  // response.
+  runtimeKeepalivePush();
+  var fetch_attr = fetch + 108;
+  var onsuccess = GROWABLE_HEAP_U32()[(((fetch_attr) + (36)) >>> 2) >>> 0];
+  var onerror = GROWABLE_HEAP_U32()[(((fetch_attr) + (40)) >>> 2) >>> 0];
+  var onprogress = GROWABLE_HEAP_U32()[(((fetch_attr) + (44)) >>> 2) >>> 0];
+  var onreadystatechange = GROWABLE_HEAP_U32()[(((fetch_attr) + (48)) >>> 2) >>> 0];
+  var fetchAttributes = GROWABLE_HEAP_U32()[(((fetch_attr) + (52)) >>> 2) >>> 0];
+  var fetchAttrSynchronous = !!(fetchAttributes & 64);
+  function doCallback(f) {
+    if (fetchAttrSynchronous) {
+      f();
+    } else {
+      callUserCallback(f);
+    }
+  }
+  var reportSuccess = (fetch, xhr, e) => {
+    runtimeKeepalivePop();
+    doCallback(() => {
+      if (onsuccess) (a1 => dynCall_vi(onsuccess, a1))(fetch); else successcb?.(fetch);
+    });
+  };
+  var reportProgress = (fetch, xhr, e) => {
+    doCallback(() => {
+      if (onprogress) (a1 => dynCall_vi(onprogress, a1))(fetch); else progresscb?.(fetch);
+    });
+  };
+  var reportError = (fetch, xhr, e) => {
+    runtimeKeepalivePop();
+    doCallback(() => {
+      if (onerror) (a1 => dynCall_vi(onerror, a1))(fetch); else errorcb?.(fetch);
+    });
+  };
+  var reportReadyStateChange = (fetch, xhr, e) => {
+    doCallback(() => {
+      if (onreadystatechange) (a1 => dynCall_vi(onreadystatechange, a1))(fetch); else readystatechangecb?.(fetch);
+    });
+  };
+  var performUncachedXhr = (fetch, xhr, e) => {
+    fetchXHR(fetch, reportSuccess, reportError, reportProgress, reportReadyStateChange);
+  };
+  var cacheResultAndReportSuccess = (fetch, xhr, e) => {
+    var storeSuccess = (fetch, xhr, e) => {
+      runtimeKeepalivePop();
+      doCallback(() => {
+        if (onsuccess) (a1 => dynCall_vi(onsuccess, a1))(fetch); else successcb?.(fetch);
+      });
+    };
+    var storeError = (fetch, xhr, e) => {
+      runtimeKeepalivePop();
+      doCallback(() => {
+        if (onsuccess) (a1 => dynCall_vi(onsuccess, a1))(fetch); else successcb?.(fetch);
+      });
+    };
+    fetchCacheData(Fetch.dbInstance, fetch, xhr.response, storeSuccess, storeError);
+  };
+  var performCachedXhr = (fetch, xhr, e) => {
+    fetchXHR(fetch, cacheResultAndReportSuccess, reportError, reportProgress, reportReadyStateChange);
+  };
+  var requestMethod = UTF8ToString(fetch_attr + 0);
+  var fetchAttrReplace = !!(fetchAttributes & 16);
+  var fetchAttrPersistFile = !!(fetchAttributes & 4);
+  var fetchAttrNoDownload = !!(fetchAttributes & 32);
+  if (requestMethod === "EM_IDB_STORE") {
+    // TODO(?): Here we perform a clone of the data, because storing shared typed arrays to IndexedDB does not seem to be allowed.
+    var ptr = GROWABLE_HEAP_U32()[(((fetch_attr) + (84)) >>> 2) >>> 0];
+    var size = GROWABLE_HEAP_U32()[(((fetch_attr) + (88)) >>> 2) >>> 0];
+    fetchCacheData(Fetch.dbInstance, fetch, GROWABLE_HEAP_U8().slice(ptr, ptr + size), reportSuccess, reportError);
+  } else if (requestMethod === "EM_IDB_DELETE") {
+    fetchDeleteCachedData(Fetch.dbInstance, fetch, reportSuccess, reportError);
+  } else if (!fetchAttrReplace) {
+    fetchLoadCachedData(Fetch.dbInstance, fetch, reportSuccess, fetchAttrNoDownload ? reportError : (fetchAttrPersistFile ? performCachedXhr : performUncachedXhr));
+  } else if (!fetchAttrNoDownload) {
+    fetchXHR(fetch, fetchAttrPersistFile ? cacheResultAndReportSuccess : reportSuccess, reportError, reportProgress, reportReadyStateChange);
+  } else {
+    return 0;
+  }
+  // todo: free
+  return fetch;
+}
 
 var _emscripten_unwind_to_js_event_loop = () => {
   throw "unwind";
@@ -12658,7 +14164,6 @@ var findCanvasEventTarget = findEventTarget;
 /** @suppress {duplicate } */ function _emscripten_webgl_do_create_context(target, attributes) {
   target >>>= 0;
   attributes >>>= 0;
-  assert(attributes);
   var attr32 = ((attributes) >>> 2);
   var powerPreference = GROWABLE_HEAP_I32()[attr32 + (8 >> 2) >>> 0];
   var contextAttributes = {
@@ -12763,7 +14268,6 @@ var getEnvStrings = () => {
 
 var stringToAscii = (str, buffer) => {
   for (var i = 0; i < str.length; ++i) {
-    assert(str.charCodeAt(i) === (str.charCodeAt(i) & 255));
     GROWABLE_HEAP_I8()[buffer++ >>> 0] = str.charCodeAt(i);
   }
   // Null-terminate the string
@@ -12771,7 +14275,7 @@ var stringToAscii = (str, buffer) => {
 };
 
 var _environ_get = function(__environ, environ_buf) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(29, 0, 1, __environ, environ_buf);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(40, 0, 1, __environ, environ_buf);
   __environ >>>= 0;
   environ_buf >>>= 0;
   var bufSize = 0;
@@ -12785,7 +14289,7 @@ var _environ_get = function(__environ, environ_buf) {
 };
 
 var _environ_sizes_get = function(penviron_count, penviron_buf_size) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(30, 0, 1, penviron_count, penviron_buf_size);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(41, 0, 1, penviron_count, penviron_buf_size);
   penviron_count >>>= 0;
   penviron_buf_size >>>= 0;
   var strings = getEnvStrings();
@@ -12797,7 +14301,7 @@ var _environ_sizes_get = function(penviron_count, penviron_buf_size) {
 };
 
 function _fd_close(fd) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(31, 0, 1, fd);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(42, 0, 1, fd);
   try {
     var stream = SYSCALLS.getStreamFromFD(fd);
     FS.close(stream);
@@ -12809,7 +14313,7 @@ function _fd_close(fd) {
 }
 
 function _fd_fdstat_get(fd, pbuf) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(32, 0, 1, fd, pbuf);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(43, 0, 1, fd, pbuf);
   pbuf >>>= 0;
   try {
     var rightsBase = 0;
@@ -12851,7 +14355,7 @@ function _fd_fdstat_get(fd, pbuf) {
 };
 
 function _fd_read(fd, iov, iovcnt, pnum) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(33, 0, 1, fd, iov, iovcnt, pnum);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(44, 0, 1, fd, iov, iovcnt, pnum);
   iov >>>= 0;
   iovcnt >>>= 0;
   pnum >>>= 0;
@@ -12867,7 +14371,7 @@ function _fd_read(fd, iov, iovcnt, pnum) {
 }
 
 function _fd_seek(fd, offset, whence, newOffset) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(34, 0, 1, fd, offset, whence, newOffset);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(45, 0, 1, fd, offset, whence, newOffset);
   offset = bigintToI53Checked(offset);
   newOffset >>>= 0;
   try {
@@ -12884,20 +14388,32 @@ function _fd_seek(fd, offset, whence, newOffset) {
   }
 }
 
-function _fd_sync(fd) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(35, 0, 1, fd);
+var _fd_sync = function(fd) {
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(46, 0, 1, fd);
   try {
     var stream = SYSCALLS.getStreamFromFD(fd);
-    if (stream.stream_ops?.fsync) {
-      return stream.stream_ops.fsync(stream);
-    }
-    return 0;
-  } // we can't do anything synchronously; the in-memory FS is already synced to
-  catch (e) {
+    return Asyncify.handleSleep(wakeUp => {
+      var mount = stream.node.mount;
+      if (!mount.type.syncfs) {
+        // We write directly to the file system, so there's nothing to do here.
+        wakeUp(0);
+        return;
+      }
+      mount.type.syncfs(mount, false, err => {
+        if (err) {
+          wakeUp(29);
+          return;
+        }
+        wakeUp(0);
+      });
+    });
+  } catch (e) {
     if (typeof FS == "undefined" || !(e.name === "ErrnoError")) throw e;
     return e.errno;
   }
-}
+};
+
+_fd_sync.isAsync = true;
 
 /** @param {number=} offset */ var doWritev = (stream, iov, iovcnt, offset) => {
   var ret = 0;
@@ -12920,7 +14436,7 @@ function _fd_sync(fd) {
 };
 
 function _fd_write(fd, iov, iovcnt, pnum) {
-  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(36, 0, 1, fd, iov, iovcnt, pnum);
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(47, 0, 1, fd, iov, iovcnt, pnum);
   iov >>>= 0;
   iovcnt >>>= 0;
   pnum >>>= 0;
@@ -12935,6 +14451,158 @@ function _fd_write(fd, iov, iovcnt, pnum) {
   }
 }
 
+function _getaddrinfo(node, service, hint, out) {
+  if (ENVIRONMENT_IS_PTHREAD) return proxyToMainThread(48, 0, 1, node, service, hint, out);
+  node >>>= 0;
+  service >>>= 0;
+  hint >>>= 0;
+  out >>>= 0;
+  // Note getaddrinfo currently only returns a single addrinfo with ai_next defaulting to NULL. When NULL
+  // hints are specified or ai_family set to AF_UNSPEC or ai_socktype or ai_protocol set to 0 then we
+  // really should provide a linked list of suitable addrinfo values.
+  var addrs = [];
+  var canon = null;
+  var addr = 0;
+  var port = 0;
+  var flags = 0;
+  var family = 0;
+  var type = 0;
+  var proto = 0;
+  var ai, last;
+  function allocaddrinfo(family, type, proto, canon, addr, port) {
+    var sa, salen, ai;
+    var errno;
+    salen = family === 10 ? 28 : 16;
+    addr = family === 10 ? inetNtop6(addr) : inetNtop4(addr);
+    sa = _malloc(salen);
+    errno = writeSockaddr(sa, family, addr, port);
+    assert(!errno);
+    ai = _malloc(32);
+    GROWABLE_HEAP_I32()[(((ai) + (4)) >>> 2) >>> 0] = family;
+    GROWABLE_HEAP_I32()[(((ai) + (8)) >>> 2) >>> 0] = type;
+    GROWABLE_HEAP_I32()[(((ai) + (12)) >>> 2) >>> 0] = proto;
+    GROWABLE_HEAP_U32()[(((ai) + (24)) >>> 2) >>> 0] = canon;
+    GROWABLE_HEAP_U32()[(((ai) + (20)) >>> 2) >>> 0] = sa;
+    if (family === 10) {
+      GROWABLE_HEAP_I32()[(((ai) + (16)) >>> 2) >>> 0] = 28;
+    } else {
+      GROWABLE_HEAP_I32()[(((ai) + (16)) >>> 2) >>> 0] = 16;
+    }
+    GROWABLE_HEAP_I32()[(((ai) + (28)) >>> 2) >>> 0] = 0;
+    return ai;
+  }
+  if (hint) {
+    flags = GROWABLE_HEAP_I32()[((hint) >>> 2) >>> 0];
+    family = GROWABLE_HEAP_I32()[(((hint) + (4)) >>> 2) >>> 0];
+    type = GROWABLE_HEAP_I32()[(((hint) + (8)) >>> 2) >>> 0];
+    proto = GROWABLE_HEAP_I32()[(((hint) + (12)) >>> 2) >>> 0];
+  }
+  if (type && !proto) {
+    proto = type === 2 ? 17 : 6;
+  }
+  if (!type && proto) {
+    type = proto === 17 ? 2 : 1;
+  }
+  // If type or proto are set to zero in hints we should really be returning multiple addrinfo values, but for
+  // now default to a TCP STREAM socket so we can at least return a sensible addrinfo given NULL hints.
+  if (proto === 0) {
+    proto = 6;
+  }
+  if (type === 0) {
+    type = 1;
+  }
+  if (!node && !service) {
+    return -2;
+  }
+  if (flags & ~(1 | 2 | 4 | 1024 | 8 | 16 | 32)) {
+    return -1;
+  }
+  if (hint !== 0 && (GROWABLE_HEAP_I32()[((hint) >>> 2) >>> 0] & 2) && !node) {
+    return -1;
+  }
+  if (flags & 32) {
+    // TODO
+    return -2;
+  }
+  if (type !== 0 && type !== 1 && type !== 2) {
+    return -7;
+  }
+  if (family !== 0 && family !== 2 && family !== 10) {
+    return -6;
+  }
+  if (service) {
+    service = UTF8ToString(service);
+    port = parseInt(service, 10);
+    if (isNaN(port)) {
+      if (flags & 1024) {
+        return -2;
+      }
+      // TODO support resolving well-known service names from:
+      // http://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.txt
+      return -8;
+    }
+  }
+  if (!node) {
+    if (family === 0) {
+      family = 2;
+    }
+    if ((flags & 1) === 0) {
+      if (family === 2) {
+        addr = _htonl(2130706433);
+      } else {
+        addr = [ 0, 0, 0, _htonl(1) ];
+      }
+    }
+    ai = allocaddrinfo(family, type, proto, null, addr, port);
+    GROWABLE_HEAP_U32()[((out) >>> 2) >>> 0] = ai;
+    return 0;
+  }
+  // try as a numeric address
+  node = UTF8ToString(node);
+  addr = inetPton4(node);
+  if (addr !== null) {
+    // incoming node is a valid ipv4 address
+    if (family === 0 || family === 2) {
+      family = 2;
+    } else if (family === 10 && (flags & 8)) {
+      addr = [ 0, 0, _htonl(65535), addr ];
+      family = 10;
+    } else {
+      return -2;
+    }
+  } else {
+    addr = inetPton6(node);
+    if (addr !== null) {
+      // incoming node is a valid ipv6 address
+      if (family === 0 || family === 10) {
+        family = 10;
+      } else {
+        return -2;
+      }
+    }
+  }
+  if (addr != null) {
+    ai = allocaddrinfo(family, type, proto, node, addr, port);
+    GROWABLE_HEAP_U32()[((out) >>> 2) >>> 0] = ai;
+    return 0;
+  }
+  if (flags & 4) {
+    return -2;
+  }
+  // try as a hostname
+  // resolve the hostname to a temporary fake address
+  node = DNS.lookup_name(node);
+  addr = inetPton4(node);
+  if (family === 0) {
+    family = 2;
+  } else if (family === 10) {
+    addr = [ 0, 0, _htonl(65535), addr ];
+  }
+  ai = allocaddrinfo(family, type, proto, null, addr, port);
+  GROWABLE_HEAP_U32()[((out) >>> 2) >>> 0] = ai;
+  return 0;
+}
+
 function _getentropy(buffer, size) {
   buffer >>>= 0;
   size >>>= 0;
@@ -12947,11 +14615,32 @@ function _llvm_eh_typeid_for(type) {
   return type;
 }
 
+var FS_createPath = FS.createPath;
+
+var FS_unlink = path => FS.unlink(path);
+
+var FS_createLazyFile = FS.createLazyFile;
+
+var FS_createDevice = FS.createDevice;
+
 PThread.init();
 
 FS.createPreloadedFile = FS_createPreloadedFile;
 
 FS.staticInit();
+
+// Set module methods based on EXPORTED_RUNTIME_METHODS
+Module["FS_createPath"] = FS.createPath;
+
+Module["FS_createDataFile"] = FS.createDataFile;
+
+Module["FS_createPreloadedFile"] = FS.createPreloadedFile;
+
+Module["FS_unlink"] = FS.unlink;
+
+Module["FS_createLazyFile"] = FS.createLazyFile;
+
+Module["FS_createDevice"] = FS.createDevice;
 
 embind_init_charCodes();
 
@@ -12988,8 +14677,6 @@ MainLoop.init();
 // exports
 Module["requestFullscreen"] = Browser.requestFullscreen;
 
-Module["requestFullScreen"] = Browser.requestFullScreen;
-
 Module["setCanvasSize"] = Browser.setCanvasSize;
 
 Module["getUserMedia"] = Browser.getUserMedia;
@@ -13016,15 +14703,13 @@ for (/**@suppress{duplicate}*/ var i = 0; i <= 288; ++i) {
   miniTempWebGLIntBuffers[i] = miniTempWebGLIntBuffersStorage.subarray(0, i);
 }
 
+Fetch.init();
+
 // proxiedFunctionTable specifies the list of functions that can be called
 // either synchronously or asynchronously from other threads in postMessage()d
 // or internally queued events. This way a pthread in a Worker can synchronously
 // access e.g. the DOM on the main thread.
-var proxiedFunctionTable = [ _proc_exit, exitOnMainThread, pthreadCreateProxied, ___syscall_chmod, ___syscall_faccessat, ___syscall_fchmod, ___syscall_fcntl64, ___syscall_fstat64, ___syscall_ftruncate64, ___syscall_getcwd, ___syscall_getdents64, ___syscall_ioctl, ___syscall_lstat64, ___syscall_mkdirat, ___syscall_newfstatat, ___syscall_openat, ___syscall_readlinkat, ___syscall_renameat, ___syscall_rmdir, ___syscall_stat64, ___syscall_symlink, ___syscall_truncate64, ___syscall_unlinkat, ___syscall_utimensat, __mmap_js, __munmap_js, _emscripten_get_element_css_size, _emscripten_set_resize_callback_on_thread, _emscripten_set_wheel_callback_on_thread, _environ_get, _environ_sizes_get, _fd_close, _fd_fdstat_get, _fd_read, _fd_seek, _fd_sync, _fd_write ];
-
-function checkIncomingModuleAPI() {
-  ignoredModuleProp("fetchSettings");
-}
+var proxiedFunctionTable = [ _proc_exit, exitOnMainThread, pthreadCreateProxied, ___syscall_accept4, ___syscall_bind, ___syscall_chmod, ___syscall_connect, ___syscall_faccessat, ___syscall_fchmod, ___syscall_fcntl64, ___syscall_fstat64, ___syscall_ftruncate64, ___syscall_getcwd, ___syscall_getdents64, ___syscall_getpeername, ___syscall_getsockname, ___syscall_getsockopt, ___syscall_ioctl, ___syscall_listen, ___syscall_lstat64, ___syscall_mkdirat, ___syscall_newfstatat, ___syscall_openat, ___syscall_readlinkat, ___syscall_recvfrom, ___syscall_recvmsg, ___syscall_renameat, ___syscall_rmdir, ___syscall_sendmsg, ___syscall_socket, ___syscall_stat64, ___syscall_symlink, ___syscall_truncate64, ___syscall_unlinkat, ___syscall_utimensat, __mmap_js, __munmap_js, _emscripten_get_element_css_size, _emscripten_set_resize_callback_on_thread, _emscripten_set_wheel_callback_on_thread, _environ_get, _environ_sizes_get, _fd_close, _fd_fdstat_get, _fd_read, _fd_seek, _fd_sync, _fd_write, _getaddrinfo ];
 
 var wasmImports;
 
@@ -13041,7 +14726,10 @@ function assignWasmImports() {
     /** @export */ __cxa_throw: ___cxa_throw,
     /** @export */ __pthread_create_js: ___pthread_create_js,
     /** @export */ __resumeException: ___resumeException,
+    /** @export */ __syscall_accept4: ___syscall_accept4,
+    /** @export */ __syscall_bind: ___syscall_bind,
     /** @export */ __syscall_chmod: ___syscall_chmod,
+    /** @export */ __syscall_connect: ___syscall_connect,
     /** @export */ __syscall_faccessat: ___syscall_faccessat,
     /** @export */ __syscall_fchmod: ___syscall_fchmod,
     /** @export */ __syscall_fcntl64: ___syscall_fcntl64,
@@ -13049,14 +14737,22 @@ function assignWasmImports() {
     /** @export */ __syscall_ftruncate64: ___syscall_ftruncate64,
     /** @export */ __syscall_getcwd: ___syscall_getcwd,
     /** @export */ __syscall_getdents64: ___syscall_getdents64,
+    /** @export */ __syscall_getpeername: ___syscall_getpeername,
+    /** @export */ __syscall_getsockname: ___syscall_getsockname,
+    /** @export */ __syscall_getsockopt: ___syscall_getsockopt,
     /** @export */ __syscall_ioctl: ___syscall_ioctl,
+    /** @export */ __syscall_listen: ___syscall_listen,
     /** @export */ __syscall_lstat64: ___syscall_lstat64,
     /** @export */ __syscall_mkdirat: ___syscall_mkdirat,
     /** @export */ __syscall_newfstatat: ___syscall_newfstatat,
     /** @export */ __syscall_openat: ___syscall_openat,
     /** @export */ __syscall_readlinkat: ___syscall_readlinkat,
+    /** @export */ __syscall_recvfrom: ___syscall_recvfrom,
+    /** @export */ __syscall_recvmsg: ___syscall_recvmsg,
     /** @export */ __syscall_renameat: ___syscall_renameat,
     /** @export */ __syscall_rmdir: ___syscall_rmdir,
+    /** @export */ __syscall_sendmsg: ___syscall_sendmsg,
+    /** @export */ __syscall_socket: ___syscall_socket,
     /** @export */ __syscall_stat64: ___syscall_stat64,
     /** @export */ __syscall_symlink: ___syscall_symlink,
     /** @export */ __syscall_truncate64: ___syscall_truncate64,
@@ -13076,6 +14772,9 @@ function assignWasmImports() {
     /** @export */ _embind_register_std_string: __embind_register_std_string,
     /** @export */ _embind_register_std_wstring: __embind_register_std_wstring,
     /** @export */ _embind_register_void: __embind_register_void,
+    /** @export */ _emscripten_fetch_free: __emscripten_fetch_free,
+    /** @export */ _emscripten_fetch_get_response_headers: __emscripten_fetch_get_response_headers,
+    /** @export */ _emscripten_fetch_get_response_headers_length: __emscripten_fetch_get_response_headers_length,
     /** @export */ _emscripten_get_now_is_monotonic: __emscripten_get_now_is_monotonic,
     /** @export */ _emscripten_init_main_thread_js: __emscripten_init_main_thread_js,
     /** @export */ _emscripten_notify_mailbox_postmessage: __emscripten_notify_mailbox_postmessage,
@@ -13114,7 +14813,6 @@ function assignWasmImports() {
     /** @export */ emscripten_check_blocking_allowed: _emscripten_check_blocking_allowed,
     /** @export */ emscripten_clear_timeout: _emscripten_clear_timeout,
     /** @export */ emscripten_date_now: _emscripten_date_now,
-    /** @export */ emscripten_err: _emscripten_err,
     /** @export */ emscripten_exit_with_live_runtime: _emscripten_exit_with_live_runtime,
     /** @export */ emscripten_get_element_css_size: _emscripten_get_element_css_size,
     /** @export */ emscripten_get_heap_max: _emscripten_get_heap_max,
@@ -13415,6 +15113,7 @@ function assignWasmImports() {
     /** @export */ emscripten_set_timeout: _emscripten_set_timeout,
     /** @export */ emscripten_set_wheel_callback_on_thread: _emscripten_set_wheel_callback_on_thread,
     /** @export */ emscripten_sleep: _emscripten_sleep,
+    /** @export */ emscripten_start_fetch: _emscripten_start_fetch,
     /** @export */ emscripten_unwind_to_js_event_loop: _emscripten_unwind_to_js_event_loop,
     /** @export */ emscripten_webgl_create_context: _emscripten_webgl_create_context,
     /** @export */ emscripten_webgl_destroy_context: _emscripten_webgl_destroy_context,
@@ -13429,6 +15128,7 @@ function assignWasmImports() {
     /** @export */ fd_seek: _fd_seek,
     /** @export */ fd_sync: _fd_sync,
     /** @export */ fd_write: _fd_write,
+    /** @export */ getaddrinfo: _getaddrinfo,
     /** @export */ getentropy: _getentropy,
     /** @export */ invoke_dii,
     /** @export */ invoke_diii,
@@ -13510,65 +15210,53 @@ function assignWasmImports() {
 
 var wasmExports = createWasm();
 
-var ___wasm_call_ctors = createExportWrapper("__wasm_call_ctors", 0);
+var ___wasm_call_ctors = () => (___wasm_call_ctors = wasmExports["__wasm_call_ctors"])();
 
-var _main = Module["_main"] = createExportWrapper("__main_argc_argv", 2);
+var _main = Module["_main"] = (a0, a1) => (_main = Module["_main"] = wasmExports["__main_argc_argv"])(a0, a1);
 
-var _fflush = createExportWrapper("fflush", 1);
+var _free = a0 => (_free = wasmExports["free"])(a0);
 
-var _free = createExportWrapper("free", 1);
-
-var _malloc = createExportWrapper("malloc", 1);
+var _malloc = a0 => (_malloc = wasmExports["malloc"])(a0);
 
 var _pthread_self = () => (_pthread_self = wasmExports["pthread_self"])();
 
-var _strerror = createExportWrapper("strerror", 1);
+var _emscripten_main_runtime_thread_id = () => (_emscripten_main_runtime_thread_id = wasmExports["emscripten_main_runtime_thread_id"])();
 
-var _emscripten_main_runtime_thread_id = createExportWrapper("emscripten_main_runtime_thread_id", 0);
+var ___getTypeName = a0 => (___getTypeName = wasmExports["__getTypeName"])(a0);
 
-var ___getTypeName = createExportWrapper("__getTypeName", 1);
+var __embind_initialize_bindings = Module["__embind_initialize_bindings"] = () => (__embind_initialize_bindings = Module["__embind_initialize_bindings"] = wasmExports["_embind_initialize_bindings"])();
 
-var __embind_initialize_bindings = Module["__embind_initialize_bindings"] = createExportWrapper("_embind_initialize_bindings", 0);
+var _htonl = a0 => (_htonl = wasmExports["htonl"])(a0);
 
-var _htonl = createExportWrapper("htonl", 1);
+var _htons = a0 => (_htons = wasmExports["htons"])(a0);
 
-var _htons = createExportWrapper("htons", 1);
+var _ntohs = a0 => (_ntohs = wasmExports["ntohs"])(a0);
 
-var _ntohs = createExportWrapper("ntohs", 1);
+var __emscripten_tls_init = () => (__emscripten_tls_init = wasmExports["_emscripten_tls_init"])();
 
-var __emscripten_tls_init = createExportWrapper("_emscripten_tls_init", 0);
+var _emscripten_builtin_memalign = (a0, a1) => (_emscripten_builtin_memalign = wasmExports["emscripten_builtin_memalign"])(a0, a1);
 
-var _emscripten_builtin_memalign = createExportWrapper("emscripten_builtin_memalign", 2);
+var __emscripten_run_callback_on_thread = (a0, a1, a2, a3, a4) => (__emscripten_run_callback_on_thread = wasmExports["_emscripten_run_callback_on_thread"])(a0, a1, a2, a3, a4);
 
-var __emscripten_run_callback_on_thread = createExportWrapper("_emscripten_run_callback_on_thread", 5);
+var __emscripten_thread_init = (a0, a1, a2, a3, a4, a5) => (__emscripten_thread_init = wasmExports["_emscripten_thread_init"])(a0, a1, a2, a3, a4, a5);
 
-var __emscripten_thread_init = createExportWrapper("_emscripten_thread_init", 6);
+var __emscripten_thread_crashed = () => (__emscripten_thread_crashed = wasmExports["_emscripten_thread_crashed"])();
 
-var __emscripten_thread_crashed = createExportWrapper("_emscripten_thread_crashed", 0);
+var _emscripten_main_thread_process_queued_calls = () => (_emscripten_main_thread_process_queued_calls = wasmExports["emscripten_main_thread_process_queued_calls"])();
 
-var _emscripten_main_thread_process_queued_calls = createExportWrapper("emscripten_main_thread_process_queued_calls", 0);
+var __emscripten_run_on_main_thread_js = (a0, a1, a2, a3, a4) => (__emscripten_run_on_main_thread_js = wasmExports["_emscripten_run_on_main_thread_js"])(a0, a1, a2, a3, a4);
 
-var _emscripten_stack_get_base = () => (_emscripten_stack_get_base = wasmExports["emscripten_stack_get_base"])();
+var __emscripten_thread_free_data = a0 => (__emscripten_thread_free_data = wasmExports["_emscripten_thread_free_data"])(a0);
 
-var _emscripten_stack_get_end = () => (_emscripten_stack_get_end = wasmExports["emscripten_stack_get_end"])();
+var __emscripten_thread_exit = a0 => (__emscripten_thread_exit = wasmExports["_emscripten_thread_exit"])(a0);
 
-var __emscripten_run_on_main_thread_js = createExportWrapper("_emscripten_run_on_main_thread_js", 5);
+var __emscripten_check_mailbox = () => (__emscripten_check_mailbox = wasmExports["_emscripten_check_mailbox"])();
 
-var __emscripten_thread_free_data = createExportWrapper("_emscripten_thread_free_data", 1);
+var _setThrew = (a0, a1) => (_setThrew = wasmExports["setThrew"])(a0, a1);
 
-var __emscripten_thread_exit = createExportWrapper("_emscripten_thread_exit", 1);
-
-var __emscripten_check_mailbox = createExportWrapper("_emscripten_check_mailbox", 0);
-
-var _setThrew = createExportWrapper("setThrew", 2);
-
-var __emscripten_tempret_set = createExportWrapper("_emscripten_tempret_set", 1);
-
-var _emscripten_stack_init = () => (_emscripten_stack_init = wasmExports["emscripten_stack_init"])();
+var __emscripten_tempret_set = a0 => (__emscripten_tempret_set = wasmExports["_emscripten_tempret_set"])(a0);
 
 var _emscripten_stack_set_limits = (a0, a1) => (_emscripten_stack_set_limits = wasmExports["emscripten_stack_set_limits"])(a0, a1);
-
-var _emscripten_stack_get_free = () => (_emscripten_stack_get_free = wasmExports["emscripten_stack_get_free"])();
 
 var __emscripten_stack_restore = a0 => (__emscripten_stack_restore = wasmExports["_emscripten_stack_restore"])(a0);
 
@@ -13576,18 +15264,260 @@ var __emscripten_stack_alloc = a0 => (__emscripten_stack_alloc = wasmExports["_e
 
 var _emscripten_stack_get_current = () => (_emscripten_stack_get_current = wasmExports["emscripten_stack_get_current"])();
 
-var ___cxa_decrement_exception_refcount = createExportWrapper("__cxa_decrement_exception_refcount", 1);
+var ___cxa_decrement_exception_refcount = a0 => (___cxa_decrement_exception_refcount = wasmExports["__cxa_decrement_exception_refcount"])(a0);
 
-var ___cxa_increment_exception_refcount = createExportWrapper("__cxa_increment_exception_refcount", 1);
+var ___cxa_increment_exception_refcount = a0 => (___cxa_increment_exception_refcount = wasmExports["__cxa_increment_exception_refcount"])(a0);
 
-var ___cxa_can_catch = createExportWrapper("__cxa_can_catch", 3);
+var ___cxa_can_catch = (a0, a1, a2) => (___cxa_can_catch = wasmExports["__cxa_can_catch"])(a0, a1, a2);
 
-var ___cxa_get_exception_ptr = createExportWrapper("__cxa_get_exception_ptr", 1);
+var ___cxa_get_exception_ptr = a0 => (___cxa_get_exception_ptr = wasmExports["__cxa_get_exception_ptr"])(a0);
+
+var dynCall_i = Module["dynCall_i"] = a0 => (dynCall_i = Module["dynCall_i"] = wasmExports["dynCall_i"])(a0);
+
+var dynCall_ii = Module["dynCall_ii"] = (a0, a1) => (dynCall_ii = Module["dynCall_ii"] = wasmExports["dynCall_ii"])(a0, a1);
+
+var dynCall_viiii = Module["dynCall_viiii"] = (a0, a1, a2, a3, a4) => (dynCall_viiii = Module["dynCall_viiii"] = wasmExports["dynCall_viiii"])(a0, a1, a2, a3, a4);
+
+var dynCall_vi = Module["dynCall_vi"] = (a0, a1) => (dynCall_vi = Module["dynCall_vi"] = wasmExports["dynCall_vi"])(a0, a1);
+
+var dynCall_jj = Module["dynCall_jj"] = (a0, a1) => (dynCall_jj = Module["dynCall_jj"] = wasmExports["dynCall_jj"])(a0, a1);
+
+var dynCall_vjiii = Module["dynCall_vjiii"] = (a0, a1, a2, a3, a4) => (dynCall_vjiii = Module["dynCall_vjiii"] = wasmExports["dynCall_vjiii"])(a0, a1, a2, a3, a4);
+
+var dynCall_viii = Module["dynCall_viii"] = (a0, a1, a2, a3) => (dynCall_viii = Module["dynCall_viii"] = wasmExports["dynCall_viii"])(a0, a1, a2, a3);
+
+var dynCall_v = Module["dynCall_v"] = a0 => (dynCall_v = Module["dynCall_v"] = wasmExports["dynCall_v"])(a0);
+
+var dynCall_iiii = Module["dynCall_iiii"] = (a0, a1, a2, a3) => (dynCall_iiii = Module["dynCall_iiii"] = wasmExports["dynCall_iiii"])(a0, a1, a2, a3);
+
+var dynCall_vii = Module["dynCall_vii"] = (a0, a1, a2) => (dynCall_vii = Module["dynCall_vii"] = wasmExports["dynCall_vii"])(a0, a1, a2);
+
+var dynCall_iii = Module["dynCall_iii"] = (a0, a1, a2) => (dynCall_iii = Module["dynCall_iii"] = wasmExports["dynCall_iii"])(a0, a1, a2);
+
+var dynCall_iiiii = Module["dynCall_iiiii"] = (a0, a1, a2, a3, a4) => (dynCall_iiiii = Module["dynCall_iiiii"] = wasmExports["dynCall_iiiii"])(a0, a1, a2, a3, a4);
+
+var dynCall_viiiii = Module["dynCall_viiiii"] = (a0, a1, a2, a3, a4, a5) => (dynCall_viiiii = Module["dynCall_viiiii"] = wasmExports["dynCall_viiiii"])(a0, a1, a2, a3, a4, a5);
+
+var dynCall_viji = Module["dynCall_viji"] = (a0, a1, a2, a3) => (dynCall_viji = Module["dynCall_viji"] = wasmExports["dynCall_viji"])(a0, a1, a2, a3);
+
+var dynCall_iij = Module["dynCall_iij"] = (a0, a1, a2) => (dynCall_iij = Module["dynCall_iij"] = wasmExports["dynCall_iij"])(a0, a1, a2);
+
+var dynCall_viij = Module["dynCall_viij"] = (a0, a1, a2, a3) => (dynCall_viij = Module["dynCall_viij"] = wasmExports["dynCall_viij"])(a0, a1, a2, a3);
+
+var dynCall_iiiiii = Module["dynCall_iiiiii"] = (a0, a1, a2, a3, a4, a5) => (dynCall_iiiiii = Module["dynCall_iiiiii"] = wasmExports["dynCall_iiiiii"])(a0, a1, a2, a3, a4, a5);
+
+var dynCall_viiiiii = Module["dynCall_viiiiii"] = (a0, a1, a2, a3, a4, a5, a6) => (dynCall_viiiiii = Module["dynCall_viiiiii"] = wasmExports["dynCall_viiiiii"])(a0, a1, a2, a3, a4, a5, a6);
+
+var dynCall_ji = Module["dynCall_ji"] = (a0, a1) => (dynCall_ji = Module["dynCall_ji"] = wasmExports["dynCall_ji"])(a0, a1);
+
+var dynCall_jiij = Module["dynCall_jiij"] = (a0, a1, a2, a3) => (dynCall_jiij = Module["dynCall_jiij"] = wasmExports["dynCall_jiij"])(a0, a1, a2, a3);
+
+var dynCall_jij = Module["dynCall_jij"] = (a0, a1, a2) => (dynCall_jij = Module["dynCall_jij"] = wasmExports["dynCall_jij"])(a0, a1, a2);
+
+var dynCall_jiiji = Module["dynCall_jiiji"] = (a0, a1, a2, a3, a4) => (dynCall_jiiji = Module["dynCall_jiiji"] = wasmExports["dynCall_jiiji"])(a0, a1, a2, a3, a4);
+
+var dynCall_iiij = Module["dynCall_iiij"] = (a0, a1, a2, a3) => (dynCall_iiij = Module["dynCall_iiij"] = wasmExports["dynCall_iiij"])(a0, a1, a2, a3);
+
+var dynCall_vij = Module["dynCall_vij"] = (a0, a1, a2) => (dynCall_vij = Module["dynCall_vij"] = wasmExports["dynCall_vij"])(a0, a1, a2);
+
+var dynCall_vijii = Module["dynCall_vijii"] = (a0, a1, a2, a3, a4) => (dynCall_vijii = Module["dynCall_vijii"] = wasmExports["dynCall_vijii"])(a0, a1, a2, a3, a4);
+
+var dynCall_viiiiiii = Module["dynCall_viiiiiii"] = (a0, a1, a2, a3, a4, a5, a6, a7) => (dynCall_viiiiiii = Module["dynCall_viiiiiii"] = wasmExports["dynCall_viiiiiii"])(a0, a1, a2, a3, a4, a5, a6, a7);
+
+var dynCall_viijii = Module["dynCall_viijii"] = (a0, a1, a2, a3, a4, a5) => (dynCall_viijii = Module["dynCall_viijii"] = wasmExports["dynCall_viijii"])(a0, a1, a2, a3, a4, a5);
+
+var dynCall_diii = Module["dynCall_diii"] = (a0, a1, a2, a3) => (dynCall_diii = Module["dynCall_diii"] = wasmExports["dynCall_diii"])(a0, a1, a2, a3);
+
+var dynCall_viijiii = Module["dynCall_viijiii"] = (a0, a1, a2, a3, a4, a5, a6) => (dynCall_viijiii = Module["dynCall_viijiii"] = wasmExports["dynCall_viijiii"])(a0, a1, a2, a3, a4, a5, a6);
+
+var dynCall_iiiiiiii = Module["dynCall_iiiiiiii"] = (a0, a1, a2, a3, a4, a5, a6, a7) => (dynCall_iiiiiiii = Module["dynCall_iiiiiiii"] = wasmExports["dynCall_iiiiiiii"])(a0, a1, a2, a3, a4, a5, a6, a7);
+
+var dynCall_iiiiiiiii = Module["dynCall_iiiiiiiii"] = (a0, a1, a2, a3, a4, a5, a6, a7, a8) => (dynCall_iiiiiiiii = Module["dynCall_iiiiiiiii"] = wasmExports["dynCall_iiiiiiiii"])(a0, a1, a2, a3, a4, a5, a6, a7, a8);
+
+var dynCall_iiiiiii = Module["dynCall_iiiiiii"] = (a0, a1, a2, a3, a4, a5, a6) => (dynCall_iiiiiii = Module["dynCall_iiiiiii"] = wasmExports["dynCall_iiiiiii"])(a0, a1, a2, a3, a4, a5, a6);
+
+var dynCall_viiiiiiiii = Module["dynCall_viiiiiiiii"] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9) => (dynCall_viiiiiiiii = Module["dynCall_viiiiiiiii"] = wasmExports["dynCall_viiiiiiiii"])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9);
+
+var dynCall_iijiii = Module["dynCall_iijiii"] = (a0, a1, a2, a3, a4, a5) => (dynCall_iijiii = Module["dynCall_iijiii"] = wasmExports["dynCall_iijiii"])(a0, a1, a2, a3, a4, a5);
+
+var dynCall_iiiiiij = Module["dynCall_iiiiiij"] = (a0, a1, a2, a3, a4, a5, a6) => (dynCall_iiiiiij = Module["dynCall_iiiiiij"] = wasmExports["dynCall_iiiiiij"])(a0, a1, a2, a3, a4, a5, a6);
+
+var dynCall_iiji = Module["dynCall_iiji"] = (a0, a1, a2, a3) => (dynCall_iiji = Module["dynCall_iiji"] = wasmExports["dynCall_iiji"])(a0, a1, a2, a3);
+
+var dynCall_iid = Module["dynCall_iid"] = (a0, a1, a2) => (dynCall_iid = Module["dynCall_iid"] = wasmExports["dynCall_iid"])(a0, a1, a2);
+
+var dynCall_vidii = Module["dynCall_vidii"] = (a0, a1, a2, a3, a4) => (dynCall_vidii = Module["dynCall_vidii"] = wasmExports["dynCall_vidii"])(a0, a1, a2, a3, a4);
+
+var dynCall_jiii = Module["dynCall_jiii"] = (a0, a1, a2, a3) => (dynCall_jiii = Module["dynCall_jiii"] = wasmExports["dynCall_jiii"])(a0, a1, a2, a3);
+
+var dynCall_dii = Module["dynCall_dii"] = (a0, a1, a2) => (dynCall_dii = Module["dynCall_dii"] = wasmExports["dynCall_dii"])(a0, a1, a2);
+
+var dynCall_jii = Module["dynCall_jii"] = (a0, a1, a2) => (dynCall_jii = Module["dynCall_jii"] = wasmExports["dynCall_jii"])(a0, a1, a2);
+
+var dynCall_viiiiiiiiii = Module["dynCall_viiiiiiiiii"] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10) => (dynCall_viiiiiiiiii = Module["dynCall_viiiiiiiiii"] = wasmExports["dynCall_viiiiiiiiii"])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
+
+var dynCall_viiiiiiii = Module["dynCall_viiiiiiii"] = (a0, a1, a2, a3, a4, a5, a6, a7, a8) => (dynCall_viiiiiiii = Module["dynCall_viiiiiiii"] = wasmExports["dynCall_viiiiiiii"])(a0, a1, a2, a3, a4, a5, a6, a7, a8);
+
+var dynCall_viiiijii = Module["dynCall_viiiijii"] = (a0, a1, a2, a3, a4, a5, a6, a7) => (dynCall_viiiijii = Module["dynCall_viiiijii"] = wasmExports["dynCall_viiiijii"])(a0, a1, a2, a3, a4, a5, a6, a7);
+
+var dynCall_vdiiiiiii = Module["dynCall_vdiiiiiii"] = (a0, a1, a2, a3, a4, a5, a6, a7, a8) => (dynCall_vdiiiiiii = Module["dynCall_vdiiiiiii"] = wasmExports["dynCall_vdiiiiiii"])(a0, a1, a2, a3, a4, a5, a6, a7, a8);
+
+var dynCall_viijiiii = Module["dynCall_viijiiii"] = (a0, a1, a2, a3, a4, a5, a6, a7) => (dynCall_viijiiii = Module["dynCall_viijiiii"] = wasmExports["dynCall_viijiiii"])(a0, a1, a2, a3, a4, a5, a6, a7);
+
+var dynCall_viidiiii = Module["dynCall_viidiiii"] = (a0, a1, a2, a3, a4, a5, a6, a7) => (dynCall_viidiiii = Module["dynCall_viidiiii"] = wasmExports["dynCall_viidiiii"])(a0, a1, a2, a3, a4, a5, a6, a7);
+
+var dynCall_vijiii = Module["dynCall_vijiii"] = (a0, a1, a2, a3, a4, a5) => (dynCall_vijiii = Module["dynCall_vijiii"] = wasmExports["dynCall_vijiii"])(a0, a1, a2, a3, a4, a5);
+
+var dynCall_viiji = Module["dynCall_viiji"] = (a0, a1, a2, a3, a4) => (dynCall_viiji = Module["dynCall_viiji"] = wasmExports["dynCall_viiji"])(a0, a1, a2, a3, a4);
+
+var dynCall_ij = Module["dynCall_ij"] = (a0, a1) => (dynCall_ij = Module["dynCall_ij"] = wasmExports["dynCall_ij"])(a0, a1);
+
+var dynCall_iijii = Module["dynCall_iijii"] = (a0, a1, a2, a3, a4) => (dynCall_iijii = Module["dynCall_iijii"] = wasmExports["dynCall_iijii"])(a0, a1, a2, a3, a4);
+
+var dynCall_dd = Module["dynCall_dd"] = (a0, a1) => (dynCall_dd = Module["dynCall_dd"] = wasmExports["dynCall_dd"])(a0, a1);
+
+var dynCall_did = Module["dynCall_did"] = (a0, a1, a2) => (dynCall_did = Module["dynCall_did"] = wasmExports["dynCall_did"])(a0, a1, a2);
+
+var dynCall_jiiiiiiii = Module["dynCall_jiiiiiiii"] = (a0, a1, a2, a3, a4, a5, a6, a7, a8) => (dynCall_jiiiiiiii = Module["dynCall_jiiiiiiii"] = wasmExports["dynCall_jiiiiiiii"])(a0, a1, a2, a3, a4, a5, a6, a7, a8);
+
+var dynCall_iji = Module["dynCall_iji"] = (a0, a1, a2) => (dynCall_iji = Module["dynCall_iji"] = wasmExports["dynCall_iji"])(a0, a1, a2);
+
+var dynCall_diiiii = Module["dynCall_diiiii"] = (a0, a1, a2, a3, a4, a5) => (dynCall_diiiii = Module["dynCall_diiiii"] = wasmExports["dynCall_diiiii"])(a0, a1, a2, a3, a4, a5);
+
+var dynCall_iijji = Module["dynCall_iijji"] = (a0, a1, a2, a3, a4) => (dynCall_iijji = Module["dynCall_iijji"] = wasmExports["dynCall_iijji"])(a0, a1, a2, a3, a4);
+
+var dynCall_diiii = Module["dynCall_diiii"] = (a0, a1, a2, a3, a4) => (dynCall_diiii = Module["dynCall_diiii"] = wasmExports["dynCall_diiii"])(a0, a1, a2, a3, a4);
+
+var dynCall_viijj = Module["dynCall_viijj"] = (a0, a1, a2, a3, a4) => (dynCall_viijj = Module["dynCall_viijj"] = wasmExports["dynCall_viijj"])(a0, a1, a2, a3, a4);
+
+var dynCall_vijj = Module["dynCall_vijj"] = (a0, a1, a2, a3) => (dynCall_vijj = Module["dynCall_vijj"] = wasmExports["dynCall_vijj"])(a0, a1, a2, a3);
+
+var dynCall_iidi = Module["dynCall_iidi"] = (a0, a1, a2, a3) => (dynCall_iidi = Module["dynCall_iidi"] = wasmExports["dynCall_iidi"])(a0, a1, a2, a3);
+
+var dynCall_jjj = Module["dynCall_jjj"] = (a0, a1, a2) => (dynCall_jjj = Module["dynCall_jjj"] = wasmExports["dynCall_jjj"])(a0, a1, a2);
+
+var dynCall_jiji = Module["dynCall_jiji"] = (a0, a1, a2, a3) => (dynCall_jiji = Module["dynCall_jiji"] = wasmExports["dynCall_jiji"])(a0, a1, a2, a3);
+
+var dynCall_viiij = Module["dynCall_viiij"] = (a0, a1, a2, a3, a4) => (dynCall_viiij = Module["dynCall_viiij"] = wasmExports["dynCall_viiij"])(a0, a1, a2, a3, a4);
+
+var dynCall_viiid = Module["dynCall_viiid"] = (a0, a1, a2, a3, a4) => (dynCall_viiid = Module["dynCall_viiid"] = wasmExports["dynCall_viiid"])(a0, a1, a2, a3, a4);
+
+var dynCall_viiiid = Module["dynCall_viiiid"] = (a0, a1, a2, a3, a4, a5) => (dynCall_viiiid = Module["dynCall_viiiid"] = wasmExports["dynCall_viiiid"])(a0, a1, a2, a3, a4, a5);
+
+var dynCall_vid = Module["dynCall_vid"] = (a0, a1, a2) => (dynCall_vid = Module["dynCall_vid"] = wasmExports["dynCall_vid"])(a0, a1, a2);
+
+var dynCall_viid = Module["dynCall_viid"] = (a0, a1, a2, a3) => (dynCall_viid = Module["dynCall_viid"] = wasmExports["dynCall_viid"])(a0, a1, a2, a3);
+
+var dynCall_di = Module["dynCall_di"] = (a0, a1) => (dynCall_di = Module["dynCall_di"] = wasmExports["dynCall_di"])(a0, a1);
+
+var dynCall_viiiiid = Module["dynCall_viiiiid"] = (a0, a1, a2, a3, a4, a5, a6) => (dynCall_viiiiid = Module["dynCall_viiiiid"] = wasmExports["dynCall_viiiiid"])(a0, a1, a2, a3, a4, a5, a6);
+
+var dynCall_viiiiiiiiiiii = Module["dynCall_viiiiiiiiiiii"] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12) => (dynCall_viiiiiiiiiiii = Module["dynCall_viiiiiiiiiiii"] = wasmExports["dynCall_viiiiiiiiiiii"])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12);
+
+var dynCall_idi = Module["dynCall_idi"] = (a0, a1, a2) => (dynCall_idi = Module["dynCall_idi"] = wasmExports["dynCall_idi"])(a0, a1, a2);
+
+var dynCall_iiidi = Module["dynCall_iiidi"] = (a0, a1, a2, a3, a4) => (dynCall_iiidi = Module["dynCall_iiidi"] = wasmExports["dynCall_iiidi"])(a0, a1, a2, a3, a4);
+
+var dynCall_iiidiiii = Module["dynCall_iiidiiii"] = (a0, a1, a2, a3, a4, a5, a6, a7) => (dynCall_iiidiiii = Module["dynCall_iiidiiii"] = wasmExports["dynCall_iiidiiii"])(a0, a1, a2, a3, a4, a5, a6, a7);
+
+var dynCall_jiiiii = Module["dynCall_jiiiii"] = (a0, a1, a2, a3, a4, a5) => (dynCall_jiiiii = Module["dynCall_jiiiii"] = wasmExports["dynCall_jiiiii"])(a0, a1, a2, a3, a4, a5);
+
+var dynCall_diiiiiiii = Module["dynCall_diiiiiiii"] = (a0, a1, a2, a3, a4, a5, a6, a7, a8) => (dynCall_diiiiiiii = Module["dynCall_diiiiiiii"] = wasmExports["dynCall_diiiiiiii"])(a0, a1, a2, a3, a4, a5, a6, a7, a8);
+
+var dynCall_fi = Module["dynCall_fi"] = (a0, a1) => (dynCall_fi = Module["dynCall_fi"] = wasmExports["dynCall_fi"])(a0, a1);
+
+var dynCall_jiijii = Module["dynCall_jiijii"] = (a0, a1, a2, a3, a4, a5) => (dynCall_jiijii = Module["dynCall_jiijii"] = wasmExports["dynCall_jiijii"])(a0, a1, a2, a3, a4, a5);
+
+var dynCall_viiiiiijjii = Module["dynCall_viiiiiijjii"] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10) => (dynCall_viiiiiijjii = Module["dynCall_viiiiiijjii"] = wasmExports["dynCall_viiiiiijjii"])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
+
+var dynCall_vijiij = Module["dynCall_vijiij"] = (a0, a1, a2, a3, a4, a5) => (dynCall_vijiij = Module["dynCall_vijiij"] = wasmExports["dynCall_vijiij"])(a0, a1, a2, a3, a4, a5);
+
+var dynCall_ff = Module["dynCall_ff"] = (a0, a1) => (dynCall_ff = Module["dynCall_ff"] = wasmExports["dynCall_ff"])(a0, a1);
+
+var dynCall_iiddddi = Module["dynCall_iiddddi"] = (a0, a1, a2, a3, a4, a5, a6) => (dynCall_iiddddi = Module["dynCall_iiddddi"] = wasmExports["dynCall_iiddddi"])(a0, a1, a2, a3, a4, a5, a6);
+
+var dynCall_vddddddi = Module["dynCall_vddddddi"] = (a0, a1, a2, a3, a4, a5, a6, a7) => (dynCall_vddddddi = Module["dynCall_vddddddi"] = wasmExports["dynCall_vddddddi"])(a0, a1, a2, a3, a4, a5, a6, a7);
+
+var dynCall_vddi = Module["dynCall_vddi"] = (a0, a1, a2, a3) => (dynCall_vddi = Module["dynCall_vddi"] = wasmExports["dynCall_vddi"])(a0, a1, a2, a3);
+
+var dynCall_viiddi = Module["dynCall_viiddi"] = (a0, a1, a2, a3, a4, a5) => (dynCall_viiddi = Module["dynCall_viiddi"] = wasmExports["dynCall_viiddi"])(a0, a1, a2, a3, a4, a5);
+
+var dynCall_viddiii = Module["dynCall_viddiii"] = (a0, a1, a2, a3, a4, a5, a6) => (dynCall_viddiii = Module["dynCall_viddiii"] = wasmExports["dynCall_viddiii"])(a0, a1, a2, a3, a4, a5, a6);
+
+var dynCall_iiiiiiiiiii = Module["dynCall_iiiiiiiiiii"] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10) => (dynCall_iiiiiiiiiii = Module["dynCall_iiiiiiiiiii"] = wasmExports["dynCall_iiiiiiiiiii"])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
+
+var dynCall_iiiiiiif = Module["dynCall_iiiiiiif"] = (a0, a1, a2, a3, a4, a5, a6, a7) => (dynCall_iiiiiiif = Module["dynCall_iiiiiiif"] = wasmExports["dynCall_iiiiiiif"])(a0, a1, a2, a3, a4, a5, a6, a7);
+
+var dynCall_iiiif = Module["dynCall_iiiif"] = (a0, a1, a2, a3, a4) => (dynCall_iiiif = Module["dynCall_iiiif"] = wasmExports["dynCall_iiiif"])(a0, a1, a2, a3, a4);
+
+var dynCall_vidd = Module["dynCall_vidd"] = (a0, a1, a2, a3) => (dynCall_vidd = Module["dynCall_vidd"] = wasmExports["dynCall_vidd"])(a0, a1, a2, a3);
+
+var dynCall_viif = Module["dynCall_viif"] = (a0, a1, a2, a3) => (dynCall_viif = Module["dynCall_viif"] = wasmExports["dynCall_viif"])(a0, a1, a2, a3);
+
+var dynCall_iiiiiiiiii = Module["dynCall_iiiiiiiiii"] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9) => (dynCall_iiiiiiiiii = Module["dynCall_iiiiiiiiii"] = wasmExports["dynCall_iiiiiiiiii"])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9);
+
+var dynCall_viiif = Module["dynCall_viiif"] = (a0, a1, a2, a3, a4) => (dynCall_viiif = Module["dynCall_viiif"] = wasmExports["dynCall_viiif"])(a0, a1, a2, a3, a4);
+
+var dynCall_viiiiiiiiiddd = Module["dynCall_viiiiiiiiiddd"] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12) => (dynCall_viiiiiiiiiddd = Module["dynCall_viiiiiiiiiddd"] = wasmExports["dynCall_viiiiiiiiiddd"])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12);
+
+var dynCall_viiiffi = Module["dynCall_viiiffi"] = (a0, a1, a2, a3, a4, a5, a6) => (dynCall_viiiffi = Module["dynCall_viiiffi"] = wasmExports["dynCall_viiiffi"])(a0, a1, a2, a3, a4, a5, a6);
+
+var dynCall_viiiffffi = Module["dynCall_viiiffffi"] = (a0, a1, a2, a3, a4, a5, a6, a7, a8) => (dynCall_viiiffffi = Module["dynCall_viiiffffi"] = wasmExports["dynCall_viiiffffi"])(a0, a1, a2, a3, a4, a5, a6, a7, a8);
+
+var dynCall_viiiffffffi = Module["dynCall_viiiffffffi"] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10) => (dynCall_viiiffffffi = Module["dynCall_viiiffffffi"] = wasmExports["dynCall_viiiffffffi"])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
+
+var dynCall_viiffffffi = Module["dynCall_viiffffffi"] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9) => (dynCall_viiffffffi = Module["dynCall_viiffffffi"] = wasmExports["dynCall_viiffffffi"])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9);
+
+var dynCall_viiffffi = Module["dynCall_viiffffi"] = (a0, a1, a2, a3, a4, a5, a6, a7) => (dynCall_viiffffi = Module["dynCall_viiffffi"] = wasmExports["dynCall_viiffffi"])(a0, a1, a2, a3, a4, a5, a6, a7);
+
+var dynCall_iiiiiiifii = Module["dynCall_iiiiiiifii"] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9) => (dynCall_iiiiiiifii = Module["dynCall_iiiiiiifii"] = wasmExports["dynCall_iiiiiiifii"])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9);
+
+var dynCall_vffff = Module["dynCall_vffff"] = (a0, a1, a2, a3, a4) => (dynCall_vffff = Module["dynCall_vffff"] = wasmExports["dynCall_vffff"])(a0, a1, a2, a3, a4);
+
+var dynCall_vf = Module["dynCall_vf"] = (a0, a1) => (dynCall_vf = Module["dynCall_vf"] = wasmExports["dynCall_vf"])(a0, a1);
+
+var dynCall_vff = Module["dynCall_vff"] = (a0, a1, a2) => (dynCall_vff = Module["dynCall_vff"] = wasmExports["dynCall_vff"])(a0, a1, a2);
+
+var dynCall_vfi = Module["dynCall_vfi"] = (a0, a1, a2) => (dynCall_vfi = Module["dynCall_vfi"] = wasmExports["dynCall_vfi"])(a0, a1, a2);
+
+var dynCall_vif = Module["dynCall_vif"] = (a0, a1, a2) => (dynCall_vif = Module["dynCall_vif"] = wasmExports["dynCall_vif"])(a0, a1, a2);
+
+var dynCall_viff = Module["dynCall_viff"] = (a0, a1, a2, a3) => (dynCall_viff = Module["dynCall_viff"] = wasmExports["dynCall_viff"])(a0, a1, a2, a3);
+
+var dynCall_vifff = Module["dynCall_vifff"] = (a0, a1, a2, a3, a4) => (dynCall_vifff = Module["dynCall_vifff"] = wasmExports["dynCall_vifff"])(a0, a1, a2, a3, a4);
+
+var dynCall_viffff = Module["dynCall_viffff"] = (a0, a1, a2, a3, a4, a5) => (dynCall_viffff = Module["dynCall_viffff"] = wasmExports["dynCall_viffff"])(a0, a1, a2, a3, a4, a5);
+
+var dynCall_vfff = Module["dynCall_vfff"] = (a0, a1, a2, a3) => (dynCall_vfff = Module["dynCall_vfff"] = wasmExports["dynCall_vfff"])(a0, a1, a2, a3);
+
+var dynCall_viiiiiiiiiii = Module["dynCall_viiiiiiiiiii"] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11) => (dynCall_viiiiiiiiiii = Module["dynCall_viiiiiiiiiii"] = wasmExports["dynCall_viiiiiiiiiii"])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11);
+
+var dynCall_viifi = Module["dynCall_viifi"] = (a0, a1, a2, a3, a4) => (dynCall_viifi = Module["dynCall_viifi"] = wasmExports["dynCall_viifi"])(a0, a1, a2, a3, a4);
+
+var dynCall_iidiiii = Module["dynCall_iidiiii"] = (a0, a1, a2, a3, a4, a5, a6) => (dynCall_iidiiii = Module["dynCall_iidiiii"] = wasmExports["dynCall_iidiiii"])(a0, a1, a2, a3, a4, a5, a6);
+
+var dynCall_iiiiij = Module["dynCall_iiiiij"] = (a0, a1, a2, a3, a4, a5) => (dynCall_iiiiij = Module["dynCall_iiiiij"] = wasmExports["dynCall_iiiiij"])(a0, a1, a2, a3, a4, a5);
+
+var dynCall_iiiiid = Module["dynCall_iiiiid"] = (a0, a1, a2, a3, a4, a5) => (dynCall_iiiiid = Module["dynCall_iiiiid"] = wasmExports["dynCall_iiiiid"])(a0, a1, a2, a3, a4, a5);
+
+var dynCall_iiiiijj = Module["dynCall_iiiiijj"] = (a0, a1, a2, a3, a4, a5, a6) => (dynCall_iiiiijj = Module["dynCall_iiiiijj"] = wasmExports["dynCall_iiiiijj"])(a0, a1, a2, a3, a4, a5, a6);
+
+var dynCall_iiiiiijj = Module["dynCall_iiiiiijj"] = (a0, a1, a2, a3, a4, a5, a6, a7) => (dynCall_iiiiiijj = Module["dynCall_iiiiiijj"] = wasmExports["dynCall_iiiiiijj"])(a0, a1, a2, a3, a4, a5, a6, a7);
+
+var dynCall_vj = Module["dynCall_vj"] = (a0, a1) => (dynCall_vj = Module["dynCall_vj"] = wasmExports["dynCall_vj"])(a0, a1);
+
+var _asyncify_start_unwind = a0 => (_asyncify_start_unwind = wasmExports["asyncify_start_unwind"])(a0);
+
+var _asyncify_stop_unwind = () => (_asyncify_stop_unwind = wasmExports["asyncify_stop_unwind"])();
+
+var _asyncify_start_rewind = a0 => (_asyncify_start_rewind = wasmExports["asyncify_start_rewind"])(a0);
+
+var _asyncify_stop_rewind = () => (_asyncify_stop_rewind = wasmExports["asyncify_stop_rewind"])();
 
 function invoke_viii(index, a1, a2, a3) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3);
+    dynCall_viii(index, a1, a2, a3);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13598,7 +15528,7 @@ function invoke_viii(index, a1, a2, a3) {
 function invoke_ii(index, a1) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1);
+    return dynCall_ii(index, a1);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13609,7 +15539,7 @@ function invoke_ii(index, a1) {
 function invoke_v(index) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)();
+    dynCall_v(index);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13620,7 +15550,7 @@ function invoke_v(index) {
 function invoke_iiii(index, a1, a2, a3) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2, a3);
+    return dynCall_iiii(index, a1, a2, a3);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13631,7 +15561,7 @@ function invoke_iiii(index, a1, a2, a3) {
 function invoke_viiii(index, a1, a2, a3, a4) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3, a4);
+    dynCall_viiii(index, a1, a2, a3, a4);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13642,7 +15572,7 @@ function invoke_viiii(index, a1, a2, a3, a4) {
 function invoke_i(index) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)();
+    return dynCall_i(index);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13653,7 +15583,7 @@ function invoke_i(index) {
 function invoke_vii(index, a1, a2) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2);
+    dynCall_vii(index, a1, a2);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13664,7 +15594,7 @@ function invoke_vii(index, a1, a2) {
 function invoke_vi(index, a1) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1);
+    dynCall_vi(index, a1);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13675,7 +15605,7 @@ function invoke_vi(index, a1) {
 function invoke_iii(index, a1, a2) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2);
+    return dynCall_iii(index, a1, a2);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13686,7 +15616,7 @@ function invoke_iii(index, a1, a2) {
 function invoke_viiiii(index, a1, a2, a3, a4, a5) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3, a4, a5);
+    dynCall_viiiii(index, a1, a2, a3, a4, a5);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13697,7 +15627,7 @@ function invoke_viiiii(index, a1, a2, a3, a4, a5) {
 function invoke_viiiiii(index, a1, a2, a3, a4, a5, a6) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3, a4, a5, a6);
+    dynCall_viiiiii(index, a1, a2, a3, a4, a5, a6);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13708,7 +15638,7 @@ function invoke_viiiiii(index, a1, a2, a3, a4, a5, a6) {
 function invoke_jj(index, a1) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1);
+    return dynCall_jj(index, a1);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13720,7 +15650,7 @@ function invoke_jj(index, a1) {
 function invoke_vjiii(index, a1, a2, a3, a4) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3, a4);
+    dynCall_vjiii(index, a1, a2, a3, a4);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13731,7 +15661,7 @@ function invoke_vjiii(index, a1, a2, a3, a4) {
 function invoke_iiiii(index, a1, a2, a3, a4) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2, a3, a4);
+    return dynCall_iiiii(index, a1, a2, a3, a4);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13742,7 +15672,7 @@ function invoke_iiiii(index, a1, a2, a3, a4) {
 function invoke_viji(index, a1, a2, a3) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3);
+    dynCall_viji(index, a1, a2, a3);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13753,7 +15683,7 @@ function invoke_viji(index, a1, a2, a3) {
 function invoke_viijii(index, a1, a2, a3, a4, a5) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3, a4, a5);
+    dynCall_viijii(index, a1, a2, a3, a4, a5);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13764,7 +15694,7 @@ function invoke_viijii(index, a1, a2, a3, a4, a5) {
 function invoke_jiii(index, a1, a2, a3) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2, a3);
+    return dynCall_jiii(index, a1, a2, a3);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13776,7 +15706,7 @@ function invoke_jiii(index, a1, a2, a3) {
 function invoke_iij(index, a1, a2) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2);
+    return dynCall_iij(index, a1, a2);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13787,7 +15717,7 @@ function invoke_iij(index, a1, a2) {
 function invoke_viij(index, a1, a2, a3) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3);
+    dynCall_viij(index, a1, a2, a3);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13798,7 +15728,7 @@ function invoke_viij(index, a1, a2, a3) {
 function invoke_jii(index, a1, a2) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2);
+    return dynCall_jii(index, a1, a2);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13810,7 +15740,7 @@ function invoke_jii(index, a1, a2) {
 function invoke_iiiiii(index, a1, a2, a3, a4, a5) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2, a3, a4, a5);
+    return dynCall_iiiiii(index, a1, a2, a3, a4, a5);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13821,7 +15751,7 @@ function invoke_iiiiii(index, a1, a2, a3, a4, a5) {
 function invoke_jiij(index, a1, a2, a3) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2, a3);
+    return dynCall_jiij(index, a1, a2, a3);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13833,7 +15763,7 @@ function invoke_jiij(index, a1, a2, a3) {
 function invoke_ji(index, a1) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1);
+    return dynCall_ji(index, a1);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13845,7 +15775,7 @@ function invoke_ji(index, a1) {
 function invoke_jiiji(index, a1, a2, a3, a4) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2, a3, a4);
+    return dynCall_jiiji(index, a1, a2, a3, a4);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13857,7 +15787,7 @@ function invoke_jiiji(index, a1, a2, a3, a4) {
 function invoke_iiij(index, a1, a2, a3) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2, a3);
+    return dynCall_iiij(index, a1, a2, a3);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13868,7 +15798,7 @@ function invoke_iiij(index, a1, a2, a3) {
 function invoke_jij(index, a1, a2) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2);
+    return dynCall_jij(index, a1, a2);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13880,7 +15810,7 @@ function invoke_jij(index, a1, a2) {
 function invoke_iiiiiij(index, a1, a2, a3, a4, a5, a6) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2, a3, a4, a5, a6);
+    return dynCall_iiiiiij(index, a1, a2, a3, a4, a5, a6);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13891,7 +15821,7 @@ function invoke_iiiiiij(index, a1, a2, a3, a4, a5, a6) {
 function invoke_vijii(index, a1, a2, a3, a4) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3, a4);
+    dynCall_vijii(index, a1, a2, a3, a4);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13902,7 +15832,7 @@ function invoke_vijii(index, a1, a2, a3, a4) {
 function invoke_viiiiiii(index, a1, a2, a3, a4, a5, a6, a7) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3, a4, a5, a6, a7);
+    dynCall_viiiiiii(index, a1, a2, a3, a4, a5, a6, a7);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13913,7 +15843,7 @@ function invoke_viiiiiii(index, a1, a2, a3, a4, a5, a6, a7) {
 function invoke_diii(index, a1, a2, a3) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2, a3);
+    return dynCall_diii(index, a1, a2, a3);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13924,7 +15854,7 @@ function invoke_diii(index, a1, a2, a3) {
 function invoke_viijiii(index, a1, a2, a3, a4, a5, a6) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3, a4, a5, a6);
+    dynCall_viijiii(index, a1, a2, a3, a4, a5, a6);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13935,7 +15865,7 @@ function invoke_viijiii(index, a1, a2, a3, a4, a5, a6) {
 function invoke_iiiiiiii(index, a1, a2, a3, a4, a5, a6, a7) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2, a3, a4, a5, a6, a7);
+    return dynCall_iiiiiiii(index, a1, a2, a3, a4, a5, a6, a7);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13946,7 +15876,7 @@ function invoke_iiiiiiii(index, a1, a2, a3, a4, a5, a6, a7) {
 function invoke_iiiiiiiii(index, a1, a2, a3, a4, a5, a6, a7, a8) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2, a3, a4, a5, a6, a7, a8);
+    return dynCall_iiiiiiiii(index, a1, a2, a3, a4, a5, a6, a7, a8);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13957,7 +15887,7 @@ function invoke_iiiiiiiii(index, a1, a2, a3, a4, a5, a6, a7, a8) {
 function invoke_iiiiiii(index, a1, a2, a3, a4, a5, a6) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2, a3, a4, a5, a6);
+    return dynCall_iiiiiii(index, a1, a2, a3, a4, a5, a6);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13968,7 +15898,7 @@ function invoke_iiiiiii(index, a1, a2, a3, a4, a5, a6) {
 function invoke_viiiiiiiii(index, a1, a2, a3, a4, a5, a6, a7, a8, a9) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3, a4, a5, a6, a7, a8, a9);
+    dynCall_viiiiiiiii(index, a1, a2, a3, a4, a5, a6, a7, a8, a9);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13979,7 +15909,7 @@ function invoke_viiiiiiiii(index, a1, a2, a3, a4, a5, a6, a7, a8, a9) {
 function invoke_iijiii(index, a1, a2, a3, a4, a5) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2, a3, a4, a5);
+    return dynCall_iijiii(index, a1, a2, a3, a4, a5);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -13990,7 +15920,7 @@ function invoke_iijiii(index, a1, a2, a3, a4, a5) {
 function invoke_vij(index, a1, a2) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2);
+    dynCall_vij(index, a1, a2);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14001,7 +15931,7 @@ function invoke_vij(index, a1, a2) {
 function invoke_iiji(index, a1, a2, a3) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2, a3);
+    return dynCall_iiji(index, a1, a2, a3);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14012,7 +15942,7 @@ function invoke_iiji(index, a1, a2, a3) {
 function invoke_iid(index, a1, a2) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2);
+    return dynCall_iid(index, a1, a2);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14023,7 +15953,7 @@ function invoke_iid(index, a1, a2) {
 function invoke_vidii(index, a1, a2, a3, a4) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3, a4);
+    dynCall_vidii(index, a1, a2, a3, a4);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14034,7 +15964,7 @@ function invoke_vidii(index, a1, a2, a3, a4) {
 function invoke_dii(index, a1, a2) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2);
+    return dynCall_dii(index, a1, a2);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14045,7 +15975,7 @@ function invoke_dii(index, a1, a2) {
 function invoke_viiiiiiiiii(index, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
+    dynCall_viiiiiiiiii(index, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14056,7 +15986,7 @@ function invoke_viiiiiiiiii(index, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10) {
 function invoke_viiiiiiii(index, a1, a2, a3, a4, a5, a6, a7, a8) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3, a4, a5, a6, a7, a8);
+    dynCall_viiiiiiii(index, a1, a2, a3, a4, a5, a6, a7, a8);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14067,7 +15997,7 @@ function invoke_viiiiiiii(index, a1, a2, a3, a4, a5, a6, a7, a8) {
 function invoke_viiiijii(index, a1, a2, a3, a4, a5, a6, a7) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3, a4, a5, a6, a7);
+    dynCall_viiiijii(index, a1, a2, a3, a4, a5, a6, a7);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14078,7 +16008,7 @@ function invoke_viiiijii(index, a1, a2, a3, a4, a5, a6, a7) {
 function invoke_vdiiiiiii(index, a1, a2, a3, a4, a5, a6, a7, a8) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3, a4, a5, a6, a7, a8);
+    dynCall_vdiiiiiii(index, a1, a2, a3, a4, a5, a6, a7, a8);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14089,7 +16019,7 @@ function invoke_vdiiiiiii(index, a1, a2, a3, a4, a5, a6, a7, a8) {
 function invoke_viijiiii(index, a1, a2, a3, a4, a5, a6, a7) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3, a4, a5, a6, a7);
+    dynCall_viijiiii(index, a1, a2, a3, a4, a5, a6, a7);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14100,7 +16030,7 @@ function invoke_viijiiii(index, a1, a2, a3, a4, a5, a6, a7) {
 function invoke_viidiiii(index, a1, a2, a3, a4, a5, a6, a7) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3, a4, a5, a6, a7);
+    dynCall_viidiiii(index, a1, a2, a3, a4, a5, a6, a7);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14111,7 +16041,7 @@ function invoke_viidiiii(index, a1, a2, a3, a4, a5, a6, a7) {
 function invoke_vijiii(index, a1, a2, a3, a4, a5) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3, a4, a5);
+    dynCall_vijiii(index, a1, a2, a3, a4, a5);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14122,7 +16052,7 @@ function invoke_vijiii(index, a1, a2, a3, a4, a5) {
 function invoke_viiji(index, a1, a2, a3, a4) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3, a4);
+    dynCall_viiji(index, a1, a2, a3, a4);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14133,7 +16063,7 @@ function invoke_viiji(index, a1, a2, a3, a4) {
 function invoke_ij(index, a1) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1);
+    return dynCall_ij(index, a1);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14144,7 +16074,7 @@ function invoke_ij(index, a1) {
 function invoke_iijii(index, a1, a2, a3, a4) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2, a3, a4);
+    return dynCall_iijii(index, a1, a2, a3, a4);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14155,7 +16085,7 @@ function invoke_iijii(index, a1, a2, a3, a4) {
 function invoke_jiiiiiiii(index, a1, a2, a3, a4, a5, a6, a7, a8) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2, a3, a4, a5, a6, a7, a8);
+    return dynCall_jiiiiiiii(index, a1, a2, a3, a4, a5, a6, a7, a8);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14167,7 +16097,7 @@ function invoke_jiiiiiiii(index, a1, a2, a3, a4, a5, a6, a7, a8) {
 function invoke_iji(index, a1, a2) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2);
+    return dynCall_iji(index, a1, a2);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14178,7 +16108,7 @@ function invoke_iji(index, a1, a2) {
 function invoke_diiiii(index, a1, a2, a3, a4, a5) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2, a3, a4, a5);
+    return dynCall_diiiii(index, a1, a2, a3, a4, a5);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14189,7 +16119,7 @@ function invoke_diiiii(index, a1, a2, a3, a4, a5) {
 function invoke_iijji(index, a1, a2, a3, a4) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2, a3, a4);
+    return dynCall_iijji(index, a1, a2, a3, a4);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14200,7 +16130,7 @@ function invoke_iijji(index, a1, a2, a3, a4) {
 function invoke_diiii(index, a1, a2, a3, a4) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2, a3, a4);
+    return dynCall_diiii(index, a1, a2, a3, a4);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14211,7 +16141,7 @@ function invoke_diiii(index, a1, a2, a3, a4) {
 function invoke_viijj(index, a1, a2, a3, a4) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3, a4);
+    dynCall_viijj(index, a1, a2, a3, a4);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14222,7 +16152,7 @@ function invoke_viijj(index, a1, a2, a3, a4) {
 function invoke_vijj(index, a1, a2, a3) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3);
+    dynCall_vijj(index, a1, a2, a3);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14233,7 +16163,7 @@ function invoke_vijj(index, a1, a2, a3) {
 function invoke_iidi(index, a1, a2, a3) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2, a3);
+    return dynCall_iidi(index, a1, a2, a3);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14244,7 +16174,7 @@ function invoke_iidi(index, a1, a2, a3) {
 function invoke_vj(index, a1) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1);
+    dynCall_vj(index, a1);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14255,7 +16185,7 @@ function invoke_vj(index, a1) {
 function invoke_iiiiiiiiiii(index, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
+    return dynCall_iiiiiiiiiii(index, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14266,7 +16196,7 @@ function invoke_iiiiiiiiiii(index, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10) {
 function invoke_iiiiiiif(index, a1, a2, a3, a4, a5, a6, a7) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2, a3, a4, a5, a6, a7);
+    return dynCall_iiiiiiif(index, a1, a2, a3, a4, a5, a6, a7);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14277,7 +16207,7 @@ function invoke_iiiiiiif(index, a1, a2, a3, a4, a5, a6, a7) {
 function invoke_iiiif(index, a1, a2, a3, a4) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2, a3, a4);
+    return dynCall_iiiif(index, a1, a2, a3, a4);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14288,7 +16218,7 @@ function invoke_iiiif(index, a1, a2, a3, a4) {
 function invoke_vidd(index, a1, a2, a3) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3);
+    dynCall_vidd(index, a1, a2, a3);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14299,7 +16229,7 @@ function invoke_vidd(index, a1, a2, a3) {
 function invoke_viif(index, a1, a2, a3) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3);
+    dynCall_viif(index, a1, a2, a3);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14310,7 +16240,7 @@ function invoke_viif(index, a1, a2, a3) {
 function invoke_iiiiiiiiii(index, a1, a2, a3, a4, a5, a6, a7, a8, a9) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1, a2, a3, a4, a5, a6, a7, a8, a9);
+    return dynCall_iiiiiiiiii(index, a1, a2, a3, a4, a5, a6, a7, a8, a9);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14321,7 +16251,7 @@ function invoke_iiiiiiiiii(index, a1, a2, a3, a4, a5, a6, a7, a8, a9) {
 function invoke_fi(index, a1) {
   var sp = stackSave();
   try {
-    return getWasmTableEntry(index)(a1);
+    return dynCall_fi(index, a1);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14332,7 +16262,7 @@ function invoke_fi(index, a1) {
 function invoke_viiif(index, a1, a2, a3, a4) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3, a4);
+    dynCall_viiif(index, a1, a2, a3, a4);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14343,7 +16273,7 @@ function invoke_viiif(index, a1, a2, a3, a4) {
 function invoke_viid(index, a1, a2, a3) {
   var sp = stackSave();
   try {
-    getWasmTableEntry(index)(a1, a2, a3);
+    dynCall_viid(index, a1, a2, a3);
   } catch (e) {
     stackRestore(sp);
     if (e !== e + 0) throw e;
@@ -14359,16 +16289,12 @@ function applySignatureConversions(wasmExports) {
   wasmExports = Object.assign({}, wasmExports);
   var makeWrapper_pp = f => a0 => f(a0) >>> 0;
   var makeWrapper_p = f => () => f() >>> 0;
-  var makeWrapper_p_ = f => a0 => f(a0) >>> 0;
   var makeWrapper_ppp = f => (a0, a1) => f(a0, a1) >>> 0;
   wasmExports["malloc"] = makeWrapper_pp(wasmExports["malloc"]);
   wasmExports["pthread_self"] = makeWrapper_p(wasmExports["pthread_self"]);
-  wasmExports["strerror"] = makeWrapper_p_(wasmExports["strerror"]);
   wasmExports["emscripten_main_runtime_thread_id"] = makeWrapper_p(wasmExports["emscripten_main_runtime_thread_id"]);
   wasmExports["__getTypeName"] = makeWrapper_pp(wasmExports["__getTypeName"]);
   wasmExports["emscripten_builtin_memalign"] = makeWrapper_ppp(wasmExports["emscripten_builtin_memalign"]);
-  wasmExports["emscripten_stack_get_base"] = makeWrapper_p(wasmExports["emscripten_stack_get_base"]);
-  wasmExports["emscripten_stack_get_end"] = makeWrapper_p(wasmExports["emscripten_stack_get_end"]);
   wasmExports["_emscripten_stack_alloc"] = makeWrapper_pp(wasmExports["_emscripten_stack_alloc"]);
   wasmExports["emscripten_stack_get_current"] = makeWrapper_p(wasmExports["emscripten_stack_get_current"]);
   wasmExports["__cxa_get_exception_ptr"] = makeWrapper_pp(wasmExports["__cxa_get_exception_ptr"]);
@@ -14377,6 +16303,10 @@ function applySignatureConversions(wasmExports) {
 
 // include: postamble.js
 // === Auto-generated postamble setup entry stuff ===
+Module["addRunDependency"] = addRunDependency;
+
+Module["removeRunDependency"] = removeRunDependency;
+
 Module["callMain"] = callMain;
 
 Module["UTF16ToString"] = UTF16ToString;
@@ -14387,15 +16317,19 @@ Module["JSEvents"] = JSEvents;
 
 Module["specialHTMLTargets"] = specialHTMLTargets;
 
+Module["FS_createPreloadedFile"] = FS_createPreloadedFile;
+
+Module["FS_unlink"] = FS_unlink;
+
+Module["FS_createPath"] = FS_createPath;
+
+Module["FS_createDevice"] = FS_createDevice;
+
 Module["FS"] = FS;
 
-var missingLibrarySymbols = [ "writeI53ToI64Clamped", "writeI53ToI64Signaling", "writeI53ToU64Clamped", "writeI53ToU64Signaling", "convertI32PairToI53Checked", "getTempRet0", "inetPton4", "inetNtop4", "inetPton6", "inetNtop6", "readSockaddr", "writeSockaddr", "readEmAsmArgs", "listenOnce", "autoResumeAudioContext", "asmjsMangle", "HandleAllocator", "getNativeTypeSize", "STACK_SIZE", "STACK_ALIGN", "POINTER_SIZE", "ASSERTIONS", "getCFunc", "ccall", "cwrap", "uleb128Encode", "sigToWasmTypes", "generateFuncType", "convertJsFunctionToWasm", "getEmptyTableSlot", "updateTableMap", "getFunctionAddress", "addFunction", "removeFunction", "intArrayToString", "AsciiToString", "writeArrayToMemory", "registerKeyEventCallback", "registerMouseEventCallback", "registerFocusEventCallback", "fillDeviceOrientationEventData", "registerDeviceOrientationEventCallback", "fillDeviceMotionEventData", "registerDeviceMotionEventCallback", "screenOrientation", "fillOrientationChangeEventData", "registerOrientationChangeEventCallback", "fillFullscreenChangeEventData", "registerFullscreenChangeEventCallback", "JSEvents_requestFullscreen", "JSEvents_resizeCanvasForFullscreen", "registerRestoreOldStyle", "hideEverythingExceptGivenElement", "restoreHiddenElements", "setLetterbox", "softFullscreenResizeWebGLRenderTarget", "doRequestFullscreen", "fillPointerlockChangeEventData", "registerPointerlockChangeEventCallback", "registerPointerlockErrorEventCallback", "requestPointerLock", "fillVisibilityChangeEventData", "registerVisibilityChangeEventCallback", "registerTouchEventCallback", "fillGamepadEventData", "registerGamepadEventCallback", "registerBeforeUnloadEventCallback", "fillBatteryEventData", "battery", "registerBatteryEventCallback", "setCanvasElementSizeCallingThread", "setCanvasElementSizeMainThread", "setCanvasElementSize", "getCanvasSizeCallingThread", "getCanvasSizeMainThread", "getCanvasElementSize", "convertPCtoSourceLocation", "checkWasiClock", "wasiRightsToMuslOFlags", "wasiOFlagsToMuslOFlags", "createDyncallWrapper", "setImmediateWrapped", "clearImmediateWrapped", "polyfillSetImmediate", "registerPostMainLoop", "registerPreMainLoop", "getPromise", "makePromise", "idsToPromises", "makePromiseCallback", "Browser_asyncPrepareDataCounter", "arraySum", "addDays", "getSocketFromFD", "getSocketAddress", "FS_unlink", "FS_mkdirTree", "writeGLArray", "emscripten_webgl_destroy_context_before_on_calling_thread", "registerWebGlEventCallback", "runAndAbortIfError", "ALLOC_NORMAL", "ALLOC_STACK", "allocate", "writeStringToMemory", "writeAsciiToMemory", "setErrNo", "demangle", "stackTrace", "getFunctionArgsName", "createJsInvokerSignature", "registerInheritedInstance", "unregisterInheritedInstance", "getInheritedInstanceCount", "getLiveInheritedInstances", "enumReadValueFromPointer", "setDelayFunction", "validateThis", "fetchDeleteCachedData", "fetchLoadCachedData", "fetchCacheData", "fetchXHR" ];
+Module["FS_createDataFile"] = FS_createDataFile;
 
-missingLibrarySymbols.forEach(missingLibrarySymbol);
-
-var unexportedSymbols = [ "run", "addOnPreRun", "addOnInit", "addOnPreMain", "addOnExit", "addOnPostRun", "addRunDependency", "removeRunDependency", "out", "err", "abort", "wasmMemory", "wasmExports", "GROWABLE_HEAP_I8", "GROWABLE_HEAP_U8", "GROWABLE_HEAP_I16", "GROWABLE_HEAP_U16", "GROWABLE_HEAP_I32", "GROWABLE_HEAP_U32", "GROWABLE_HEAP_F32", "GROWABLE_HEAP_F64", "writeStackCookie", "checkStackCookie", "writeI53ToI64", "readI53FromI64", "readI53FromU64", "convertI32PairToI53", "convertU32PairToI53", "INT53_MAX", "INT53_MIN", "bigintToI53Checked", "stackSave", "stackRestore", "stackAlloc", "setTempRet0", "ptrToString", "zeroMemory", "exitJS", "getHeapMax", "growMemory", "ENV", "ERRNO_CODES", "strError", "DNS", "Protocols", "Sockets", "initRandomFill", "randomFill", "timers", "warnOnce", "emscriptenLog", "readEmAsmArgsArray", "jstoi_q", "jstoi_s", "getExecutableName", "getDynCaller", "dynCall", "handleException", "keepRuntimeAlive", "runtimeKeepalivePush", "runtimeKeepalivePop", "callUserCallback", "maybeExit", "asyncLoad", "alignMemory", "mmapAlloc", "wasmTable", "noExitRuntime", "freeTableIndexes", "functionsInTableMap", "reallyNegative", "unSign", "strLen", "reSign", "formatString", "setValue", "getValue", "PATH", "PATH_FS", "UTF8Decoder", "UTF8ArrayToString", "UTF8ToString", "stringToUTF8Array", "stringToUTF8", "lengthBytesUTF8", "intArrayFromString", "stringToAscii", "UTF16Decoder", "lengthBytesUTF16", "UTF32ToString", "stringToUTF32", "lengthBytesUTF32", "stringToNewUTF8", "stringToUTF8OnStack", "maybeCStringToJsString", "findEventTarget", "findCanvasEventTarget", "getBoundingClientRect", "fillMouseEventData", "registerWheelEventCallback", "registerUiEventCallback", "currentFullscreenStrategy", "restoreOldWindowedStyle", "jsStackTrace", "getCallstack", "UNWIND_CACHE", "ExitStatus", "getEnvStrings", "doReadv", "doWritev", "safeSetTimeout", "promiseMap", "uncaughtExceptionCount", "exceptionLast", "exceptionCaught", "ExceptionInfo", "findMatchingCatch", "Browser", "safeRequestAnimationFrame", "getPreloadedImageData__data", "wget", "MONTH_DAYS_REGULAR", "MONTH_DAYS_LEAP", "MONTH_DAYS_REGULAR_CUMULATIVE", "MONTH_DAYS_LEAP_CUMULATIVE", "isLeapYear", "ydayFromDate", "SYSCALLS", "preloadPlugins", "FS_createPreloadedFile", "FS_modeStringToFlags", "FS_getMode", "FS_stdin_getChar_buffer", "FS_stdin_getChar", "FS_createPath", "FS_createDevice", "FS_readFile", "FS_createDataFile", "FS_createLazyFile", "MEMFS", "TTY", "PIPEFS", "SOCKFS", "_setNetworkCallback", "tempFixedLengthArray", "miniTempWebGLFloatBuffers", "miniTempWebGLIntBuffers", "heapObjectForWebGLType", "toTypedArrayIndex", "webgl_enable_ANGLE_instanced_arrays", "webgl_enable_OES_vertex_array_object", "webgl_enable_WEBGL_draw_buffers", "webgl_enable_WEBGL_multi_draw", "webgl_enable_EXT_polygon_offset_clamp", "webgl_enable_EXT_clip_control", "webgl_enable_WEBGL_polygon_mode", "GL", "emscriptenWebGLGet", "computeUnpackAlignedImageSize", "colorChannelsInGlTextureFormat", "emscriptenWebGLGetTexPixelData", "emscriptenWebGLGetUniform", "webglGetUniformLocation", "webglPrepareUniformLocationsBeforeFirstUse", "webglGetLeftBracePos", "emscriptenWebGLGetVertexAttrib", "__glGetActiveAttribOrUniform", "AL", "GLUT", "EGL", "GLEW", "IDBStore", "SDL", "SDL_gfx", "emscriptenWebGLGetIndexed", "webgl_enable_WEBGL_draw_instanced_base_vertex_base_instance", "webgl_enable_WEBGL_multi_draw_instanced_base_vertex_base_instance", "allocateUTF8", "allocateUTF8OnStack", "print", "printErr", "PThread", "terminateWorker", "cleanupThread", "registerTLSInit", "spawnThread", "exitOnMainThread", "proxyToMainThread", "proxiedJSCallArgs", "invokeEntryPoint", "checkMailbox", "InternalError", "BindingError", "throwInternalError", "throwBindingError", "registeredTypes", "awaitingDependencies", "typeDependencies", "tupleRegistrations", "structRegistrations", "sharedRegisterType", "whenDependentTypesAreResolved", "embind_charCodes", "embind_init_charCodes", "readLatin1String", "getTypeName", "getFunctionName", "heap32VectorToArray", "requireRegisteredType", "usesDestructorStack", "checkArgCount", "getRequiredArgCount", "createJsInvoker", "UnboundTypeError", "PureVirtualError", "GenericWireTypeSize", "EmValType", "EmValOptionalType", "throwUnboundTypeError", "ensureOverloadTable", "exposePublicSymbol", "replacePublicSymbol", "extendError", "createNamedFunction", "embindRepr", "registeredInstances", "getBasestPointer", "getInheritedInstance", "registeredPointers", "registerType", "integerReadValueFromPointer", "floatReadValueFromPointer", "readPointer", "runDestructors", "newFunc", "craftInvokerFunction", "embind__requireFunction", "genericPointerToWireType", "constNoSmartPtrRawPointerToWireType", "nonConstNoSmartPtrRawPointerToWireType", "init_RegisteredPointer", "RegisteredPointer", "RegisteredPointer_fromWireType", "runDestructor", "releaseClassHandle", "finalizationRegistry", "detachFinalizer_deps", "detachFinalizer", "attachFinalizer", "makeClassHandle", "init_ClassHandle", "ClassHandle", "throwInstanceAlreadyDeleted", "deletionQueue", "flushPendingDeletes", "delayFunction", "RegisteredClass", "shallowCopyInternalPointer", "downcastPointer", "upcastPointer", "char_0", "char_9", "makeLegalFunctionName", "emval_freelist", "emval_handles", "emval_symbols", "init_emval", "count_emval_handles", "getStringOrSymbol", "Emval", "emval_get_global", "emval_returnValue", "emval_lookupTypes", "emval_methodCallers", "emval_addMethodCaller", "reflectConstruct", "Fetch" ];
-
-unexportedSymbols.forEach(unexportedRuntimeSymbol);
+Module["FS_createLazyFile"] = FS_createLazyFile;
 
 var calledRun;
 
@@ -14409,8 +16343,6 @@ dependenciesFulfilled = function runCaller() {
 
 // try this again later, after new deps are fulfilled
 function callMain(args = []) {
-  assert(runDependencies == 0, 'cannot call main when async dependencies remain! (listen on Module["onRuntimeInitialized"])');
-  assert(calledPrerun, "cannot call main without calling preRun first");
   var entryFunction = _main;
   args.unshift(thisProgram);
   var argc = args.length;
@@ -14431,17 +16363,6 @@ function callMain(args = []) {
   }
 }
 
-function stackCheckInit() {
-  // This is normally called automatically during __wasm_call_ctors but need to
-  // get these values before even running any of the ctors so we call it redundantly
-  // here.
-  // See $establishStackSpace for the equivalent code that runs on a thread
-  assert(!ENVIRONMENT_IS_PTHREAD);
-  _emscripten_stack_init();
-  // TODO(sbc): Move writeStackCookie to native to to avoid this.
-  writeStackCookie();
-}
-
 function run(args = arguments_) {
   if (runDependencies > 0) {
     return;
@@ -14455,7 +16376,6 @@ function run(args = arguments_) {
     startWorker(Module);
     return;
   }
-  stackCheckInit();
   if (!calledPrerun) {
     calledPrerun = 1;
     preRun();
@@ -14487,47 +16407,6 @@ function run(args = arguments_) {
   } else {
     doRun();
   }
-  checkStackCookie();
-}
-
-function checkUnflushedContent() {
-  // Compiler settings do not allow exiting the runtime, so flushing
-  // the streams is not possible. but in ASSERTIONS mode we check
-  // if there was something to flush, and if so tell the user they
-  // should request that the runtime be exitable.
-  // Normally we would not even include flush() at all, but in ASSERTIONS
-  // builds we do so just for this check, and here we see if there is any
-  // content to flush, that is, we check if there would have been
-  // something a non-ASSERTIONS build would have not seen.
-  // How we flush the streams depends on whether we are in SYSCALLS_REQUIRE_FILESYSTEM=0
-  // mode (which has its own special function for this; otherwise, all
-  // the code is inside libc)
-  var oldOut = out;
-  var oldErr = err;
-  var has = false;
-  out = err = x => {
-    has = true;
-  };
-  try {
-    // it doesn't matter if it fails
-    _fflush(0);
-    // also flush in the JS FS layer
-    [ "stdout", "stderr" ].forEach(name => {
-      var info = FS.analyzePath("/dev/" + name);
-      if (!info) return;
-      var stream = info.object;
-      var rdev = stream.rdev;
-      var tty = TTY.ttys[rdev];
-      if (tty?.output?.length) {
-        has = true;
-      }
-    });
-  } catch (e) {}
-  out = oldOut;
-  err = oldErr;
-  if (has) {
-    warnOnce("stdio streams had content in them that was not flushed. you should set EXIT_RUNTIME to 1 (see the Emscripten FAQ), or make sure to emit a newline when you printf etc.");
-  }
 }
 
 if (Module["preInit"]) {
@@ -14551,22 +16430,6 @@ run();
 // We assign to the `moduleRtn` global here and configure closure to see
 // this as and extern so it won't get minified.
 moduleRtn = readyPromise;
-
-// Assertion for attempting to access module properties on the incoming
-// moduleArg.  In the past we used this object as the prototype of the module
-// and assigned properties to it, but now we return a distinct object.  This
-// keeps the instance private until it is ready (i.e the promise has been
-// resolved).
-for (const prop of Object.keys(Module)) {
-  if (!(prop in moduleArg)) {
-    Object.defineProperty(moduleArg, prop, {
-      configurable: true,
-      get() {
-        abort(`Access to module property ('${prop}') is no longer possible via the module constructor argument; Instead, use the result of the module constructor.`);
-      }
-    });
-  }
-}
 
 
   return moduleRtn;

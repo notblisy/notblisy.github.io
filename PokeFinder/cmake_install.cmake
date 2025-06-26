@@ -1,4 +1,4 @@
-# Install script for directory: P:/blisynet/PokeFinder/Source
+# Install script for directory: P:/blisynet/PokeFinderWeb/Source
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,16 +39,16 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Core/cmake_install.cmake")
+  include("P:/blisynet/PokeFinderWeb/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Core/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Model/cmake_install.cmake")
+  include("P:/blisynet/PokeFinderWeb/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Model/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("P:/blisynet/PokeFinder/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Form/cmake_install.cmake")
+  include("P:/blisynet/PokeFinderWeb/build/WebAssembly_Qt_6_9_1_multi_threaded-Debug/Source/Form/cmake_install.cmake")
 endif()
 

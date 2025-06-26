@@ -17,6 +17,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QScrollArea>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 #include "Form/Controls/ComboBox.hpp"
 
@@ -26,6 +27,22 @@ class Ui_IVCalculator
 {
 public:
     QGridLayout *gridLayout_3;
+    QGroupBox *groupBoxResults;
+    QGridLayout *gridLayout_5;
+    QLabel *labelHPIV;
+    QLabel *labelHPIVValue;
+    QLabel *labelAtkIV;
+    QLabel *labelAtkIVValue;
+    QLabel *labelDefIV;
+    QLabel *labelDefIVValue;
+    QLabel *labelSpAIV;
+    QLabel *labelSpAIVValue;
+    QLabel *labelSpDIV;
+    QLabel *labelSpDIVValue;
+    QLabel *labelSpeIV;
+    QLabel *labelSpeIVValue;
+    QLabel *labelNextLevel;
+    QLabel *labelNextLevelValue;
     QGroupBox *groupBoxSettings;
     QGridLayout *gridLayout;
     QLabel *labelGame;
@@ -67,22 +84,7 @@ public:
     QLabel *labelBaseSpDValue;
     QLabel *labelBaseSpe;
     QLabel *labelBaseSpeValue;
-    QGroupBox *groupBoxResults;
-    QGridLayout *gridLayout_5;
-    QLabel *labelHPIV;
-    QLabel *labelHPIVValue;
-    QLabel *labelAtkIV;
-    QLabel *labelAtkIVValue;
-    QLabel *labelDefIV;
-    QLabel *labelDefIVValue;
-    QLabel *labelSpAIV;
-    QLabel *labelSpAIVValue;
-    QLabel *labelSpDIV;
-    QLabel *labelSpDIVValue;
-    QLabel *labelSpeIV;
-    QLabel *labelSpeIVValue;
-    QLabel *labelNextLevel;
-    QLabel *labelNextLevelValue;
+    QToolButton *closebutton;
 
     void setupUi(QWidget *IVCalculator)
     {
@@ -91,6 +93,83 @@ public:
         IVCalculator->resize(630, 420);
         gridLayout_3 = new QGridLayout(IVCalculator);
         gridLayout_3->setObjectName("gridLayout_3");
+        groupBoxResults = new QGroupBox(IVCalculator);
+        groupBoxResults->setObjectName("groupBoxResults");
+        gridLayout_5 = new QGridLayout(groupBoxResults);
+        gridLayout_5->setObjectName("gridLayout_5");
+        labelHPIV = new QLabel(groupBoxResults);
+        labelHPIV->setObjectName("labelHPIV");
+
+        gridLayout_5->addWidget(labelHPIV, 0, 0, 1, 1);
+
+        labelHPIVValue = new QLabel(groupBoxResults);
+        labelHPIVValue->setObjectName("labelHPIVValue");
+
+        gridLayout_5->addWidget(labelHPIVValue, 0, 1, 1, 1);
+
+        labelAtkIV = new QLabel(groupBoxResults);
+        labelAtkIV->setObjectName("labelAtkIV");
+
+        gridLayout_5->addWidget(labelAtkIV, 1, 0, 1, 1);
+
+        labelAtkIVValue = new QLabel(groupBoxResults);
+        labelAtkIVValue->setObjectName("labelAtkIVValue");
+
+        gridLayout_5->addWidget(labelAtkIVValue, 1, 1, 1, 1);
+
+        labelDefIV = new QLabel(groupBoxResults);
+        labelDefIV->setObjectName("labelDefIV");
+
+        gridLayout_5->addWidget(labelDefIV, 2, 0, 1, 1);
+
+        labelDefIVValue = new QLabel(groupBoxResults);
+        labelDefIVValue->setObjectName("labelDefIVValue");
+
+        gridLayout_5->addWidget(labelDefIVValue, 2, 1, 1, 1);
+
+        labelSpAIV = new QLabel(groupBoxResults);
+        labelSpAIV->setObjectName("labelSpAIV");
+
+        gridLayout_5->addWidget(labelSpAIV, 3, 0, 1, 1);
+
+        labelSpAIVValue = new QLabel(groupBoxResults);
+        labelSpAIVValue->setObjectName("labelSpAIVValue");
+
+        gridLayout_5->addWidget(labelSpAIVValue, 3, 1, 1, 1);
+
+        labelSpDIV = new QLabel(groupBoxResults);
+        labelSpDIV->setObjectName("labelSpDIV");
+
+        gridLayout_5->addWidget(labelSpDIV, 4, 0, 1, 1);
+
+        labelSpDIVValue = new QLabel(groupBoxResults);
+        labelSpDIVValue->setObjectName("labelSpDIVValue");
+
+        gridLayout_5->addWidget(labelSpDIVValue, 4, 1, 1, 1);
+
+        labelSpeIV = new QLabel(groupBoxResults);
+        labelSpeIV->setObjectName("labelSpeIV");
+
+        gridLayout_5->addWidget(labelSpeIV, 5, 0, 1, 1);
+
+        labelSpeIVValue = new QLabel(groupBoxResults);
+        labelSpeIVValue->setObjectName("labelSpeIVValue");
+
+        gridLayout_5->addWidget(labelSpeIVValue, 5, 1, 1, 1);
+
+        labelNextLevel = new QLabel(groupBoxResults);
+        labelNextLevel->setObjectName("labelNextLevel");
+
+        gridLayout_5->addWidget(labelNextLevel, 6, 0, 1, 1);
+
+        labelNextLevelValue = new QLabel(groupBoxResults);
+        labelNextLevelValue->setObjectName("labelNextLevelValue");
+
+        gridLayout_5->addWidget(labelNextLevelValue, 6, 1, 1, 1);
+
+
+        gridLayout_3->addWidget(groupBoxResults, 2, 1, 1, 1);
+
         groupBoxSettings = new QGroupBox(IVCalculator);
         groupBoxSettings->setObjectName("groupBoxSettings");
         gridLayout = new QGridLayout(groupBoxSettings);
@@ -183,7 +262,7 @@ public:
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName("scrollAreaWidgetContents");
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 365, 223));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 351, 206));
         gridLayoutEntry = new QGridLayout(scrollAreaWidgetContents);
         gridLayoutEntry->setObjectName("gridLayoutEntry");
         labelLevel = new QLabel(scrollAreaWidgetContents);
@@ -226,7 +305,7 @@ public:
         gridLayout->addWidget(scrollArea, 5, 0, 1, 3);
 
 
-        gridLayout_3->addWidget(groupBoxSettings, 0, 0, 2, 1);
+        gridLayout_3->addWidget(groupBoxSettings, 1, 0, 2, 1);
 
         groupBoxInformation = new QGroupBox(IVCalculator);
         groupBoxInformation->setObjectName("groupBoxInformation");
@@ -293,84 +372,12 @@ public:
         gridLayout_4->addWidget(labelBaseSpeValue, 5, 1, 1, 1);
 
 
-        gridLayout_3->addWidget(groupBoxInformation, 0, 1, 1, 1);
+        gridLayout_3->addWidget(groupBoxInformation, 1, 1, 1, 1);
 
-        groupBoxResults = new QGroupBox(IVCalculator);
-        groupBoxResults->setObjectName("groupBoxResults");
-        gridLayout_5 = new QGridLayout(groupBoxResults);
-        gridLayout_5->setObjectName("gridLayout_5");
-        labelHPIV = new QLabel(groupBoxResults);
-        labelHPIV->setObjectName("labelHPIV");
+        closebutton = new QToolButton(IVCalculator);
+        closebutton->setObjectName("closebutton");
 
-        gridLayout_5->addWidget(labelHPIV, 0, 0, 1, 1);
-
-        labelHPIVValue = new QLabel(groupBoxResults);
-        labelHPIVValue->setObjectName("labelHPIVValue");
-
-        gridLayout_5->addWidget(labelHPIVValue, 0, 1, 1, 1);
-
-        labelAtkIV = new QLabel(groupBoxResults);
-        labelAtkIV->setObjectName("labelAtkIV");
-
-        gridLayout_5->addWidget(labelAtkIV, 1, 0, 1, 1);
-
-        labelAtkIVValue = new QLabel(groupBoxResults);
-        labelAtkIVValue->setObjectName("labelAtkIVValue");
-
-        gridLayout_5->addWidget(labelAtkIVValue, 1, 1, 1, 1);
-
-        labelDefIV = new QLabel(groupBoxResults);
-        labelDefIV->setObjectName("labelDefIV");
-
-        gridLayout_5->addWidget(labelDefIV, 2, 0, 1, 1);
-
-        labelDefIVValue = new QLabel(groupBoxResults);
-        labelDefIVValue->setObjectName("labelDefIVValue");
-
-        gridLayout_5->addWidget(labelDefIVValue, 2, 1, 1, 1);
-
-        labelSpAIV = new QLabel(groupBoxResults);
-        labelSpAIV->setObjectName("labelSpAIV");
-
-        gridLayout_5->addWidget(labelSpAIV, 3, 0, 1, 1);
-
-        labelSpAIVValue = new QLabel(groupBoxResults);
-        labelSpAIVValue->setObjectName("labelSpAIVValue");
-
-        gridLayout_5->addWidget(labelSpAIVValue, 3, 1, 1, 1);
-
-        labelSpDIV = new QLabel(groupBoxResults);
-        labelSpDIV->setObjectName("labelSpDIV");
-
-        gridLayout_5->addWidget(labelSpDIV, 4, 0, 1, 1);
-
-        labelSpDIVValue = new QLabel(groupBoxResults);
-        labelSpDIVValue->setObjectName("labelSpDIVValue");
-
-        gridLayout_5->addWidget(labelSpDIVValue, 4, 1, 1, 1);
-
-        labelSpeIV = new QLabel(groupBoxResults);
-        labelSpeIV->setObjectName("labelSpeIV");
-
-        gridLayout_5->addWidget(labelSpeIV, 5, 0, 1, 1);
-
-        labelSpeIVValue = new QLabel(groupBoxResults);
-        labelSpeIVValue->setObjectName("labelSpeIVValue");
-
-        gridLayout_5->addWidget(labelSpeIVValue, 5, 1, 1, 1);
-
-        labelNextLevel = new QLabel(groupBoxResults);
-        labelNextLevel->setObjectName("labelNextLevel");
-
-        gridLayout_5->addWidget(labelNextLevel, 6, 0, 1, 1);
-
-        labelNextLevelValue = new QLabel(groupBoxResults);
-        labelNextLevelValue->setObjectName("labelNextLevelValue");
-
-        gridLayout_5->addWidget(labelNextLevelValue, 6, 1, 1, 1);
-
-
-        gridLayout_3->addWidget(groupBoxResults, 1, 1, 1, 1);
+        gridLayout_3->addWidget(closebutton, 0, 0, 1, 1);
 
 
         retranslateUi(IVCalculator);
@@ -381,6 +388,14 @@ public:
     void retranslateUi(QWidget *IVCalculator)
     {
         IVCalculator->setWindowTitle(QCoreApplication::translate("IVCalculator", "IV Calculator", nullptr));
+        groupBoxResults->setTitle(QCoreApplication::translate("IVCalculator", "Results", nullptr));
+        labelHPIV->setText(QCoreApplication::translate("IVCalculator", "HP", nullptr));
+        labelAtkIV->setText(QCoreApplication::translate("IVCalculator", "Atk", nullptr));
+        labelDefIV->setText(QCoreApplication::translate("IVCalculator", "Def", nullptr));
+        labelSpAIV->setText(QCoreApplication::translate("IVCalculator", "SpA", nullptr));
+        labelSpDIV->setText(QCoreApplication::translate("IVCalculator", "SpD", nullptr));
+        labelSpeIV->setText(QCoreApplication::translate("IVCalculator", "Spe", nullptr));
+        labelNextLevel->setText(QCoreApplication::translate("IVCalculator", "Next level", nullptr));
         groupBoxSettings->setTitle(QCoreApplication::translate("IVCalculator", "Settings", nullptr));
         labelGame->setText(QCoreApplication::translate("IVCalculator", "Game", nullptr));
         labelSpecies->setText(QCoreApplication::translate("IVCalculator", "Pok\303\251mon", nullptr));
@@ -416,14 +431,7 @@ public:
         labelBaseSpA->setText(QCoreApplication::translate("IVCalculator", "Base SpA", nullptr));
         labelBaseSpD->setText(QCoreApplication::translate("IVCalculator", "Base SpD", nullptr));
         labelBaseSpe->setText(QCoreApplication::translate("IVCalculator", "Base Spe", nullptr));
-        groupBoxResults->setTitle(QCoreApplication::translate("IVCalculator", "Results", nullptr));
-        labelHPIV->setText(QCoreApplication::translate("IVCalculator", "HP", nullptr));
-        labelAtkIV->setText(QCoreApplication::translate("IVCalculator", "Atk", nullptr));
-        labelDefIV->setText(QCoreApplication::translate("IVCalculator", "Def", nullptr));
-        labelSpAIV->setText(QCoreApplication::translate("IVCalculator", "SpA", nullptr));
-        labelSpDIV->setText(QCoreApplication::translate("IVCalculator", "SpD", nullptr));
-        labelSpeIV->setText(QCoreApplication::translate("IVCalculator", "Spe", nullptr));
-        labelNextLevel->setText(QCoreApplication::translate("IVCalculator", "Next level", nullptr));
+        closebutton->setText(QCoreApplication::translate("IVCalculator", "X", nullptr));
     } // retranslateUi
 
 };
