@@ -50,7 +50,8 @@ template <> constexpr inline auto Static5::qt_create_metaobjectdata<qt_meta_tag_
         "search",
         "searcherCategoryIndexChanged",
         "searcherFastSearchChanged",
-        "searcherPokemonIndexChanged"
+        "searcherPokemonIndexChanged",
+        "on_closebutton_clicked"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -86,6 +87,8 @@ template <> constexpr inline auto Static5::qt_create_metaobjectdata<qt_meta_tag_
         QtMocHelpers::SlotData<void(int)>(12, 2, QMC::AccessPrivate, QMetaType::Void, {{
             { QMetaType::Int, 5 },
         }}),
+        // Slot 'on_closebutton_clicked'
+        QtMocHelpers::SlotData<void()>(13, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -119,6 +122,7 @@ void Static5::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
         case 7: _t->searcherCategoryIndexChanged((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
         case 8: _t->searcherFastSearchChanged(); break;
         case 9: _t->searcherPokemonIndexChanged((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 10: _t->on_closebutton_clicked(); break;
         default: ;
         }
     }
@@ -147,14 +151,14 @@ int Static5::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 10)
+        if (_id < 11)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 10;
+        _id -= 11;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 10)
+        if (_id < 11)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 10;
+        _id -= 11;
     }
     return _id;
 }

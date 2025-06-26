@@ -43,7 +43,8 @@ template <> constexpr inline auto ProfileEditor5::qt_create_metaobjectdata<qt_me
         "",
         "okay",
         "versionIndexChanged",
-        "index"
+        "index",
+        "on_closebutton_clicked"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -55,6 +56,8 @@ template <> constexpr inline auto ProfileEditor5::qt_create_metaobjectdata<qt_me
         QtMocHelpers::SlotData<void(int)>(4, 2, QMC::AccessPrivate, QMetaType::Void, {{
             { QMetaType::Int, 5 },
         }}),
+        // Slot 'on_closebutton_clicked'
+        QtMocHelpers::SlotData<void()>(6, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -81,6 +84,7 @@ void ProfileEditor5::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
         case 0: _t->findParameters(); break;
         case 1: _t->okay(); break;
         case 2: _t->versionIndexChanged((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 3: _t->on_closebutton_clicked(); break;
         default: ;
         }
     }
@@ -105,14 +109,14 @@ int ProfileEditor5::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 3)
+        if (_id < 4)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 3;
+        _id -= 4;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 3)
+        if (_id < 4)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 3;
+        _id -= 4;
     }
     return _id;
 }

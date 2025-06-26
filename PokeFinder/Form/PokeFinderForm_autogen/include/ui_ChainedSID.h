@@ -16,6 +16,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpinBox>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 #include "Form/Controls/ComboBox.hpp"
 #include "Form/Controls/TableView.hpp"
@@ -27,32 +28,33 @@ class Ui_ChainedSID
 {
 public:
     QGridLayout *gridLayout;
+    QLabel *labelAtk;
+    QLabel *labelSpe;
+    ComboBox *comboBoxGender;
+    QLabel *labelAbility;
+    QSpinBox *spinBoxSpD;
+    QSpinBox *spinBoxDef;
+    QLabel *labelSpD;
+    TableView *tableView;
+    QSpinBox *spinBoxAtk;
+    QLabel *labelTID;
+    QLabel *labelSpA;
+    ComboBox *comboBoxNature;
+    QPushButton *pushButtonClear;
+    ComboBox *comboBoxAbility;
+    TextBox *textBoxTID;
     QLabel *labelPokemon;
     ComboBox *comboBoxPokemon;
-    QLabel *labelAbility;
-    ComboBox *comboBoxAbility;
-    QLabel *labelGender;
-    ComboBox *comboBoxGender;
-    QLabel *labelNature;
-    ComboBox *comboBoxNature;
-    QLabel *labelTID;
-    TextBox *textBoxTID;
     QLabel *labelPossibleResults;
-    QLabel *labelHP;
-    QSpinBox *spinBoxHP;
-    QLabel *labelAtk;
-    QSpinBox *spinBoxAtk;
-    QLabel *labelDef;
-    QSpinBox *spinBoxDef;
-    QLabel *labelSpA;
     QSpinBox *spinBoxSpA;
-    QLabel *labelSpD;
-    QSpinBox *spinBoxSpD;
-    QLabel *labelSpe;
-    QSpinBox *spinBoxSpe;
+    QLabel *labelNature;
+    QLabel *labelDef;
+    QLabel *labelHP;
     QPushButton *pushButtonCalculate;
-    QPushButton *pushButtonClear;
-    TableView *tableView;
+    QSpinBox *spinBoxHP;
+    QSpinBox *spinBoxSpe;
+    QLabel *labelGender;
+    QToolButton *closebutton;
 
     void setupUi(QWidget *ChainedSID)
     {
@@ -61,50 +63,75 @@ public:
         ChainedSID->resize(509, 380);
         gridLayout = new QGridLayout(ChainedSID);
         gridLayout->setObjectName("gridLayout");
-        labelPokemon = new QLabel(ChainedSID);
-        labelPokemon->setObjectName("labelPokemon");
+        labelAtk = new QLabel(ChainedSID);
+        labelAtk->setObjectName("labelAtk");
 
-        gridLayout->addWidget(labelPokemon, 0, 0, 1, 1);
+        gridLayout->addWidget(labelAtk, 2, 2, 1, 1);
 
-        comboBoxPokemon = new ComboBox(ChainedSID);
-        comboBoxPokemon->setObjectName("comboBoxPokemon");
+        labelSpe = new QLabel(ChainedSID);
+        labelSpe->setObjectName("labelSpe");
 
-        gridLayout->addWidget(comboBoxPokemon, 0, 1, 1, 1);
-
-        labelAbility = new QLabel(ChainedSID);
-        labelAbility->setObjectName("labelAbility");
-
-        gridLayout->addWidget(labelAbility, 1, 0, 1, 1);
-
-        comboBoxAbility = new ComboBox(ChainedSID);
-        comboBoxAbility->setObjectName("comboBoxAbility");
-
-        gridLayout->addWidget(comboBoxAbility, 1, 1, 1, 1);
-
-        labelGender = new QLabel(ChainedSID);
-        labelGender->setObjectName("labelGender");
-
-        gridLayout->addWidget(labelGender, 2, 0, 1, 1);
+        gridLayout->addWidget(labelSpe, 6, 2, 1, 1);
 
         comboBoxGender = new ComboBox(ChainedSID);
         comboBoxGender->setObjectName("comboBoxGender");
 
-        gridLayout->addWidget(comboBoxGender, 2, 1, 1, 1);
+        gridLayout->addWidget(comboBoxGender, 3, 1, 1, 1);
 
-        labelNature = new QLabel(ChainedSID);
-        labelNature->setObjectName("labelNature");
+        labelAbility = new QLabel(ChainedSID);
+        labelAbility->setObjectName("labelAbility");
 
-        gridLayout->addWidget(labelNature, 3, 0, 1, 1);
+        gridLayout->addWidget(labelAbility, 2, 0, 1, 1);
 
-        comboBoxNature = new ComboBox(ChainedSID);
-        comboBoxNature->setObjectName("comboBoxNature");
+        spinBoxSpD = new QSpinBox(ChainedSID);
+        spinBoxSpD->setObjectName("spinBoxSpD");
 
-        gridLayout->addWidget(comboBoxNature, 3, 1, 1, 1);
+        gridLayout->addWidget(spinBoxSpD, 5, 3, 1, 1);
+
+        spinBoxDef = new QSpinBox(ChainedSID);
+        spinBoxDef->setObjectName("spinBoxDef");
+
+        gridLayout->addWidget(spinBoxDef, 3, 3, 1, 1);
+
+        labelSpD = new QLabel(ChainedSID);
+        labelSpD->setObjectName("labelSpD");
+
+        gridLayout->addWidget(labelSpD, 5, 2, 1, 1);
+
+        tableView = new TableView(ChainedSID);
+        tableView->setObjectName("tableView");
+
+        gridLayout->addWidget(tableView, 8, 0, 1, 4);
+
+        spinBoxAtk = new QSpinBox(ChainedSID);
+        spinBoxAtk->setObjectName("spinBoxAtk");
+
+        gridLayout->addWidget(spinBoxAtk, 2, 3, 1, 1);
 
         labelTID = new QLabel(ChainedSID);
         labelTID->setObjectName("labelTID");
 
-        gridLayout->addWidget(labelTID, 4, 0, 1, 1);
+        gridLayout->addWidget(labelTID, 5, 0, 1, 1);
+
+        labelSpA = new QLabel(ChainedSID);
+        labelSpA->setObjectName("labelSpA");
+
+        gridLayout->addWidget(labelSpA, 4, 2, 1, 1);
+
+        comboBoxNature = new ComboBox(ChainedSID);
+        comboBoxNature->setObjectName("comboBoxNature");
+
+        gridLayout->addWidget(comboBoxNature, 4, 1, 1, 1);
+
+        pushButtonClear = new QPushButton(ChainedSID);
+        pushButtonClear->setObjectName("pushButtonClear");
+
+        gridLayout->addWidget(pushButtonClear, 7, 3, 1, 1);
+
+        comboBoxAbility = new ComboBox(ChainedSID);
+        comboBoxAbility->setObjectName("comboBoxAbility");
+
+        gridLayout->addWidget(comboBoxAbility, 2, 1, 1, 1);
 
         textBoxTID = new TextBox(ChainedSID);
         textBoxTID->setObjectName("textBoxTID");
@@ -114,87 +141,67 @@ public:
         sizePolicy.setHeightForWidth(textBoxTID->sizePolicy().hasHeightForWidth());
         textBoxTID->setSizePolicy(sizePolicy);
 
-        gridLayout->addWidget(textBoxTID, 4, 1, 1, 1);
+        gridLayout->addWidget(textBoxTID, 5, 1, 1, 1);
+
+        labelPokemon = new QLabel(ChainedSID);
+        labelPokemon->setObjectName("labelPokemon");
+
+        gridLayout->addWidget(labelPokemon, 1, 0, 1, 1);
+
+        comboBoxPokemon = new ComboBox(ChainedSID);
+        comboBoxPokemon->setObjectName("comboBoxPokemon");
+
+        gridLayout->addWidget(comboBoxPokemon, 1, 1, 1, 1);
 
         labelPossibleResults = new QLabel(ChainedSID);
         labelPossibleResults->setObjectName("labelPossibleResults");
 
-        gridLayout->addWidget(labelPossibleResults, 5, 0, 1, 1);
-
-        labelHP = new QLabel(ChainedSID);
-        labelHP->setObjectName("labelHP");
-
-        gridLayout->addWidget(labelHP, 0, 2, 1, 1);
-
-        spinBoxHP = new QSpinBox(ChainedSID);
-        spinBoxHP->setObjectName("spinBoxHP");
-
-        gridLayout->addWidget(spinBoxHP, 0, 3, 1, 1);
-
-        labelAtk = new QLabel(ChainedSID);
-        labelAtk->setObjectName("labelAtk");
-
-        gridLayout->addWidget(labelAtk, 1, 2, 1, 1);
-
-        spinBoxAtk = new QSpinBox(ChainedSID);
-        spinBoxAtk->setObjectName("spinBoxAtk");
-
-        gridLayout->addWidget(spinBoxAtk, 1, 3, 1, 1);
-
-        labelDef = new QLabel(ChainedSID);
-        labelDef->setObjectName("labelDef");
-
-        gridLayout->addWidget(labelDef, 2, 2, 1, 1);
-
-        spinBoxDef = new QSpinBox(ChainedSID);
-        spinBoxDef->setObjectName("spinBoxDef");
-
-        gridLayout->addWidget(spinBoxDef, 2, 3, 1, 1);
-
-        labelSpA = new QLabel(ChainedSID);
-        labelSpA->setObjectName("labelSpA");
-
-        gridLayout->addWidget(labelSpA, 3, 2, 1, 1);
+        gridLayout->addWidget(labelPossibleResults, 6, 0, 1, 1);
 
         spinBoxSpA = new QSpinBox(ChainedSID);
         spinBoxSpA->setObjectName("spinBoxSpA");
 
-        gridLayout->addWidget(spinBoxSpA, 3, 3, 1, 1);
+        gridLayout->addWidget(spinBoxSpA, 4, 3, 1, 1);
 
-        labelSpD = new QLabel(ChainedSID);
-        labelSpD->setObjectName("labelSpD");
+        labelNature = new QLabel(ChainedSID);
+        labelNature->setObjectName("labelNature");
 
-        gridLayout->addWidget(labelSpD, 4, 2, 1, 1);
+        gridLayout->addWidget(labelNature, 4, 0, 1, 1);
 
-        spinBoxSpD = new QSpinBox(ChainedSID);
-        spinBoxSpD->setObjectName("spinBoxSpD");
+        labelDef = new QLabel(ChainedSID);
+        labelDef->setObjectName("labelDef");
 
-        gridLayout->addWidget(spinBoxSpD, 4, 3, 1, 1);
+        gridLayout->addWidget(labelDef, 3, 2, 1, 1);
 
-        labelSpe = new QLabel(ChainedSID);
-        labelSpe->setObjectName("labelSpe");
+        labelHP = new QLabel(ChainedSID);
+        labelHP->setObjectName("labelHP");
 
-        gridLayout->addWidget(labelSpe, 5, 2, 1, 1);
-
-        spinBoxSpe = new QSpinBox(ChainedSID);
-        spinBoxSpe->setObjectName("spinBoxSpe");
-
-        gridLayout->addWidget(spinBoxSpe, 5, 3, 1, 1);
+        gridLayout->addWidget(labelHP, 1, 2, 1, 1);
 
         pushButtonCalculate = new QPushButton(ChainedSID);
         pushButtonCalculate->setObjectName("pushButtonCalculate");
 
-        gridLayout->addWidget(pushButtonCalculate, 6, 2, 1, 1);
+        gridLayout->addWidget(pushButtonCalculate, 7, 2, 1, 1);
 
-        pushButtonClear = new QPushButton(ChainedSID);
-        pushButtonClear->setObjectName("pushButtonClear");
+        spinBoxHP = new QSpinBox(ChainedSID);
+        spinBoxHP->setObjectName("spinBoxHP");
 
-        gridLayout->addWidget(pushButtonClear, 6, 3, 1, 1);
+        gridLayout->addWidget(spinBoxHP, 1, 3, 1, 1);
 
-        tableView = new TableView(ChainedSID);
-        tableView->setObjectName("tableView");
+        spinBoxSpe = new QSpinBox(ChainedSID);
+        spinBoxSpe->setObjectName("spinBoxSpe");
 
-        gridLayout->addWidget(tableView, 7, 0, 1, 4);
+        gridLayout->addWidget(spinBoxSpe, 6, 3, 1, 1);
+
+        labelGender = new QLabel(ChainedSID);
+        labelGender->setObjectName("labelGender");
+
+        gridLayout->addWidget(labelGender, 3, 0, 1, 1);
+
+        closebutton = new QToolButton(ChainedSID);
+        closebutton->setObjectName("closebutton");
+
+        gridLayout->addWidget(closebutton, 0, 0, 1, 1);
 
 
         retranslateUi(ChainedSID);
@@ -205,20 +212,21 @@ public:
     void retranslateUi(QWidget *ChainedSID)
     {
         ChainedSID->setWindowTitle(QCoreApplication::translate("ChainedSID", "Chained Shiny to SID", nullptr));
-        labelPokemon->setText(QCoreApplication::translate("ChainedSID", "Pokemon", nullptr));
-        labelAbility->setText(QCoreApplication::translate("ChainedSID", "Ability", nullptr));
-        labelGender->setText(QCoreApplication::translate("ChainedSID", "Gender", nullptr));
-        labelNature->setText(QCoreApplication::translate("ChainedSID", "Nature", nullptr));
-        labelTID->setText(QCoreApplication::translate("ChainedSID", "TID", nullptr));
-        labelPossibleResults->setText(QCoreApplication::translate("ChainedSID", "Possible Results:", nullptr));
-        labelHP->setText(QCoreApplication::translate("ChainedSID", "HP", nullptr));
         labelAtk->setText(QCoreApplication::translate("ChainedSID", "Atk", nullptr));
-        labelDef->setText(QCoreApplication::translate("ChainedSID", "Def", nullptr));
-        labelSpA->setText(QCoreApplication::translate("ChainedSID", "SpA", nullptr));
-        labelSpD->setText(QCoreApplication::translate("ChainedSID", "SpD", nullptr));
         labelSpe->setText(QCoreApplication::translate("ChainedSID", "Spe", nullptr));
-        pushButtonCalculate->setText(QCoreApplication::translate("ChainedSID", "Calculate", nullptr));
+        labelAbility->setText(QCoreApplication::translate("ChainedSID", "Ability", nullptr));
+        labelSpD->setText(QCoreApplication::translate("ChainedSID", "SpD", nullptr));
+        labelTID->setText(QCoreApplication::translate("ChainedSID", "TID", nullptr));
+        labelSpA->setText(QCoreApplication::translate("ChainedSID", "SpA", nullptr));
         pushButtonClear->setText(QCoreApplication::translate("ChainedSID", "Clear", nullptr));
+        labelPokemon->setText(QCoreApplication::translate("ChainedSID", "Pokemon", nullptr));
+        labelPossibleResults->setText(QCoreApplication::translate("ChainedSID", "Possible Results:", nullptr));
+        labelNature->setText(QCoreApplication::translate("ChainedSID", "Nature", nullptr));
+        labelDef->setText(QCoreApplication::translate("ChainedSID", "Def", nullptr));
+        labelHP->setText(QCoreApplication::translate("ChainedSID", "HP", nullptr));
+        pushButtonCalculate->setText(QCoreApplication::translate("ChainedSID", "Calculate", nullptr));
+        labelGender->setText(QCoreApplication::translate("ChainedSID", "Gender", nullptr));
+        closebutton->setText(QCoreApplication::translate("ChainedSID", "X", nullptr));
     } // retranslateUi
 
 };

@@ -18,6 +18,7 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 #include "Form/Controls/ComboBox.hpp"
 #include "Form/Controls/EggSettings.hpp"
@@ -31,6 +32,24 @@ class Ui_Eggs8
 {
 public:
     QGridLayout *gridLayout_2;
+    QGroupBox *groupBoxRNGInfo;
+    QGridLayout *gridLayout_3;
+    QLabel *labelSeed0;
+    TextBox *textBoxSeed0;
+    QLabel *labelSeed1;
+    TextBox *textBoxSeed1;
+    QLabel *labelCompatibility;
+    ComboBox *comboBoxCompatibility;
+    QLabel *labelInitialAdvances;
+    TextBox *textBoxInitialAdvances;
+    QLabel *labelMaxAdvances;
+    TextBox *textBoxMaxAdvances;
+    QLabel *labelOffset;
+    TextBox *textBoxOffset;
+    QPushButton *pushButtonGenerate;
+    QGroupBox *groupBoxFilters;
+    QGridLayout *gridLayout;
+    Filter *filter;
     QGroupBox *groupBoxProfile;
     QGridLayout *gridLayout_4;
     QLabel *labelProfile;
@@ -48,28 +67,11 @@ public:
     QFrame *line_5;
     QLabel *labelProfileOvalCharm;
     QLabel *labelProfileOvalCharmValue;
-    QGroupBox *groupBoxRNGInfo;
-    QGridLayout *gridLayout_3;
-    QLabel *labelSeed0;
-    TextBox *textBoxSeed0;
-    QLabel *labelSeed1;
-    TextBox *textBoxSeed1;
-    QLabel *labelCompatibility;
-    ComboBox *comboBoxCompatibility;
-    QLabel *labelInitialAdvances;
-    TextBox *textBoxInitialAdvances;
-    QLabel *labelMaxAdvances;
-    TextBox *textBoxMaxAdvances;
-    QLabel *labelOffset;
-    TextBox *textBoxOffset;
-    QPushButton *pushButtonGenerate;
+    TableView *tableView;
     QGroupBox *groupBoxSettings;
     QGridLayout *gridLayout_11;
     EggSettings *eggSettings;
-    QGroupBox *groupBoxFilters;
-    QGridLayout *gridLayout;
-    Filter *filter;
-    TableView *tableView;
+    QToolButton *closebutton;
 
     void setupUi(QWidget *Eggs8)
     {
@@ -78,6 +80,100 @@ public:
         Eggs8->resize(1200, 700);
         gridLayout_2 = new QGridLayout(Eggs8);
         gridLayout_2->setObjectName("gridLayout_2");
+        groupBoxRNGInfo = new QGroupBox(Eggs8);
+        groupBoxRNGInfo->setObjectName("groupBoxRNGInfo");
+        gridLayout_3 = new QGridLayout(groupBoxRNGInfo);
+        gridLayout_3->setObjectName("gridLayout_3");
+        labelSeed0 = new QLabel(groupBoxRNGInfo);
+        labelSeed0->setObjectName("labelSeed0");
+
+        gridLayout_3->addWidget(labelSeed0, 0, 0, 1, 1);
+
+        textBoxSeed0 = new TextBox(groupBoxRNGInfo);
+        textBoxSeed0->setObjectName("textBoxSeed0");
+
+        gridLayout_3->addWidget(textBoxSeed0, 0, 1, 1, 1);
+
+        labelSeed1 = new QLabel(groupBoxRNGInfo);
+        labelSeed1->setObjectName("labelSeed1");
+
+        gridLayout_3->addWidget(labelSeed1, 1, 0, 1, 1);
+
+        textBoxSeed1 = new TextBox(groupBoxRNGInfo);
+        textBoxSeed1->setObjectName("textBoxSeed1");
+
+        gridLayout_3->addWidget(textBoxSeed1, 1, 1, 1, 1);
+
+        labelCompatibility = new QLabel(groupBoxRNGInfo);
+        labelCompatibility->setObjectName("labelCompatibility");
+
+        gridLayout_3->addWidget(labelCompatibility, 2, 0, 1, 1);
+
+        comboBoxCompatibility = new ComboBox(groupBoxRNGInfo);
+        comboBoxCompatibility->addItem(QString());
+        comboBoxCompatibility->addItem(QString());
+        comboBoxCompatibility->addItem(QString());
+        comboBoxCompatibility->setObjectName("comboBoxCompatibility");
+
+        gridLayout_3->addWidget(comboBoxCompatibility, 2, 1, 1, 1);
+
+        labelInitialAdvances = new QLabel(groupBoxRNGInfo);
+        labelInitialAdvances->setObjectName("labelInitialAdvances");
+
+        gridLayout_3->addWidget(labelInitialAdvances, 3, 0, 1, 1);
+
+        textBoxInitialAdvances = new TextBox(groupBoxRNGInfo);
+        textBoxInitialAdvances->setObjectName("textBoxInitialAdvances");
+        textBoxInitialAdvances->setText(QString::fromUtf8("0"));
+
+        gridLayout_3->addWidget(textBoxInitialAdvances, 3, 1, 1, 1);
+
+        labelMaxAdvances = new QLabel(groupBoxRNGInfo);
+        labelMaxAdvances->setObjectName("labelMaxAdvances");
+
+        gridLayout_3->addWidget(labelMaxAdvances, 4, 0, 1, 1);
+
+        textBoxMaxAdvances = new TextBox(groupBoxRNGInfo);
+        textBoxMaxAdvances->setObjectName("textBoxMaxAdvances");
+        textBoxMaxAdvances->setText(QString::fromUtf8("100000"));
+
+        gridLayout_3->addWidget(textBoxMaxAdvances, 4, 1, 1, 1);
+
+        labelOffset = new QLabel(groupBoxRNGInfo);
+        labelOffset->setObjectName("labelOffset");
+
+        gridLayout_3->addWidget(labelOffset, 5, 0, 1, 1);
+
+        textBoxOffset = new TextBox(groupBoxRNGInfo);
+        textBoxOffset->setObjectName("textBoxOffset");
+
+        gridLayout_3->addWidget(textBoxOffset, 5, 1, 1, 1);
+
+        pushButtonGenerate = new QPushButton(groupBoxRNGInfo);
+        pushButtonGenerate->setObjectName("pushButtonGenerate");
+
+        gridLayout_3->addWidget(pushButtonGenerate, 6, 0, 1, 2);
+
+
+        gridLayout_2->addWidget(groupBoxRNGInfo, 2, 0, 1, 1);
+
+        groupBoxFilters = new QGroupBox(Eggs8);
+        groupBoxFilters->setObjectName("groupBoxFilters");
+        QSizePolicy sizePolicy(QSizePolicy::Policy::Preferred, QSizePolicy::Policy::Preferred);
+        sizePolicy.setHorizontalStretch(1);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(groupBoxFilters->sizePolicy().hasHeightForWidth());
+        groupBoxFilters->setSizePolicy(sizePolicy);
+        gridLayout = new QGridLayout(groupBoxFilters);
+        gridLayout->setObjectName("gridLayout");
+        filter = new Filter(groupBoxFilters);
+        filter->setObjectName("filter");
+
+        gridLayout->addWidget(filter, 0, 0, 2, 1);
+
+
+        gridLayout_2->addWidget(groupBoxFilters, 2, 2, 1, 1);
+
         groupBoxProfile = new QGroupBox(Eggs8);
         groupBoxProfile->setObjectName("groupBoxProfile");
         gridLayout_4 = new QGridLayout(groupBoxProfile);
@@ -162,84 +258,12 @@ public:
         gridLayout_4->addWidget(labelProfileOvalCharmValue, 0, 9, 1, 1);
 
 
-        gridLayout_2->addWidget(groupBoxProfile, 0, 0, 1, 3);
+        gridLayout_2->addWidget(groupBoxProfile, 1, 0, 1, 3);
 
-        groupBoxRNGInfo = new QGroupBox(Eggs8);
-        groupBoxRNGInfo->setObjectName("groupBoxRNGInfo");
-        gridLayout_3 = new QGridLayout(groupBoxRNGInfo);
-        gridLayout_3->setObjectName("gridLayout_3");
-        labelSeed0 = new QLabel(groupBoxRNGInfo);
-        labelSeed0->setObjectName("labelSeed0");
+        tableView = new TableView(Eggs8);
+        tableView->setObjectName("tableView");
 
-        gridLayout_3->addWidget(labelSeed0, 0, 0, 1, 1);
-
-        textBoxSeed0 = new TextBox(groupBoxRNGInfo);
-        textBoxSeed0->setObjectName("textBoxSeed0");
-
-        gridLayout_3->addWidget(textBoxSeed0, 0, 1, 1, 1);
-
-        labelSeed1 = new QLabel(groupBoxRNGInfo);
-        labelSeed1->setObjectName("labelSeed1");
-
-        gridLayout_3->addWidget(labelSeed1, 1, 0, 1, 1);
-
-        textBoxSeed1 = new TextBox(groupBoxRNGInfo);
-        textBoxSeed1->setObjectName("textBoxSeed1");
-
-        gridLayout_3->addWidget(textBoxSeed1, 1, 1, 1, 1);
-
-        labelCompatibility = new QLabel(groupBoxRNGInfo);
-        labelCompatibility->setObjectName("labelCompatibility");
-
-        gridLayout_3->addWidget(labelCompatibility, 2, 0, 1, 1);
-
-        comboBoxCompatibility = new ComboBox(groupBoxRNGInfo);
-        comboBoxCompatibility->addItem(QString());
-        comboBoxCompatibility->addItem(QString());
-        comboBoxCompatibility->addItem(QString());
-        comboBoxCompatibility->setObjectName("comboBoxCompatibility");
-
-        gridLayout_3->addWidget(comboBoxCompatibility, 2, 1, 1, 1);
-
-        labelInitialAdvances = new QLabel(groupBoxRNGInfo);
-        labelInitialAdvances->setObjectName("labelInitialAdvances");
-
-        gridLayout_3->addWidget(labelInitialAdvances, 3, 0, 1, 1);
-
-        textBoxInitialAdvances = new TextBox(groupBoxRNGInfo);
-        textBoxInitialAdvances->setObjectName("textBoxInitialAdvances");
-        textBoxInitialAdvances->setText(QString::fromUtf8("0"));
-
-        gridLayout_3->addWidget(textBoxInitialAdvances, 3, 1, 1, 1);
-
-        labelMaxAdvances = new QLabel(groupBoxRNGInfo);
-        labelMaxAdvances->setObjectName("labelMaxAdvances");
-
-        gridLayout_3->addWidget(labelMaxAdvances, 4, 0, 1, 1);
-
-        textBoxMaxAdvances = new TextBox(groupBoxRNGInfo);
-        textBoxMaxAdvances->setObjectName("textBoxMaxAdvances");
-        textBoxMaxAdvances->setText(QString::fromUtf8("100000"));
-
-        gridLayout_3->addWidget(textBoxMaxAdvances, 4, 1, 1, 1);
-
-        labelOffset = new QLabel(groupBoxRNGInfo);
-        labelOffset->setObjectName("labelOffset");
-
-        gridLayout_3->addWidget(labelOffset, 5, 0, 1, 1);
-
-        textBoxOffset = new TextBox(groupBoxRNGInfo);
-        textBoxOffset->setObjectName("textBoxOffset");
-
-        gridLayout_3->addWidget(textBoxOffset, 5, 1, 1, 1);
-
-        pushButtonGenerate = new QPushButton(groupBoxRNGInfo);
-        pushButtonGenerate->setObjectName("pushButtonGenerate");
-
-        gridLayout_3->addWidget(pushButtonGenerate, 6, 0, 1, 2);
-
-
-        gridLayout_2->addWidget(groupBoxRNGInfo, 1, 0, 1, 1);
+        gridLayout_2->addWidget(tableView, 3, 0, 1, 3);
 
         groupBoxSettings = new QGroupBox(Eggs8);
         groupBoxSettings->setObjectName("groupBoxSettings");
@@ -251,29 +275,12 @@ public:
         gridLayout_11->addWidget(eggSettings, 0, 0, 1, 1);
 
 
-        gridLayout_2->addWidget(groupBoxSettings, 1, 1, 1, 1);
+        gridLayout_2->addWidget(groupBoxSettings, 2, 1, 1, 1);
 
-        groupBoxFilters = new QGroupBox(Eggs8);
-        groupBoxFilters->setObjectName("groupBoxFilters");
-        QSizePolicy sizePolicy(QSizePolicy::Policy::Preferred, QSizePolicy::Policy::Preferred);
-        sizePolicy.setHorizontalStretch(1);
-        sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(groupBoxFilters->sizePolicy().hasHeightForWidth());
-        groupBoxFilters->setSizePolicy(sizePolicy);
-        gridLayout = new QGridLayout(groupBoxFilters);
-        gridLayout->setObjectName("gridLayout");
-        filter = new Filter(groupBoxFilters);
-        filter->setObjectName("filter");
+        closebutton = new QToolButton(Eggs8);
+        closebutton->setObjectName("closebutton");
 
-        gridLayout->addWidget(filter, 0, 0, 2, 1);
-
-
-        gridLayout_2->addWidget(groupBoxFilters, 1, 2, 1, 1);
-
-        tableView = new TableView(Eggs8);
-        tableView->setObjectName("tableView");
-
-        gridLayout_2->addWidget(tableView, 2, 0, 1, 3);
+        gridLayout_2->addWidget(closebutton, 0, 0, 1, 1);
 
         QWidget::setTabOrder(comboBoxProfiles, pushButtonProfileManager);
         QWidget::setTabOrder(pushButtonProfileManager, textBoxSeed0);
@@ -293,14 +300,6 @@ public:
     void retranslateUi(QWidget *Eggs8)
     {
         Eggs8->setWindowTitle(QCoreApplication::translate("Eggs8", "Gen 8 Eggs", nullptr));
-        groupBoxProfile->setTitle(QCoreApplication::translate("Eggs8", "Profile", nullptr));
-        labelProfile->setText(QCoreApplication::translate("Eggs8", "Profile", nullptr));
-        pushButtonProfileManager->setText(QCoreApplication::translate("Eggs8", "Manager", nullptr));
-        labelProfileTID->setText(QCoreApplication::translate("Eggs8", "TID", nullptr));
-        labelProfileSID->setText(QCoreApplication::translate("Eggs8", "SID", nullptr));
-        labelProfileGame->setText(QCoreApplication::translate("Eggs8", "Game", nullptr));
-        labelProfileShinyCharm->setText(QCoreApplication::translate("Eggs8", "Shiny Charm", nullptr));
-        labelProfileOvalCharm->setText(QCoreApplication::translate("Eggs8", "Oval Charm", nullptr));
         groupBoxRNGInfo->setTitle(QCoreApplication::translate("Eggs8", "RNG Info", nullptr));
         labelSeed0->setText(QCoreApplication::translate("Eggs8", "Seed 0", nullptr));
         labelSeed1->setText(QCoreApplication::translate("Eggs8", "Seed 1", nullptr));
@@ -313,8 +312,17 @@ public:
         labelMaxAdvances->setText(QCoreApplication::translate("Eggs8", "Max Advances", nullptr));
         labelOffset->setText(QCoreApplication::translate("Eggs8", "Offset", nullptr));
         pushButtonGenerate->setText(QCoreApplication::translate("Eggs8", "Generate", nullptr));
-        groupBoxSettings->setTitle(QCoreApplication::translate("Eggs8", "Settings", nullptr));
         groupBoxFilters->setTitle(QCoreApplication::translate("Eggs8", "Filters", nullptr));
+        groupBoxProfile->setTitle(QCoreApplication::translate("Eggs8", "Profile", nullptr));
+        labelProfile->setText(QCoreApplication::translate("Eggs8", "Profile", nullptr));
+        pushButtonProfileManager->setText(QCoreApplication::translate("Eggs8", "Manager", nullptr));
+        labelProfileTID->setText(QCoreApplication::translate("Eggs8", "TID", nullptr));
+        labelProfileSID->setText(QCoreApplication::translate("Eggs8", "SID", nullptr));
+        labelProfileGame->setText(QCoreApplication::translate("Eggs8", "Game", nullptr));
+        labelProfileShinyCharm->setText(QCoreApplication::translate("Eggs8", "Shiny Charm", nullptr));
+        labelProfileOvalCharm->setText(QCoreApplication::translate("Eggs8", "Oval Charm", nullptr));
+        groupBoxSettings->setTitle(QCoreApplication::translate("Eggs8", "Settings", nullptr));
+        closebutton->setText(QCoreApplication::translate("Eggs8", "X", nullptr));
     } // retranslateUi
 
 };

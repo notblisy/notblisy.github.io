@@ -19,6 +19,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpinBox>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 #include "Form/Controls/ComboBox.hpp"
 #include "Form/Controls/Filter.hpp"
@@ -31,6 +32,7 @@ class Ui_Raids
 {
 public:
     QGridLayout *gridLayout_2;
+    TableView *tableView;
     QGroupBox *groupBoxProfile;
     QGridLayout *gridLayout_5;
     QLabel *labelProfile;
@@ -43,21 +45,6 @@ public:
     QFrame *line;
     QLabel *labelProfileGame;
     QLabel *labelProfileGameValue;
-    QGroupBox *groupBoxRaidsRNGInfo;
-    QGridLayout *gridLayout_3;
-    QLabel *labelLocation;
-    QComboBox *comboBoxLocation;
-    QLabel *labelDen;
-    ComboBox *comboBoxDen;
-    QLabel *labelSeed;
-    TextBox *textBoxSeed;
-    QLabel *labelInitialAdvances;
-    TextBox *textBoxInitialAdvances;
-    QLabel *labelMaxAdvances;
-    TextBox *textBoxMaxAdvances;
-    QLabel *labelOffset;
-    TextBox *textBoxOffset;
-    QPushButton *pushButtonGenerate;
     QGroupBox *groupBoxRaidsSettings;
     QGridLayout *gridLayout;
     QLabel *labelRarity;
@@ -82,7 +69,22 @@ public:
     QGroupBox *groupBoxRaidsFilters;
     QGridLayout *gridLayout_19;
     Filter *filter;
-    TableView *tableView;
+    QGroupBox *groupBoxRaidsRNGInfo;
+    QGridLayout *gridLayout_3;
+    QLabel *labelLocation;
+    QComboBox *comboBoxLocation;
+    QLabel *labelDen;
+    ComboBox *comboBoxDen;
+    QLabel *labelSeed;
+    TextBox *textBoxSeed;
+    QLabel *labelInitialAdvances;
+    TextBox *textBoxInitialAdvances;
+    QLabel *labelMaxAdvances;
+    TextBox *textBoxMaxAdvances;
+    QLabel *labelOffset;
+    TextBox *textBoxOffset;
+    QPushButton *pushButtonGenerate;
+    QToolButton *closebutton;
 
     void setupUi(QWidget *Raids)
     {
@@ -91,6 +93,11 @@ public:
         Raids->resize(1078, 597);
         gridLayout_2 = new QGridLayout(Raids);
         gridLayout_2->setObjectName("gridLayout_2");
+        tableView = new TableView(Raids);
+        tableView->setObjectName("tableView");
+
+        gridLayout_2->addWidget(tableView, 3, 0, 1, 3);
+
         groupBoxProfile = new QGroupBox(Raids);
         groupBoxProfile->setObjectName("groupBoxProfile");
         gridLayout_5 = new QGridLayout(groupBoxProfile);
@@ -148,85 +155,7 @@ public:
         gridLayout_5->addWidget(labelProfileGameValue, 0, 6, 1, 1);
 
 
-        gridLayout_2->addWidget(groupBoxProfile, 0, 0, 1, 3);
-
-        groupBoxRaidsRNGInfo = new QGroupBox(Raids);
-        groupBoxRaidsRNGInfo->setObjectName("groupBoxRaidsRNGInfo");
-        gridLayout_3 = new QGridLayout(groupBoxRaidsRNGInfo);
-        gridLayout_3->setObjectName("gridLayout_3");
-        labelLocation = new QLabel(groupBoxRaidsRNGInfo);
-        labelLocation->setObjectName("labelLocation");
-
-        gridLayout_3->addWidget(labelLocation, 0, 0, 1, 1);
-
-        comboBoxLocation = new QComboBox(groupBoxRaidsRNGInfo);
-        comboBoxLocation->addItem(QString());
-        comboBoxLocation->addItem(QString());
-        comboBoxLocation->addItem(QString());
-        comboBoxLocation->addItem(QString());
-        comboBoxLocation->setObjectName("comboBoxLocation");
-
-        gridLayout_3->addWidget(comboBoxLocation, 0, 1, 1, 1);
-
-        labelDen = new QLabel(groupBoxRaidsRNGInfo);
-        labelDen->setObjectName("labelDen");
-
-        gridLayout_3->addWidget(labelDen, 1, 0, 1, 1);
-
-        comboBoxDen = new ComboBox(groupBoxRaidsRNGInfo);
-        comboBoxDen->setObjectName("comboBoxDen");
-
-        gridLayout_3->addWidget(comboBoxDen, 1, 1, 1, 1);
-
-        labelSeed = new QLabel(groupBoxRaidsRNGInfo);
-        labelSeed->setObjectName("labelSeed");
-
-        gridLayout_3->addWidget(labelSeed, 2, 0, 1, 1);
-
-        textBoxSeed = new TextBox(groupBoxRaidsRNGInfo);
-        textBoxSeed->setObjectName("textBoxSeed");
-
-        gridLayout_3->addWidget(textBoxSeed, 2, 1, 1, 1);
-
-        labelInitialAdvances = new QLabel(groupBoxRaidsRNGInfo);
-        labelInitialAdvances->setObjectName("labelInitialAdvances");
-
-        gridLayout_3->addWidget(labelInitialAdvances, 3, 0, 1, 1);
-
-        textBoxInitialAdvances = new TextBox(groupBoxRaidsRNGInfo);
-        textBoxInitialAdvances->setObjectName("textBoxInitialAdvances");
-        textBoxInitialAdvances->setText(QString::fromUtf8("0"));
-
-        gridLayout_3->addWidget(textBoxInitialAdvances, 3, 1, 1, 1);
-
-        labelMaxAdvances = new QLabel(groupBoxRaidsRNGInfo);
-        labelMaxAdvances->setObjectName("labelMaxAdvances");
-
-        gridLayout_3->addWidget(labelMaxAdvances, 4, 0, 1, 1);
-
-        textBoxMaxAdvances = new TextBox(groupBoxRaidsRNGInfo);
-        textBoxMaxAdvances->setObjectName("textBoxMaxAdvances");
-        textBoxMaxAdvances->setText(QString::fromUtf8("100"));
-
-        gridLayout_3->addWidget(textBoxMaxAdvances, 4, 1, 1, 1);
-
-        labelOffset = new QLabel(groupBoxRaidsRNGInfo);
-        labelOffset->setObjectName("labelOffset");
-
-        gridLayout_3->addWidget(labelOffset, 5, 0, 1, 1);
-
-        textBoxOffset = new TextBox(groupBoxRaidsRNGInfo);
-        textBoxOffset->setObjectName("textBoxOffset");
-
-        gridLayout_3->addWidget(textBoxOffset, 5, 1, 1, 1);
-
-        pushButtonGenerate = new QPushButton(groupBoxRaidsRNGInfo);
-        pushButtonGenerate->setObjectName("pushButtonGenerate");
-
-        gridLayout_3->addWidget(pushButtonGenerate, 6, 0, 1, 2);
-
-
-        gridLayout_2->addWidget(groupBoxRaidsRNGInfo, 1, 0, 1, 1);
+        gridLayout_2->addWidget(groupBoxProfile, 1, 0, 1, 3);
 
         groupBoxRaidsSettings = new QGroupBox(Raids);
         groupBoxRaidsSettings->setObjectName("groupBoxRaidsSettings");
@@ -360,7 +289,7 @@ public:
         gridLayout->addWidget(comboBoxShinyType, 5, 3, 1, 1);
 
 
-        gridLayout_2->addWidget(groupBoxRaidsSettings, 1, 1, 1, 1);
+        gridLayout_2->addWidget(groupBoxRaidsSettings, 2, 1, 1, 1);
 
         groupBoxRaidsFilters = new QGroupBox(Raids);
         groupBoxRaidsFilters->setObjectName("groupBoxRaidsFilters");
@@ -377,12 +306,90 @@ public:
         gridLayout_19->addWidget(filter, 0, 0, 2, 1);
 
 
-        gridLayout_2->addWidget(groupBoxRaidsFilters, 1, 2, 1, 1);
+        gridLayout_2->addWidget(groupBoxRaidsFilters, 2, 2, 1, 1);
 
-        tableView = new TableView(Raids);
-        tableView->setObjectName("tableView");
+        groupBoxRaidsRNGInfo = new QGroupBox(Raids);
+        groupBoxRaidsRNGInfo->setObjectName("groupBoxRaidsRNGInfo");
+        gridLayout_3 = new QGridLayout(groupBoxRaidsRNGInfo);
+        gridLayout_3->setObjectName("gridLayout_3");
+        labelLocation = new QLabel(groupBoxRaidsRNGInfo);
+        labelLocation->setObjectName("labelLocation");
 
-        gridLayout_2->addWidget(tableView, 2, 0, 1, 3);
+        gridLayout_3->addWidget(labelLocation, 0, 0, 1, 1);
+
+        comboBoxLocation = new QComboBox(groupBoxRaidsRNGInfo);
+        comboBoxLocation->addItem(QString());
+        comboBoxLocation->addItem(QString());
+        comboBoxLocation->addItem(QString());
+        comboBoxLocation->addItem(QString());
+        comboBoxLocation->setObjectName("comboBoxLocation");
+
+        gridLayout_3->addWidget(comboBoxLocation, 0, 1, 1, 1);
+
+        labelDen = new QLabel(groupBoxRaidsRNGInfo);
+        labelDen->setObjectName("labelDen");
+
+        gridLayout_3->addWidget(labelDen, 1, 0, 1, 1);
+
+        comboBoxDen = new ComboBox(groupBoxRaidsRNGInfo);
+        comboBoxDen->setObjectName("comboBoxDen");
+
+        gridLayout_3->addWidget(comboBoxDen, 1, 1, 1, 1);
+
+        labelSeed = new QLabel(groupBoxRaidsRNGInfo);
+        labelSeed->setObjectName("labelSeed");
+
+        gridLayout_3->addWidget(labelSeed, 2, 0, 1, 1);
+
+        textBoxSeed = new TextBox(groupBoxRaidsRNGInfo);
+        textBoxSeed->setObjectName("textBoxSeed");
+
+        gridLayout_3->addWidget(textBoxSeed, 2, 1, 1, 1);
+
+        labelInitialAdvances = new QLabel(groupBoxRaidsRNGInfo);
+        labelInitialAdvances->setObjectName("labelInitialAdvances");
+
+        gridLayout_3->addWidget(labelInitialAdvances, 3, 0, 1, 1);
+
+        textBoxInitialAdvances = new TextBox(groupBoxRaidsRNGInfo);
+        textBoxInitialAdvances->setObjectName("textBoxInitialAdvances");
+        textBoxInitialAdvances->setText(QString::fromUtf8("0"));
+
+        gridLayout_3->addWidget(textBoxInitialAdvances, 3, 1, 1, 1);
+
+        labelMaxAdvances = new QLabel(groupBoxRaidsRNGInfo);
+        labelMaxAdvances->setObjectName("labelMaxAdvances");
+
+        gridLayout_3->addWidget(labelMaxAdvances, 4, 0, 1, 1);
+
+        textBoxMaxAdvances = new TextBox(groupBoxRaidsRNGInfo);
+        textBoxMaxAdvances->setObjectName("textBoxMaxAdvances");
+        textBoxMaxAdvances->setText(QString::fromUtf8("100"));
+
+        gridLayout_3->addWidget(textBoxMaxAdvances, 4, 1, 1, 1);
+
+        labelOffset = new QLabel(groupBoxRaidsRNGInfo);
+        labelOffset->setObjectName("labelOffset");
+
+        gridLayout_3->addWidget(labelOffset, 5, 0, 1, 1);
+
+        textBoxOffset = new TextBox(groupBoxRaidsRNGInfo);
+        textBoxOffset->setObjectName("textBoxOffset");
+
+        gridLayout_3->addWidget(textBoxOffset, 5, 1, 1, 1);
+
+        pushButtonGenerate = new QPushButton(groupBoxRaidsRNGInfo);
+        pushButtonGenerate->setObjectName("pushButtonGenerate");
+
+        gridLayout_3->addWidget(pushButtonGenerate, 6, 0, 1, 2);
+
+
+        gridLayout_2->addWidget(groupBoxRaidsRNGInfo, 2, 0, 1, 1);
+
+        closebutton = new QToolButton(Raids);
+        closebutton->setObjectName("closebutton");
+
+        gridLayout_2->addWidget(closebutton, 0, 0, 1, 1);
 
         QWidget::setTabOrder(comboBoxProfiles, pushButtonProfileManager);
         QWidget::setTabOrder(pushButtonProfileManager, comboBoxLocation);
@@ -416,19 +423,6 @@ public:
         labelProfileTID->setText(QCoreApplication::translate("Raids", "TID", nullptr));
         labelProfileSID->setText(QCoreApplication::translate("Raids", "SID", nullptr));
         labelProfileGame->setText(QCoreApplication::translate("Raids", "Game", nullptr));
-        groupBoxRaidsRNGInfo->setTitle(QCoreApplication::translate("Raids", "RNG Info", nullptr));
-        labelLocation->setText(QCoreApplication::translate("Raids", "Location", nullptr));
-        comboBoxLocation->setItemText(0, QCoreApplication::translate("Raids", "Wild Area", nullptr));
-        comboBoxLocation->setItemText(1, QCoreApplication::translate("Raids", "Isle of Armor", nullptr));
-        comboBoxLocation->setItemText(2, QCoreApplication::translate("Raids", "Crown Tundra", nullptr));
-        comboBoxLocation->setItemText(3, QCoreApplication::translate("Raids", "Event", nullptr));
-
-        labelDen->setText(QCoreApplication::translate("Raids", "Den", nullptr));
-        labelSeed->setText(QCoreApplication::translate("Raids", "Seed", nullptr));
-        labelInitialAdvances->setText(QCoreApplication::translate("Raids", "Initial Advances", nullptr));
-        labelMaxAdvances->setText(QCoreApplication::translate("Raids", "Max Advances", nullptr));
-        labelOffset->setText(QCoreApplication::translate("Raids", "Offset", nullptr));
-        pushButtonGenerate->setText(QCoreApplication::translate("Raids", "Generate", nullptr));
         groupBoxRaidsSettings->setTitle(QCoreApplication::translate("Raids", "Settings", nullptr));
         labelRarity->setText(QCoreApplication::translate("Raids", "Rarity", nullptr));
         comboBoxRarity->setItemText(0, QCoreApplication::translate("Raids", "Normal", nullptr));
@@ -456,6 +450,20 @@ public:
         comboBoxShinyType->setItemText(2, QCoreApplication::translate("Raids", "Force shiny", nullptr));
 
         groupBoxRaidsFilters->setTitle(QCoreApplication::translate("Raids", "Filters", nullptr));
+        groupBoxRaidsRNGInfo->setTitle(QCoreApplication::translate("Raids", "RNG Info", nullptr));
+        labelLocation->setText(QCoreApplication::translate("Raids", "Location", nullptr));
+        comboBoxLocation->setItemText(0, QCoreApplication::translate("Raids", "Wild Area", nullptr));
+        comboBoxLocation->setItemText(1, QCoreApplication::translate("Raids", "Isle of Armor", nullptr));
+        comboBoxLocation->setItemText(2, QCoreApplication::translate("Raids", "Crown Tundra", nullptr));
+        comboBoxLocation->setItemText(3, QCoreApplication::translate("Raids", "Event", nullptr));
+
+        labelDen->setText(QCoreApplication::translate("Raids", "Den", nullptr));
+        labelSeed->setText(QCoreApplication::translate("Raids", "Seed", nullptr));
+        labelInitialAdvances->setText(QCoreApplication::translate("Raids", "Initial Advances", nullptr));
+        labelMaxAdvances->setText(QCoreApplication::translate("Raids", "Max Advances", nullptr));
+        labelOffset->setText(QCoreApplication::translate("Raids", "Offset", nullptr));
+        pushButtonGenerate->setText(QCoreApplication::translate("Raids", "Generate", nullptr));
+        closebutton->setText(QCoreApplication::translate("Raids", "X", nullptr));
     } // retranslateUi
 
 };

@@ -22,6 +22,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QTabWidget>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 #include "Form/Controls/ComboBox.hpp"
 #include "Form/Controls/DateEdit.hpp"
@@ -35,35 +36,6 @@ class Ui_DreamRadar
 {
 public:
     QGridLayout *gridLayout_26;
-    QGroupBox *groupBoxProfile;
-    QGridLayout *gridLayout_5;
-    QLabel *labelProfile;
-    QComboBox *comboBoxProfiles;
-    QPushButton *pushButtonProfileManager;
-    QLabel *labelProfileTID;
-    QLabel *labelProfileTIDValue;
-    QLabel *labelProfileSID;
-    QLabel *labelProfileSIDValue;
-    QFrame *line_4;
-    QLabel *labelProfileMACAddress;
-    QLabel *labelProfileMACAddressValue;
-    QLabel *labelProfileDSType;
-    QLabel *labelProfileDSTypeValue;
-    QFrame *line_3;
-    QLabel *labelProfileVCount;
-    QLabel *labelProfileVCountValue;
-    QLabel *labelProfileTimer0;
-    QLabel *labelProfileTimer0Value;
-    QFrame *line_2;
-    QLabel *labelProfileGxStat;
-    QLabel *labelProfileGxStatValue;
-    QLabel *labelProfileVFrame;
-    QLabel *labelProfileVFrameValue;
-    QFrame *line;
-    QLabel *labelProfileKeypresses;
-    QLabel *labelProfileKeypressesValue;
-    QLabel *labelProfileGame;
-    QLabel *labelProfileGameValue;
     QTabWidget *tabRNGSelector;
     QWidget *tabGenerator;
     QGridLayout *gridLayout_2;
@@ -144,6 +116,36 @@ public:
     Filter *filterSearcher;
     QProgressBar *progressBar;
     TableView *tableViewSearcher;
+    QGroupBox *groupBoxProfile;
+    QGridLayout *gridLayout_5;
+    QLabel *labelProfile;
+    QComboBox *comboBoxProfiles;
+    QPushButton *pushButtonProfileManager;
+    QLabel *labelProfileTID;
+    QLabel *labelProfileTIDValue;
+    QLabel *labelProfileSID;
+    QLabel *labelProfileSIDValue;
+    QFrame *line_4;
+    QLabel *labelProfileMACAddress;
+    QLabel *labelProfileMACAddressValue;
+    QLabel *labelProfileDSType;
+    QLabel *labelProfileDSTypeValue;
+    QFrame *line_3;
+    QLabel *labelProfileVCount;
+    QLabel *labelProfileVCountValue;
+    QLabel *labelProfileTimer0;
+    QLabel *labelProfileTimer0Value;
+    QFrame *line_2;
+    QLabel *labelProfileGxStat;
+    QLabel *labelProfileGxStatValue;
+    QLabel *labelProfileVFrame;
+    QLabel *labelProfileVFrameValue;
+    QFrame *line;
+    QLabel *labelProfileKeypresses;
+    QLabel *labelProfileKeypressesValue;
+    QLabel *labelProfileGame;
+    QLabel *labelProfileGameValue;
+    QToolButton *closebutton;
 
     void setupUi(QWidget *DreamRadar)
     {
@@ -152,158 +154,6 @@ public:
         DreamRadar->resize(1200, 700);
         gridLayout_26 = new QGridLayout(DreamRadar);
         gridLayout_26->setObjectName("gridLayout_26");
-        groupBoxProfile = new QGroupBox(DreamRadar);
-        groupBoxProfile->setObjectName("groupBoxProfile");
-        gridLayout_5 = new QGridLayout(groupBoxProfile);
-        gridLayout_5->setObjectName("gridLayout_5");
-        labelProfile = new QLabel(groupBoxProfile);
-        labelProfile->setObjectName("labelProfile");
-
-        gridLayout_5->addWidget(labelProfile, 0, 0, 1, 1);
-
-        comboBoxProfiles = new QComboBox(groupBoxProfile);
-        comboBoxProfiles->setObjectName("comboBoxProfiles");
-
-        gridLayout_5->addWidget(comboBoxProfiles, 0, 1, 1, 1);
-
-        pushButtonProfileManager = new QPushButton(groupBoxProfile);
-        pushButtonProfileManager->setObjectName("pushButtonProfileManager");
-
-        gridLayout_5->addWidget(pushButtonProfileManager, 1, 1, 1, 1);
-
-        labelProfileTID = new QLabel(groupBoxProfile);
-        labelProfileTID->setObjectName("labelProfileTID");
-
-        gridLayout_5->addWidget(labelProfileTID, 0, 2, 1, 1);
-
-        labelProfileTIDValue = new QLabel(groupBoxProfile);
-        labelProfileTIDValue->setObjectName("labelProfileTIDValue");
-        labelProfileTIDValue->setText(QString::fromUtf8("12345"));
-
-        gridLayout_5->addWidget(labelProfileTIDValue, 0, 3, 1, 1);
-
-        labelProfileSID = new QLabel(groupBoxProfile);
-        labelProfileSID->setObjectName("labelProfileSID");
-
-        gridLayout_5->addWidget(labelProfileSID, 1, 2, 1, 1);
-
-        labelProfileSIDValue = new QLabel(groupBoxProfile);
-        labelProfileSIDValue->setObjectName("labelProfileSIDValue");
-        labelProfileSIDValue->setText(QString::fromUtf8("54321"));
-
-        gridLayout_5->addWidget(labelProfileSIDValue, 1, 3, 1, 1);
-
-        line_4 = new QFrame(groupBoxProfile);
-        line_4->setObjectName("line_4");
-        line_4->setFrameShape(QFrame::Shape::VLine);
-        line_4->setFrameShadow(QFrame::Shadow::Sunken);
-
-        gridLayout_5->addWidget(line_4, 0, 4, 2, 1);
-
-        labelProfileMACAddress = new QLabel(groupBoxProfile);
-        labelProfileMACAddress->setObjectName("labelProfileMACAddress");
-
-        gridLayout_5->addWidget(labelProfileMACAddress, 0, 5, 1, 1);
-
-        labelProfileMACAddressValue = new QLabel(groupBoxProfile);
-        labelProfileMACAddressValue->setObjectName("labelProfileMACAddressValue");
-
-        gridLayout_5->addWidget(labelProfileMACAddressValue, 0, 6, 1, 1);
-
-        labelProfileDSType = new QLabel(groupBoxProfile);
-        labelProfileDSType->setObjectName("labelProfileDSType");
-
-        gridLayout_5->addWidget(labelProfileDSType, 1, 5, 1, 1);
-
-        labelProfileDSTypeValue = new QLabel(groupBoxProfile);
-        labelProfileDSTypeValue->setObjectName("labelProfileDSTypeValue");
-
-        gridLayout_5->addWidget(labelProfileDSTypeValue, 1, 6, 1, 1);
-
-        line_3 = new QFrame(groupBoxProfile);
-        line_3->setObjectName("line_3");
-        line_3->setFrameShape(QFrame::Shape::VLine);
-        line_3->setFrameShadow(QFrame::Shadow::Sunken);
-
-        gridLayout_5->addWidget(line_3, 0, 7, 2, 1);
-
-        labelProfileVCount = new QLabel(groupBoxProfile);
-        labelProfileVCount->setObjectName("labelProfileVCount");
-
-        gridLayout_5->addWidget(labelProfileVCount, 0, 8, 1, 1);
-
-        labelProfileVCountValue = new QLabel(groupBoxProfile);
-        labelProfileVCountValue->setObjectName("labelProfileVCountValue");
-
-        gridLayout_5->addWidget(labelProfileVCountValue, 0, 9, 1, 1);
-
-        labelProfileTimer0 = new QLabel(groupBoxProfile);
-        labelProfileTimer0->setObjectName("labelProfileTimer0");
-
-        gridLayout_5->addWidget(labelProfileTimer0, 1, 8, 1, 1);
-
-        labelProfileTimer0Value = new QLabel(groupBoxProfile);
-        labelProfileTimer0Value->setObjectName("labelProfileTimer0Value");
-
-        gridLayout_5->addWidget(labelProfileTimer0Value, 1, 9, 1, 1);
-
-        line_2 = new QFrame(groupBoxProfile);
-        line_2->setObjectName("line_2");
-        line_2->setFrameShape(QFrame::Shape::VLine);
-        line_2->setFrameShadow(QFrame::Shadow::Sunken);
-
-        gridLayout_5->addWidget(line_2, 0, 10, 2, 1);
-
-        labelProfileGxStat = new QLabel(groupBoxProfile);
-        labelProfileGxStat->setObjectName("labelProfileGxStat");
-
-        gridLayout_5->addWidget(labelProfileGxStat, 0, 11, 1, 1);
-
-        labelProfileGxStatValue = new QLabel(groupBoxProfile);
-        labelProfileGxStatValue->setObjectName("labelProfileGxStatValue");
-
-        gridLayout_5->addWidget(labelProfileGxStatValue, 0, 12, 1, 1);
-
-        labelProfileVFrame = new QLabel(groupBoxProfile);
-        labelProfileVFrame->setObjectName("labelProfileVFrame");
-
-        gridLayout_5->addWidget(labelProfileVFrame, 1, 11, 1, 1);
-
-        labelProfileVFrameValue = new QLabel(groupBoxProfile);
-        labelProfileVFrameValue->setObjectName("labelProfileVFrameValue");
-
-        gridLayout_5->addWidget(labelProfileVFrameValue, 1, 12, 1, 1);
-
-        line = new QFrame(groupBoxProfile);
-        line->setObjectName("line");
-        line->setFrameShape(QFrame::Shape::VLine);
-        line->setFrameShadow(QFrame::Shadow::Sunken);
-
-        gridLayout_5->addWidget(line, 0, 13, 2, 1);
-
-        labelProfileKeypresses = new QLabel(groupBoxProfile);
-        labelProfileKeypresses->setObjectName("labelProfileKeypresses");
-
-        gridLayout_5->addWidget(labelProfileKeypresses, 0, 14, 1, 1);
-
-        labelProfileKeypressesValue = new QLabel(groupBoxProfile);
-        labelProfileKeypressesValue->setObjectName("labelProfileKeypressesValue");
-
-        gridLayout_5->addWidget(labelProfileKeypressesValue, 0, 15, 1, 1);
-
-        labelProfileGame = new QLabel(groupBoxProfile);
-        labelProfileGame->setObjectName("labelProfileGame");
-
-        gridLayout_5->addWidget(labelProfileGame, 1, 14, 1, 1);
-
-        labelProfileGameValue = new QLabel(groupBoxProfile);
-        labelProfileGameValue->setObjectName("labelProfileGameValue");
-
-        gridLayout_5->addWidget(labelProfileGameValue, 1, 15, 1, 1);
-
-
-        gridLayout_26->addWidget(groupBoxProfile, 0, 0, 1, 1);
-
         tabRNGSelector = new QTabWidget(DreamRadar);
         tabRNGSelector->setObjectName("tabRNGSelector");
         tabGenerator = new QWidget();
@@ -699,7 +549,164 @@ public:
 
         tabRNGSelector->addTab(tabSearcher, QString());
 
-        gridLayout_26->addWidget(tabRNGSelector, 1, 0, 1, 1);
+        gridLayout_26->addWidget(tabRNGSelector, 2, 0, 1, 1);
+
+        groupBoxProfile = new QGroupBox(DreamRadar);
+        groupBoxProfile->setObjectName("groupBoxProfile");
+        gridLayout_5 = new QGridLayout(groupBoxProfile);
+        gridLayout_5->setObjectName("gridLayout_5");
+        labelProfile = new QLabel(groupBoxProfile);
+        labelProfile->setObjectName("labelProfile");
+
+        gridLayout_5->addWidget(labelProfile, 0, 0, 1, 1);
+
+        comboBoxProfiles = new QComboBox(groupBoxProfile);
+        comboBoxProfiles->setObjectName("comboBoxProfiles");
+
+        gridLayout_5->addWidget(comboBoxProfiles, 0, 1, 1, 1);
+
+        pushButtonProfileManager = new QPushButton(groupBoxProfile);
+        pushButtonProfileManager->setObjectName("pushButtonProfileManager");
+
+        gridLayout_5->addWidget(pushButtonProfileManager, 1, 1, 1, 1);
+
+        labelProfileTID = new QLabel(groupBoxProfile);
+        labelProfileTID->setObjectName("labelProfileTID");
+
+        gridLayout_5->addWidget(labelProfileTID, 0, 2, 1, 1);
+
+        labelProfileTIDValue = new QLabel(groupBoxProfile);
+        labelProfileTIDValue->setObjectName("labelProfileTIDValue");
+        labelProfileTIDValue->setText(QString::fromUtf8("12345"));
+
+        gridLayout_5->addWidget(labelProfileTIDValue, 0, 3, 1, 1);
+
+        labelProfileSID = new QLabel(groupBoxProfile);
+        labelProfileSID->setObjectName("labelProfileSID");
+
+        gridLayout_5->addWidget(labelProfileSID, 1, 2, 1, 1);
+
+        labelProfileSIDValue = new QLabel(groupBoxProfile);
+        labelProfileSIDValue->setObjectName("labelProfileSIDValue");
+        labelProfileSIDValue->setText(QString::fromUtf8("54321"));
+
+        gridLayout_5->addWidget(labelProfileSIDValue, 1, 3, 1, 1);
+
+        line_4 = new QFrame(groupBoxProfile);
+        line_4->setObjectName("line_4");
+        line_4->setFrameShape(QFrame::Shape::VLine);
+        line_4->setFrameShadow(QFrame::Shadow::Sunken);
+
+        gridLayout_5->addWidget(line_4, 0, 4, 2, 1);
+
+        labelProfileMACAddress = new QLabel(groupBoxProfile);
+        labelProfileMACAddress->setObjectName("labelProfileMACAddress");
+
+        gridLayout_5->addWidget(labelProfileMACAddress, 0, 5, 1, 1);
+
+        labelProfileMACAddressValue = new QLabel(groupBoxProfile);
+        labelProfileMACAddressValue->setObjectName("labelProfileMACAddressValue");
+
+        gridLayout_5->addWidget(labelProfileMACAddressValue, 0, 6, 1, 1);
+
+        labelProfileDSType = new QLabel(groupBoxProfile);
+        labelProfileDSType->setObjectName("labelProfileDSType");
+
+        gridLayout_5->addWidget(labelProfileDSType, 1, 5, 1, 1);
+
+        labelProfileDSTypeValue = new QLabel(groupBoxProfile);
+        labelProfileDSTypeValue->setObjectName("labelProfileDSTypeValue");
+
+        gridLayout_5->addWidget(labelProfileDSTypeValue, 1, 6, 1, 1);
+
+        line_3 = new QFrame(groupBoxProfile);
+        line_3->setObjectName("line_3");
+        line_3->setFrameShape(QFrame::Shape::VLine);
+        line_3->setFrameShadow(QFrame::Shadow::Sunken);
+
+        gridLayout_5->addWidget(line_3, 0, 7, 2, 1);
+
+        labelProfileVCount = new QLabel(groupBoxProfile);
+        labelProfileVCount->setObjectName("labelProfileVCount");
+
+        gridLayout_5->addWidget(labelProfileVCount, 0, 8, 1, 1);
+
+        labelProfileVCountValue = new QLabel(groupBoxProfile);
+        labelProfileVCountValue->setObjectName("labelProfileVCountValue");
+
+        gridLayout_5->addWidget(labelProfileVCountValue, 0, 9, 1, 1);
+
+        labelProfileTimer0 = new QLabel(groupBoxProfile);
+        labelProfileTimer0->setObjectName("labelProfileTimer0");
+
+        gridLayout_5->addWidget(labelProfileTimer0, 1, 8, 1, 1);
+
+        labelProfileTimer0Value = new QLabel(groupBoxProfile);
+        labelProfileTimer0Value->setObjectName("labelProfileTimer0Value");
+
+        gridLayout_5->addWidget(labelProfileTimer0Value, 1, 9, 1, 1);
+
+        line_2 = new QFrame(groupBoxProfile);
+        line_2->setObjectName("line_2");
+        line_2->setFrameShape(QFrame::Shape::VLine);
+        line_2->setFrameShadow(QFrame::Shadow::Sunken);
+
+        gridLayout_5->addWidget(line_2, 0, 10, 2, 1);
+
+        labelProfileGxStat = new QLabel(groupBoxProfile);
+        labelProfileGxStat->setObjectName("labelProfileGxStat");
+
+        gridLayout_5->addWidget(labelProfileGxStat, 0, 11, 1, 1);
+
+        labelProfileGxStatValue = new QLabel(groupBoxProfile);
+        labelProfileGxStatValue->setObjectName("labelProfileGxStatValue");
+
+        gridLayout_5->addWidget(labelProfileGxStatValue, 0, 12, 1, 1);
+
+        labelProfileVFrame = new QLabel(groupBoxProfile);
+        labelProfileVFrame->setObjectName("labelProfileVFrame");
+
+        gridLayout_5->addWidget(labelProfileVFrame, 1, 11, 1, 1);
+
+        labelProfileVFrameValue = new QLabel(groupBoxProfile);
+        labelProfileVFrameValue->setObjectName("labelProfileVFrameValue");
+
+        gridLayout_5->addWidget(labelProfileVFrameValue, 1, 12, 1, 1);
+
+        line = new QFrame(groupBoxProfile);
+        line->setObjectName("line");
+        line->setFrameShape(QFrame::Shape::VLine);
+        line->setFrameShadow(QFrame::Shadow::Sunken);
+
+        gridLayout_5->addWidget(line, 0, 13, 2, 1);
+
+        labelProfileKeypresses = new QLabel(groupBoxProfile);
+        labelProfileKeypresses->setObjectName("labelProfileKeypresses");
+
+        gridLayout_5->addWidget(labelProfileKeypresses, 0, 14, 1, 1);
+
+        labelProfileKeypressesValue = new QLabel(groupBoxProfile);
+        labelProfileKeypressesValue->setObjectName("labelProfileKeypressesValue");
+
+        gridLayout_5->addWidget(labelProfileKeypressesValue, 0, 15, 1, 1);
+
+        labelProfileGame = new QLabel(groupBoxProfile);
+        labelProfileGame->setObjectName("labelProfileGame");
+
+        gridLayout_5->addWidget(labelProfileGame, 1, 14, 1, 1);
+
+        labelProfileGameValue = new QLabel(groupBoxProfile);
+        labelProfileGameValue->setObjectName("labelProfileGameValue");
+
+        gridLayout_5->addWidget(labelProfileGameValue, 1, 15, 1, 1);
+
+
+        gridLayout_26->addWidget(groupBoxProfile, 1, 0, 1, 1);
+
+        closebutton = new QToolButton(DreamRadar);
+        closebutton->setObjectName("closebutton");
+
+        gridLayout_26->addWidget(closebutton, 0, 0, 1, 1);
 
         QWidget::setTabOrder(comboBoxProfiles, pushButtonProfileManager);
         QWidget::setTabOrder(pushButtonProfileManager, tabRNGSelector);
@@ -750,19 +757,6 @@ public:
     void retranslateUi(QWidget *DreamRadar)
     {
         DreamRadar->setWindowTitle(QCoreApplication::translate("DreamRadar", "Dream Radar", nullptr));
-        groupBoxProfile->setTitle(QCoreApplication::translate("DreamRadar", "Profile", nullptr));
-        labelProfile->setText(QCoreApplication::translate("DreamRadar", "Profile", nullptr));
-        pushButtonProfileManager->setText(QCoreApplication::translate("DreamRadar", "Manager", nullptr));
-        labelProfileTID->setText(QCoreApplication::translate("DreamRadar", "TID", nullptr));
-        labelProfileSID->setText(QCoreApplication::translate("DreamRadar", "SID", nullptr));
-        labelProfileMACAddress->setText(QCoreApplication::translate("DreamRadar", "MAC Address", nullptr));
-        labelProfileDSType->setText(QCoreApplication::translate("DreamRadar", "DS Type", nullptr));
-        labelProfileVCount->setText(QCoreApplication::translate("DreamRadar", "VCount", nullptr));
-        labelProfileTimer0->setText(QCoreApplication::translate("DreamRadar", "Timer0", nullptr));
-        labelProfileGxStat->setText(QCoreApplication::translate("DreamRadar", "GxStat", nullptr));
-        labelProfileVFrame->setText(QCoreApplication::translate("DreamRadar", "VFrame", nullptr));
-        labelProfileKeypresses->setText(QCoreApplication::translate("DreamRadar", "Keypresses", nullptr));
-        labelProfileGame->setText(QCoreApplication::translate("DreamRadar", "Game", nullptr));
         groupBoxGeneratorRNGInfo->setTitle(QCoreApplication::translate("DreamRadar", "RNG Info", nullptr));
         labelGeneratorSeed->setText(QCoreApplication::translate("DreamRadar", "Seed", nullptr));
         labelGeneratorInitialAdvances->setText(QCoreApplication::translate("DreamRadar", "Initial Advances", nullptr));
@@ -795,6 +789,20 @@ public:
         labelSearcherBadges->setText(QCoreApplication::translate("DreamRadar", "Badges", nullptr));
         groupBoxSearcherFilters->setTitle(QCoreApplication::translate("DreamRadar", "Filters", nullptr));
         tabRNGSelector->setTabText(tabRNGSelector->indexOf(tabSearcher), QCoreApplication::translate("DreamRadar", "Searcher", nullptr));
+        groupBoxProfile->setTitle(QCoreApplication::translate("DreamRadar", "Profile", nullptr));
+        labelProfile->setText(QCoreApplication::translate("DreamRadar", "Profile", nullptr));
+        pushButtonProfileManager->setText(QCoreApplication::translate("DreamRadar", "Manager", nullptr));
+        labelProfileTID->setText(QCoreApplication::translate("DreamRadar", "TID", nullptr));
+        labelProfileSID->setText(QCoreApplication::translate("DreamRadar", "SID", nullptr));
+        labelProfileMACAddress->setText(QCoreApplication::translate("DreamRadar", "MAC Address", nullptr));
+        labelProfileDSType->setText(QCoreApplication::translate("DreamRadar", "DS Type", nullptr));
+        labelProfileVCount->setText(QCoreApplication::translate("DreamRadar", "VCount", nullptr));
+        labelProfileTimer0->setText(QCoreApplication::translate("DreamRadar", "Timer0", nullptr));
+        labelProfileGxStat->setText(QCoreApplication::translate("DreamRadar", "GxStat", nullptr));
+        labelProfileVFrame->setText(QCoreApplication::translate("DreamRadar", "VFrame", nullptr));
+        labelProfileKeypresses->setText(QCoreApplication::translate("DreamRadar", "Keypresses", nullptr));
+        labelProfileGame->setText(QCoreApplication::translate("DreamRadar", "Game", nullptr));
+        closebutton->setText(QCoreApplication::translate("DreamRadar", "X", nullptr));
     } // retranslateUi
 
 };

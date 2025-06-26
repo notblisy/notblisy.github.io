@@ -23,6 +23,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QTabWidget>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 #include "Form/Controls/ComboBox.hpp"
 #include "Form/Controls/DateEdit.hpp"
@@ -167,6 +168,7 @@ public:
     Filter *filterSearcher;
     QProgressBar *progressBar;
     TableView *tableViewSearcher;
+    QToolButton *closebutton;
 
     void setupUi(QWidget *Event5)
     {
@@ -323,7 +325,7 @@ public:
         gridLayout_5->addWidget(labelProfileGameValue, 1, 15, 1, 1);
 
 
-        gridLayout_7->addWidget(groupBoxProfile, 0, 0, 1, 1);
+        gridLayout_7->addWidget(groupBoxProfile, 1, 0, 1, 1);
 
         tabRNGSelector = new QTabWidget(Event5);
         tabRNGSelector->setObjectName("tabRNGSelector");
@@ -868,7 +870,12 @@ public:
 
         tabRNGSelector->addTab(tabSearcher, QString());
 
-        gridLayout_7->addWidget(tabRNGSelector, 1, 0, 1, 1);
+        gridLayout_7->addWidget(tabRNGSelector, 2, 0, 1, 1);
+
+        closebutton = new QToolButton(Event5);
+        closebutton->setObjectName("closebutton");
+
+        gridLayout_7->addWidget(closebutton, 0, 0, 1, 1);
 
         QWidget::setTabOrder(comboBoxProfiles, pushButtonProfileManager);
         QWidget::setTabOrder(pushButtonProfileManager, tabRNGSelector);
@@ -1021,6 +1028,7 @@ public:
         checkBoxSearcherEgg->setText(QCoreApplication::translate("Event5", "Egg", nullptr));
         groupBoxSearcherFilters->setTitle(QCoreApplication::translate("Event5", "Filters", nullptr));
         tabRNGSelector->setTabText(tabRNGSelector->indexOf(tabSearcher), QCoreApplication::translate("Event5", "Searcher", nullptr));
+        closebutton->setText(QCoreApplication::translate("Event5", "X", nullptr));
     } // retranslateUi
 
 };

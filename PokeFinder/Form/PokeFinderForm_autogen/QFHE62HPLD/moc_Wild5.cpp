@@ -54,7 +54,8 @@ template <> constexpr inline auto Wild5::qt_create_metaobjectdata<qt_meta_tag_ZN
         "searcherFastSearchChanged",
         "searcherLocationIndexChanged",
         "searcherPokemonIndexChanged",
-        "searcherSeasonIndexChanged"
+        "searcherSeasonIndexChanged",
+        "on_closebutton_clicked"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -106,6 +107,8 @@ template <> constexpr inline auto Wild5::qt_create_metaobjectdata<qt_meta_tag_ZN
         QtMocHelpers::SlotData<void(int)>(16, 2, QMC::AccessPrivate, QMetaType::Void, {{
             { QMetaType::Int, 5 },
         }}),
+        // Slot 'on_closebutton_clicked'
+        QtMocHelpers::SlotData<void()>(17, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -143,6 +146,7 @@ void Wild5::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void 
         case 11: _t->searcherLocationIndexChanged((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
         case 12: _t->searcherPokemonIndexChanged((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
         case 13: _t->searcherSeasonIndexChanged((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 14: _t->on_closebutton_clicked(); break;
         default: ;
         }
     }
@@ -171,14 +175,14 @@ int Wild5::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 14)
+        if (_id < 15)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 14;
+        _id -= 15;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 14)
+        if (_id < 15)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 14;
+        _id -= 15;
     }
     return _id;
 }

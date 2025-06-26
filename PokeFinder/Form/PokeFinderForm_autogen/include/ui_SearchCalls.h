@@ -18,6 +18,7 @@
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QRadioButton>
+#include <QtWidgets/QToolButton>
 
 QT_BEGIN_NAMESPACE
 
@@ -25,18 +26,19 @@ class Ui_SearchCalls
 {
 public:
     QGridLayout *gridLayout;
-    QPushButton *pushButtonK;
-    QPushButton *pushButtonE;
     QPushButton *pushButtonP;
-    QLineEdit *lineEditCalls;
-    QLabel *labelPossibleResults;
-    QRadioButton *radioButtonElm;
+    QPushButton *pushButtonK;
     QRadioButton *radioButtonIrwin;
-    QLabel *labelKResponse;
+    QPushButton *pushButtonE;
     QLabel *labelEResponse;
     QLabel *labelPResponse;
-    QPushButton *pushButtonOkay;
+    QLineEdit *lineEditCalls;
     QPushButton *pushButtonCancel;
+    QLabel *labelPossibleResults;
+    QLabel *labelKResponse;
+    QRadioButton *radioButtonElm;
+    QPushButton *pushButtonOkay;
+    QToolButton *closebutton;
     QButtonGroup *buttonGroup;
 
     void setupUi(QDialog *SearchCalls)
@@ -46,77 +48,82 @@ public:
         SearchCalls->resize(530, 300);
         gridLayout = new QGridLayout(SearchCalls);
         gridLayout->setObjectName("gridLayout");
+        pushButtonP = new QPushButton(SearchCalls);
+        pushButtonP->setObjectName("pushButtonP");
+        pushButtonP->setText(QString::fromUtf8("P"));
+
+        gridLayout->addWidget(pushButtonP, 1, 4, 1, 2);
+
         pushButtonK = new QPushButton(SearchCalls);
         pushButtonK->setObjectName("pushButtonK");
         pushButtonK->setText(QString::fromUtf8("K"));
 
-        gridLayout->addWidget(pushButtonK, 0, 0, 1, 2);
+        gridLayout->addWidget(pushButtonK, 1, 0, 1, 2);
+
+        radioButtonIrwin = new QRadioButton(SearchCalls);
+        buttonGroup = new QButtonGroup(SearchCalls);
+        buttonGroup->setObjectName("buttonGroup");
+        buttonGroup->addButton(radioButtonIrwin);
+        radioButtonIrwin->setObjectName("radioButtonIrwin");
+        radioButtonIrwin->setChecked(true);
+
+        gridLayout->addWidget(radioButtonIrwin, 4, 1, 1, 1);
 
         pushButtonE = new QPushButton(SearchCalls);
         pushButtonE->setObjectName("pushButtonE");
         pushButtonE->setText(QString::fromUtf8("E"));
 
-        gridLayout->addWidget(pushButtonE, 0, 2, 1, 2);
-
-        pushButtonP = new QPushButton(SearchCalls);
-        pushButtonP->setObjectName("pushButtonP");
-        pushButtonP->setText(QString::fromUtf8("P"));
-
-        gridLayout->addWidget(pushButtonP, 0, 4, 1, 2);
-
-        lineEditCalls = new QLineEdit(SearchCalls);
-        lineEditCalls->setObjectName("lineEditCalls");
-
-        gridLayout->addWidget(lineEditCalls, 1, 0, 1, 6);
-
-        labelPossibleResults = new QLabel(SearchCalls);
-        labelPossibleResults->setObjectName("labelPossibleResults");
-
-        gridLayout->addWidget(labelPossibleResults, 2, 0, 1, 2);
-
-        radioButtonElm = new QRadioButton(SearchCalls);
-        buttonGroup = new QButtonGroup(SearchCalls);
-        buttonGroup->setObjectName("buttonGroup");
-        buttonGroup->addButton(radioButtonElm);
-        radioButtonElm->setObjectName("radioButtonElm");
-
-        gridLayout->addWidget(radioButtonElm, 3, 0, 1, 1);
-
-        radioButtonIrwin = new QRadioButton(SearchCalls);
-        buttonGroup->addButton(radioButtonIrwin);
-        radioButtonIrwin->setObjectName("radioButtonIrwin");
-        radioButtonIrwin->setChecked(true);
-
-        gridLayout->addWidget(radioButtonIrwin, 3, 1, 1, 1);
-
-        labelKResponse = new QLabel(SearchCalls);
-        labelKResponse->setObjectName("labelKResponse");
-        labelKResponse->setWordWrap(true);
-
-        gridLayout->addWidget(labelKResponse, 4, 0, 1, 6);
+        gridLayout->addWidget(pushButtonE, 1, 2, 1, 2);
 
         labelEResponse = new QLabel(SearchCalls);
         labelEResponse->setObjectName("labelEResponse");
         labelEResponse->setScaledContents(false);
         labelEResponse->setWordWrap(true);
 
-        gridLayout->addWidget(labelEResponse, 5, 0, 1, 6);
+        gridLayout->addWidget(labelEResponse, 6, 0, 1, 6);
 
         labelPResponse = new QLabel(SearchCalls);
         labelPResponse->setObjectName("labelPResponse");
         labelPResponse->setWordWrap(true);
 
-        gridLayout->addWidget(labelPResponse, 6, 0, 1, 6);
+        gridLayout->addWidget(labelPResponse, 7, 0, 1, 6);
 
-        pushButtonOkay = new QPushButton(SearchCalls);
-        pushButtonOkay->setObjectName("pushButtonOkay");
+        lineEditCalls = new QLineEdit(SearchCalls);
+        lineEditCalls->setObjectName("lineEditCalls");
 
-        gridLayout->addWidget(pushButtonOkay, 7, 4, 1, 1);
+        gridLayout->addWidget(lineEditCalls, 2, 0, 1, 6);
 
         pushButtonCancel = new QPushButton(SearchCalls);
         pushButtonCancel->setObjectName("pushButtonCancel");
 
-        gridLayout->addWidget(pushButtonCancel, 7, 5, 1, 1);
+        gridLayout->addWidget(pushButtonCancel, 8, 5, 1, 1);
+
+        labelPossibleResults = new QLabel(SearchCalls);
+        labelPossibleResults->setObjectName("labelPossibleResults");
+
+        gridLayout->addWidget(labelPossibleResults, 3, 0, 1, 2);
+
+        labelKResponse = new QLabel(SearchCalls);
+        labelKResponse->setObjectName("labelKResponse");
+        labelKResponse->setWordWrap(true);
+
+        gridLayout->addWidget(labelKResponse, 5, 0, 1, 6);
+
+        radioButtonElm = new QRadioButton(SearchCalls);
+        buttonGroup->addButton(radioButtonElm);
+        radioButtonElm->setObjectName("radioButtonElm");
+
+        gridLayout->addWidget(radioButtonElm, 4, 0, 1, 1);
+
+        pushButtonOkay = new QPushButton(SearchCalls);
+        pushButtonOkay->setObjectName("pushButtonOkay");
+
+        gridLayout->addWidget(pushButtonOkay, 8, 4, 1, 1);
+
+        closebutton = new QToolButton(SearchCalls);
+        closebutton->setObjectName("closebutton");
+
+        gridLayout->addWidget(closebutton, 0, 0, 1, 1);
 
 
         retranslateUi(SearchCalls);
@@ -127,14 +134,15 @@ public:
     void retranslateUi(QDialog *SearchCalls)
     {
         SearchCalls->setWindowTitle(QCoreApplication::translate("SearchCalls", "Search Calls", nullptr));
-        labelPossibleResults->setText(QCoreApplication::translate("SearchCalls", "Possible Results:", nullptr));
-        radioButtonElm->setText(QCoreApplication::translate("SearchCalls", "Elm", nullptr));
         radioButtonIrwin->setText(QCoreApplication::translate("SearchCalls", "Irwin", nullptr));
-        labelKResponse->setText(QCoreApplication::translate("SearchCalls", "K - I'm so glad you called! I was just about to call you, too! I guess we must be a good match!", nullptr));
         labelEResponse->setText(QCoreApplication::translate("SearchCalls", "E - Hearing about your escapades rocks my soul! It sure does!", nullptr));
         labelPResponse->setText(QCoreApplication::translate("SearchCalls", "P - How are you? What are you doing? Where are you? How many Badges do you have now? How much money have you saved? How's your mom? Have you got lots of Pok\303\251mon? Is it going to be sunny tomorrow? Arrgh, there's so much I want to chat about! This is going nowhere!", nullptr));
-        pushButtonOkay->setText(QCoreApplication::translate("SearchCalls", "Ok", nullptr));
         pushButtonCancel->setText(QCoreApplication::translate("SearchCalls", "Cancel", nullptr));
+        labelPossibleResults->setText(QCoreApplication::translate("SearchCalls", "Possible Results:", nullptr));
+        labelKResponse->setText(QCoreApplication::translate("SearchCalls", "K - I'm so glad you called! I was just about to call you, too! I guess we must be a good match!", nullptr));
+        radioButtonElm->setText(QCoreApplication::translate("SearchCalls", "Elm", nullptr));
+        pushButtonOkay->setText(QCoreApplication::translate("SearchCalls", "Ok", nullptr));
+        closebutton->setText(QCoreApplication::translate("SearchCalls", "X", nullptr));
     } // retranslateUi
 
 };

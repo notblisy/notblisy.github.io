@@ -19,6 +19,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpinBox>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 #include "Form/Controls/ComboBox.hpp"
 #include "Form/Controls/ComboMenu.hpp"
@@ -32,18 +33,6 @@ class Ui_Static8
 {
 public:
     QGridLayout *gridLayout_2;
-    QGroupBox *groupBoxProfile;
-    QGridLayout *gridLayout_4;
-    QLabel *labelProfile;
-    QComboBox *comboBoxProfiles;
-    QPushButton *pushButtonProfileManager;
-    QLabel *labelProfileTID;
-    QLabel *labelProfileTIDValue;
-    QLabel *labelProfileSID;
-    QLabel *labelProfileSIDValue;
-    QFrame *line;
-    QLabel *labelProfileGame;
-    QLabel *labelProfileGameValue;
     QGroupBox *groupBoxRNGInfo;
     QGridLayout *gridLayout_3;
     QLabel *labelLead;
@@ -59,6 +48,18 @@ public:
     QLabel *labelOffset;
     TextBox *textBoxOffset;
     QPushButton *pushButtonGenerate;
+    QGroupBox *groupBoxProfile;
+    QGridLayout *gridLayout_4;
+    QLabel *labelProfile;
+    QComboBox *comboBoxProfiles;
+    QPushButton *pushButtonProfileManager;
+    QLabel *labelProfileTID;
+    QLabel *labelProfileTIDValue;
+    QLabel *labelProfileSID;
+    QLabel *labelProfileSIDValue;
+    QFrame *line;
+    QLabel *labelProfileGame;
+    QLabel *labelProfileGameValue;
     QGroupBox *groupBoxSettings;
     QGridLayout *gridLayout_5;
     QLabel *labelCategory;
@@ -74,10 +75,11 @@ public:
     ComboBox *comboBoxShiny;
     QLabel *labelIVCount;
     QSpinBox *spinBoxIVCount;
+    TableView *tableView;
     QGroupBox *groupBoxFilters;
     QGridLayout *gridLayout;
     Filter *filter;
-    TableView *tableView;
+    QToolButton *closebutton;
 
     void setupUi(QWidget *Static8)
     {
@@ -86,65 +88,6 @@ public:
         Static8->resize(1200, 700);
         gridLayout_2 = new QGridLayout(Static8);
         gridLayout_2->setObjectName("gridLayout_2");
-        groupBoxProfile = new QGroupBox(Static8);
-        groupBoxProfile->setObjectName("groupBoxProfile");
-        gridLayout_4 = new QGridLayout(groupBoxProfile);
-        gridLayout_4->setObjectName("gridLayout_4");
-        labelProfile = new QLabel(groupBoxProfile);
-        labelProfile->setObjectName("labelProfile");
-
-        gridLayout_4->addWidget(labelProfile, 0, 0, 1, 1);
-
-        comboBoxProfiles = new QComboBox(groupBoxProfile);
-        comboBoxProfiles->setObjectName("comboBoxProfiles");
-
-        gridLayout_4->addWidget(comboBoxProfiles, 0, 1, 1, 1);
-
-        pushButtonProfileManager = new QPushButton(groupBoxProfile);
-        pushButtonProfileManager->setObjectName("pushButtonProfileManager");
-
-        gridLayout_4->addWidget(pushButtonProfileManager, 1, 1, 1, 1);
-
-        labelProfileTID = new QLabel(groupBoxProfile);
-        labelProfileTID->setObjectName("labelProfileTID");
-
-        gridLayout_4->addWidget(labelProfileTID, 0, 2, 1, 1);
-
-        labelProfileTIDValue = new QLabel(groupBoxProfile);
-        labelProfileTIDValue->setObjectName("labelProfileTIDValue");
-
-        gridLayout_4->addWidget(labelProfileTIDValue, 0, 3, 1, 1);
-
-        labelProfileSID = new QLabel(groupBoxProfile);
-        labelProfileSID->setObjectName("labelProfileSID");
-
-        gridLayout_4->addWidget(labelProfileSID, 1, 2, 1, 1);
-
-        labelProfileSIDValue = new QLabel(groupBoxProfile);
-        labelProfileSIDValue->setObjectName("labelProfileSIDValue");
-
-        gridLayout_4->addWidget(labelProfileSIDValue, 1, 3, 1, 1);
-
-        line = new QFrame(groupBoxProfile);
-        line->setObjectName("line");
-        line->setFrameShape(QFrame::Shape::VLine);
-        line->setFrameShadow(QFrame::Shadow::Sunken);
-
-        gridLayout_4->addWidget(line, 0, 4, 2, 1);
-
-        labelProfileGame = new QLabel(groupBoxProfile);
-        labelProfileGame->setObjectName("labelProfileGame");
-
-        gridLayout_4->addWidget(labelProfileGame, 0, 6, 1, 1);
-
-        labelProfileGameValue = new QLabel(groupBoxProfile);
-        labelProfileGameValue->setObjectName("labelProfileGameValue");
-
-        gridLayout_4->addWidget(labelProfileGameValue, 0, 7, 1, 1);
-
-
-        gridLayout_2->addWidget(groupBoxProfile, 0, 0, 1, 3);
-
         groupBoxRNGInfo = new QGroupBox(Static8);
         groupBoxRNGInfo->setObjectName("groupBoxRNGInfo");
         gridLayout_3 = new QGridLayout(groupBoxRNGInfo);
@@ -217,7 +160,66 @@ public:
         gridLayout_3->addWidget(pushButtonGenerate, 6, 0, 1, 2);
 
 
-        gridLayout_2->addWidget(groupBoxRNGInfo, 1, 0, 1, 1);
+        gridLayout_2->addWidget(groupBoxRNGInfo, 2, 0, 1, 1);
+
+        groupBoxProfile = new QGroupBox(Static8);
+        groupBoxProfile->setObjectName("groupBoxProfile");
+        gridLayout_4 = new QGridLayout(groupBoxProfile);
+        gridLayout_4->setObjectName("gridLayout_4");
+        labelProfile = new QLabel(groupBoxProfile);
+        labelProfile->setObjectName("labelProfile");
+
+        gridLayout_4->addWidget(labelProfile, 0, 0, 1, 1);
+
+        comboBoxProfiles = new QComboBox(groupBoxProfile);
+        comboBoxProfiles->setObjectName("comboBoxProfiles");
+
+        gridLayout_4->addWidget(comboBoxProfiles, 0, 1, 1, 1);
+
+        pushButtonProfileManager = new QPushButton(groupBoxProfile);
+        pushButtonProfileManager->setObjectName("pushButtonProfileManager");
+
+        gridLayout_4->addWidget(pushButtonProfileManager, 1, 1, 1, 1);
+
+        labelProfileTID = new QLabel(groupBoxProfile);
+        labelProfileTID->setObjectName("labelProfileTID");
+
+        gridLayout_4->addWidget(labelProfileTID, 0, 2, 1, 1);
+
+        labelProfileTIDValue = new QLabel(groupBoxProfile);
+        labelProfileTIDValue->setObjectName("labelProfileTIDValue");
+
+        gridLayout_4->addWidget(labelProfileTIDValue, 0, 3, 1, 1);
+
+        labelProfileSID = new QLabel(groupBoxProfile);
+        labelProfileSID->setObjectName("labelProfileSID");
+
+        gridLayout_4->addWidget(labelProfileSID, 1, 2, 1, 1);
+
+        labelProfileSIDValue = new QLabel(groupBoxProfile);
+        labelProfileSIDValue->setObjectName("labelProfileSIDValue");
+
+        gridLayout_4->addWidget(labelProfileSIDValue, 1, 3, 1, 1);
+
+        line = new QFrame(groupBoxProfile);
+        line->setObjectName("line");
+        line->setFrameShape(QFrame::Shape::VLine);
+        line->setFrameShadow(QFrame::Shadow::Sunken);
+
+        gridLayout_4->addWidget(line, 0, 4, 2, 1);
+
+        labelProfileGame = new QLabel(groupBoxProfile);
+        labelProfileGame->setObjectName("labelProfileGame");
+
+        gridLayout_4->addWidget(labelProfileGame, 0, 6, 1, 1);
+
+        labelProfileGameValue = new QLabel(groupBoxProfile);
+        labelProfileGameValue->setObjectName("labelProfileGameValue");
+
+        gridLayout_4->addWidget(labelProfileGameValue, 0, 7, 1, 1);
+
+
+        gridLayout_2->addWidget(groupBoxProfile, 1, 0, 1, 3);
 
         groupBoxSettings = new QGroupBox(Static8);
         groupBoxSettings->setObjectName("groupBoxSettings");
@@ -310,7 +312,12 @@ public:
         gridLayout_5->addWidget(spinBoxIVCount, 6, 1, 1, 1);
 
 
-        gridLayout_2->addWidget(groupBoxSettings, 1, 1, 1, 1);
+        gridLayout_2->addWidget(groupBoxSettings, 2, 1, 1, 1);
+
+        tableView = new TableView(Static8);
+        tableView->setObjectName("tableView");
+
+        gridLayout_2->addWidget(tableView, 3, 0, 1, 3);
 
         groupBoxFilters = new QGroupBox(Static8);
         groupBoxFilters->setObjectName("groupBoxFilters");
@@ -327,12 +334,12 @@ public:
         gridLayout->addWidget(filter, 0, 0, 2, 1);
 
 
-        gridLayout_2->addWidget(groupBoxFilters, 1, 2, 1, 1);
+        gridLayout_2->addWidget(groupBoxFilters, 2, 2, 1, 1);
 
-        tableView = new TableView(Static8);
-        tableView->setObjectName("tableView");
+        closebutton = new QToolButton(Static8);
+        closebutton->setObjectName("closebutton");
 
-        gridLayout_2->addWidget(tableView, 2, 0, 1, 3);
+        gridLayout_2->addWidget(closebutton, 0, 0, 1, 1);
 
         QWidget::setTabOrder(comboBoxProfiles, pushButtonProfileManager);
         QWidget::setTabOrder(pushButtonProfileManager, comboMenuLead);
@@ -358,12 +365,6 @@ public:
     void retranslateUi(QWidget *Static8)
     {
         Static8->setWindowTitle(QCoreApplication::translate("Static8", "Static Gen 8", nullptr));
-        groupBoxProfile->setTitle(QCoreApplication::translate("Static8", "Profile", nullptr));
-        labelProfile->setText(QCoreApplication::translate("Static8", "Profile", nullptr));
-        pushButtonProfileManager->setText(QCoreApplication::translate("Static8", "Manager", nullptr));
-        labelProfileTID->setText(QCoreApplication::translate("Static8", "TID", nullptr));
-        labelProfileSID->setText(QCoreApplication::translate("Static8", "SID", nullptr));
-        labelProfileGame->setText(QCoreApplication::translate("Static8", "Game", nullptr));
         groupBoxRNGInfo->setTitle(QCoreApplication::translate("Static8", "RNG Info", nullptr));
         labelLead->setText(QCoreApplication::translate("Static8", "Lead", nullptr));
         labelSeed0->setText(QCoreApplication::translate("Static8", "Seed 0", nullptr));
@@ -372,6 +373,12 @@ public:
         labelMaxAdvances->setText(QCoreApplication::translate("Static8", "Max Advances", nullptr));
         labelOffset->setText(QCoreApplication::translate("Static8", "Offset", nullptr));
         pushButtonGenerate->setText(QCoreApplication::translate("Static8", "Generate", nullptr));
+        groupBoxProfile->setTitle(QCoreApplication::translate("Static8", "Profile", nullptr));
+        labelProfile->setText(QCoreApplication::translate("Static8", "Profile", nullptr));
+        pushButtonProfileManager->setText(QCoreApplication::translate("Static8", "Manager", nullptr));
+        labelProfileTID->setText(QCoreApplication::translate("Static8", "TID", nullptr));
+        labelProfileSID->setText(QCoreApplication::translate("Static8", "SID", nullptr));
+        labelProfileGame->setText(QCoreApplication::translate("Static8", "Game", nullptr));
         groupBoxSettings->setTitle(QCoreApplication::translate("Static8", "Settings", nullptr));
         labelCategory->setText(QCoreApplication::translate("Static8", "Category", nullptr));
         comboBoxCategory->setItemText(0, QCoreApplication::translate("Static8", "Starters", nullptr));
@@ -394,6 +401,7 @@ public:
 
         labelIVCount->setText(QCoreApplication::translate("Static8", "IV Count", nullptr));
         groupBoxFilters->setTitle(QCoreApplication::translate("Static8", "Filters", nullptr));
+        closebutton->setText(QCoreApplication::translate("Static8", "X", nullptr));
     } // retranslateUi
 
 };

@@ -14,6 +14,7 @@
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -22,9 +23,10 @@ class Ui_DenMap
 {
 public:
     QGridLayout *gridLayout;
-    QLabel *labelMap;
     QComboBox *comboBoxLocation;
     QComboBox *comboBoxDen;
+    QLabel *labelMap;
+    QToolButton *closebutton;
 
     void setupUi(QWidget *DenMap)
     {
@@ -33,25 +35,30 @@ public:
         DenMap->resize(245, 610);
         gridLayout = new QGridLayout(DenMap);
         gridLayout->setObjectName("gridLayout");
-        labelMap = new QLabel(DenMap);
-        labelMap->setObjectName("labelMap");
-        labelMap->setMinimumSize(QSize(227, 532));
-        labelMap->setScaledContents(true);
-
-        gridLayout->addWidget(labelMap, 0, 0, 1, 1);
-
         comboBoxLocation = new QComboBox(DenMap);
         comboBoxLocation->addItem(QString());
         comboBoxLocation->addItem(QString());
         comboBoxLocation->addItem(QString());
         comboBoxLocation->setObjectName("comboBoxLocation");
 
-        gridLayout->addWidget(comboBoxLocation, 1, 0, 1, 1);
+        gridLayout->addWidget(comboBoxLocation, 2, 0, 1, 1);
 
         comboBoxDen = new QComboBox(DenMap);
         comboBoxDen->setObjectName("comboBoxDen");
 
-        gridLayout->addWidget(comboBoxDen, 2, 0, 1, 1);
+        gridLayout->addWidget(comboBoxDen, 3, 0, 1, 1);
+
+        labelMap = new QLabel(DenMap);
+        labelMap->setObjectName("labelMap");
+        labelMap->setMinimumSize(QSize(227, 532));
+        labelMap->setScaledContents(true);
+
+        gridLayout->addWidget(labelMap, 1, 0, 1, 1);
+
+        closebutton = new QToolButton(DenMap);
+        closebutton->setObjectName("closebutton");
+
+        gridLayout->addWidget(closebutton, 0, 0, 1, 1);
 
 
         retranslateUi(DenMap);
@@ -66,6 +73,7 @@ public:
         comboBoxLocation->setItemText(1, QCoreApplication::translate("DenMap", "Isle of Armor", nullptr));
         comboBoxLocation->setItemText(2, QCoreApplication::translate("DenMap", "Crown Tundra", nullptr));
 
+        closebutton->setText(QCoreApplication::translate("DenMap", "X", nullptr));
     } // retranslateUi
 
 };

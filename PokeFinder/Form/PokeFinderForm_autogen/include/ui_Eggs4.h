@@ -21,6 +21,7 @@
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QTabWidget>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 #include "Form/Controls/EggSettings.hpp"
 #include "Form/Controls/Filter.hpp"
@@ -94,6 +95,7 @@ public:
     Filter *filterSearcher;
     QProgressBar *progressBar;
     TableView *tableViewSearcher;
+    QToolButton *closebutton;
 
     void setupUi(QWidget *Eggs4)
     {
@@ -161,7 +163,7 @@ public:
         gridLayout_6->addWidget(labelProfileGameValue, 0, 6, 1, 1);
 
 
-        gridLayout_3->addWidget(groupBoxProfile, 0, 0, 1, 1);
+        gridLayout_3->addWidget(groupBoxProfile, 1, 0, 1, 1);
 
         tabEggSelection = new QTabWidget(Eggs4);
         tabEggSelection->setObjectName("tabEggSelection");
@@ -412,7 +414,12 @@ public:
 
         tabEggSelection->addTab(tabSearcher, QString());
 
-        gridLayout_3->addWidget(tabEggSelection, 1, 0, 1, 1);
+        gridLayout_3->addWidget(tabEggSelection, 2, 0, 1, 1);
+
+        closebutton = new QToolButton(Eggs4);
+        closebutton->setObjectName("closebutton");
+
+        gridLayout_3->addWidget(closebutton, 0, 0, 1, 1);
 
         QWidget::setTabOrder(comboBoxProfiles, pushButtonProfileManager);
         QWidget::setTabOrder(pushButtonProfileManager, tabEggSelection);
@@ -469,6 +476,7 @@ public:
         groupBox->setTitle(QCoreApplication::translate("Eggs4", "Settings", nullptr));
         groupBoxGeneratorFilters_2->setTitle(QCoreApplication::translate("Eggs4", "Filters", nullptr));
         tabEggSelection->setTabText(tabEggSelection->indexOf(tabSearcher), QCoreApplication::translate("Eggs4", "Searcher", nullptr));
+        closebutton->setText(QCoreApplication::translate("Eggs4", "X", nullptr));
     } // retranslateUi
 
 };

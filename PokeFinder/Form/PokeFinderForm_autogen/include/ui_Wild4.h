@@ -24,6 +24,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QTabWidget>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 #include "Form/Controls/ComboBox.hpp"
 #include "Form/Controls/ComboMenu.hpp"
@@ -155,6 +156,7 @@ public:
     Filter *filterSearcher;
     QProgressBar *progressBar;
     TableView *tableViewSearcher;
+    QToolButton *closebutton;
     QButtonGroup *buttonGroupGenerator;
     QButtonGroup *buttonGroupSearcher;
 
@@ -232,7 +234,7 @@ public:
         gridLayout_7->addWidget(labelProfileNationalDexValue, 1, 6, 1, 1);
 
 
-        gridLayout_9->addWidget(groupBoxProfile, 0, 0, 1, 1);
+        gridLayout_9->addWidget(groupBoxProfile, 1, 0, 1, 1);
 
         tabRNGSelector = new QTabWidget(Wild4);
         tabRNGSelector->setObjectName("tabRNGSelector");
@@ -807,7 +809,12 @@ public:
 
         tabRNGSelector->addTab(tabSpreadSearcher, QString());
 
-        gridLayout_9->addWidget(tabRNGSelector, 1, 0, 1, 1);
+        gridLayout_9->addWidget(tabRNGSelector, 2, 0, 1, 1);
+
+        closebutton = new QToolButton(Wild4);
+        closebutton->setObjectName("closebutton");
+
+        gridLayout_9->addWidget(closebutton, 0, 0, 1, 1);
 
         QWidget::setTabOrder(comboBoxProfiles, pushButtonProfileManager);
         QWidget::setTabOrder(pushButtonProfileManager, tabRNGSelector);
@@ -997,6 +1004,7 @@ public:
         labelSearcherWaterBlock->setText(QCoreApplication::translate("Wild4", "Water Block", nullptr));
         groupBoxSearcherFilters->setTitle(QCoreApplication::translate("Wild4", "Filters", nullptr));
         tabRNGSelector->setTabText(tabRNGSelector->indexOf(tabSpreadSearcher), QCoreApplication::translate("Wild4", "Searcher", nullptr));
+        closebutton->setText(QCoreApplication::translate("Wild4", "X", nullptr));
     } // retranslateUi
 
 };

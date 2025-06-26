@@ -44,7 +44,8 @@ template <> constexpr inline auto Eggs8::qt_create_metaobjectdata<qt_meta_tag_ZN
         "generate",
         "profileIndexChanged",
         "index",
-        "profileManager"
+        "profileManager",
+        "on_closebutton_clicked"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -60,6 +61,8 @@ template <> constexpr inline auto Eggs8::qt_create_metaobjectdata<qt_meta_tag_ZN
         }}),
         // Slot 'profileManager'
         QtMocHelpers::SlotData<void()>(6, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'on_closebutton_clicked'
+        QtMocHelpers::SlotData<void()>(7, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -87,6 +90,7 @@ void Eggs8::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void 
         case 1: _t->generate(); break;
         case 2: _t->profileIndexChanged((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
         case 3: _t->profileManager(); break;
+        case 4: _t->on_closebutton_clicked(); break;
         default: ;
         }
     }
@@ -115,14 +119,14 @@ int Eggs8::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 4)
+        if (_id < 5)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 4;
+        _id -= 5;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 4)
+        if (_id < 5)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 4;
+        _id -= 5;
     }
     return _id;
 }

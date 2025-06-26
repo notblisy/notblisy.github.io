@@ -17,6 +17,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QToolButton>
 
 QT_BEGIN_NAMESPACE
 
@@ -25,11 +26,12 @@ class Ui_SearchCoinFlips
 public:
     QGridLayout *gridLayout;
     QPushButton *pushButtonHeads;
-    QPushButton *pushButtonTails;
+    QPushButton *pushButtonCancel;
     QLineEdit *lineEditFlips;
     QLabel *labelPossibleResults;
     QPushButton *pushButtonOkay;
-    QPushButton *pushButtonCancel;
+    QPushButton *pushButtonTails;
+    QToolButton *closebutton;
 
     void setupUi(QDialog *SearchCoinFlips)
     {
@@ -45,7 +47,27 @@ public:
         pushButtonHeads->setIcon(icon);
         pushButtonHeads->setIconSize(QSize(66, 60));
 
-        gridLayout->addWidget(pushButtonHeads, 0, 0, 1, 1);
+        gridLayout->addWidget(pushButtonHeads, 1, 0, 1, 1);
+
+        pushButtonCancel = new QPushButton(SearchCoinFlips);
+        pushButtonCancel->setObjectName("pushButtonCancel");
+
+        gridLayout->addWidget(pushButtonCancel, 4, 3, 1, 1);
+
+        lineEditFlips = new QLineEdit(SearchCoinFlips);
+        lineEditFlips->setObjectName("lineEditFlips");
+
+        gridLayout->addWidget(lineEditFlips, 2, 0, 1, 4);
+
+        labelPossibleResults = new QLabel(SearchCoinFlips);
+        labelPossibleResults->setObjectName("labelPossibleResults");
+
+        gridLayout->addWidget(labelPossibleResults, 3, 0, 1, 2);
+
+        pushButtonOkay = new QPushButton(SearchCoinFlips);
+        pushButtonOkay->setObjectName("pushButtonOkay");
+
+        gridLayout->addWidget(pushButtonOkay, 4, 2, 1, 1);
 
         pushButtonTails = new QPushButton(SearchCoinFlips);
         pushButtonTails->setObjectName("pushButtonTails");
@@ -54,27 +76,12 @@ public:
         pushButtonTails->setIcon(icon1);
         pushButtonTails->setIconSize(QSize(66, 60));
 
-        gridLayout->addWidget(pushButtonTails, 0, 1, 1, 1);
+        gridLayout->addWidget(pushButtonTails, 1, 1, 1, 1);
 
-        lineEditFlips = new QLineEdit(SearchCoinFlips);
-        lineEditFlips->setObjectName("lineEditFlips");
+        closebutton = new QToolButton(SearchCoinFlips);
+        closebutton->setObjectName("closebutton");
 
-        gridLayout->addWidget(lineEditFlips, 1, 0, 1, 4);
-
-        labelPossibleResults = new QLabel(SearchCoinFlips);
-        labelPossibleResults->setObjectName("labelPossibleResults");
-
-        gridLayout->addWidget(labelPossibleResults, 2, 0, 1, 2);
-
-        pushButtonOkay = new QPushButton(SearchCoinFlips);
-        pushButtonOkay->setObjectName("pushButtonOkay");
-
-        gridLayout->addWidget(pushButtonOkay, 3, 2, 1, 1);
-
-        pushButtonCancel = new QPushButton(SearchCoinFlips);
-        pushButtonCancel->setObjectName("pushButtonCancel");
-
-        gridLayout->addWidget(pushButtonCancel, 3, 3, 1, 1);
+        gridLayout->addWidget(closebutton, 4, 0, 1, 1);
 
 
         retranslateUi(SearchCoinFlips);
@@ -85,9 +92,10 @@ public:
     void retranslateUi(QDialog *SearchCoinFlips)
     {
         SearchCoinFlips->setWindowTitle(QCoreApplication::translate("SearchCoinFlips", "Search Coin Flips", nullptr));
+        pushButtonCancel->setText(QCoreApplication::translate("SearchCoinFlips", "Cancel", nullptr));
         labelPossibleResults->setText(QCoreApplication::translate("SearchCoinFlips", "Possible Results:", nullptr));
         pushButtonOkay->setText(QCoreApplication::translate("SearchCoinFlips", "Ok", nullptr));
-        pushButtonCancel->setText(QCoreApplication::translate("SearchCoinFlips", "Cancel", nullptr));
+        closebutton->setText(QCoreApplication::translate("SearchCoinFlips", "X", nullptr));
     } // retranslateUi
 
 };

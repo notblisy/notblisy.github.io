@@ -19,6 +19,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 #include "Form/Controls/DateTimeEdit.hpp"
 #include "Form/Controls/IDsFilter.hpp"
@@ -31,6 +32,7 @@ class Ui_IDs4
 {
 public:
     QGridLayout *gridLayout_3;
+    TableView *tableViewSeedFinder;
     QGroupBox *groupBoxSearcher;
     QGridLayout *gridLayout_4;
     QGroupBox *groupBoxRNGInfo;
@@ -49,6 +51,7 @@ public:
     QGridLayout *gridLayout_2;
     IDsFilter *idFilter;
     QProgressBar *progressBar;
+    TableView *tableViewSearcher;
     QGroupBox *groupBoxSeedFinder;
     QGridLayout *gridLayout_6;
     QLabel *labelTID;
@@ -60,8 +63,7 @@ public:
     QLabel *labelSeedFinderMaxDelay;
     TextBox *textBoxSeedFinderMaxDelay;
     QPushButton *pushButtonFind;
-    TableView *tableViewSearcher;
-    TableView *tableViewSeedFinder;
+    QToolButton *closebutton;
 
     void setupUi(QWidget *IDs4)
     {
@@ -70,6 +72,11 @@ public:
         IDs4->resize(520, 600);
         gridLayout_3 = new QGridLayout(IDs4);
         gridLayout_3->setObjectName("gridLayout_3");
+        tableViewSeedFinder = new TableView(IDs4);
+        tableViewSeedFinder->setObjectName("tableViewSeedFinder");
+
+        gridLayout_3->addWidget(tableViewSeedFinder, 3, 1, 1, 1);
+
         groupBoxSearcher = new QGroupBox(IDs4);
         groupBoxSearcher->setObjectName("groupBoxSearcher");
         QSizePolicy sizePolicy(QSizePolicy::Policy::Preferred, QSizePolicy::Policy::Preferred);
@@ -157,7 +164,12 @@ public:
         gridLayout_4->addWidget(progressBar, 1, 0, 1, 2);
 
 
-        gridLayout_3->addWidget(groupBoxSearcher, 0, 0, 1, 1);
+        gridLayout_3->addWidget(groupBoxSearcher, 1, 0, 1, 1);
+
+        tableViewSearcher = new TableView(IDs4);
+        tableViewSearcher->setObjectName("tableViewSearcher");
+
+        gridLayout_3->addWidget(tableViewSearcher, 3, 0, 1, 1);
 
         groupBoxSeedFinder = new QGroupBox(IDs4);
         groupBoxSeedFinder->setObjectName("groupBoxSeedFinder");
@@ -213,17 +225,12 @@ public:
         gridLayout_6->addWidget(pushButtonFind, 4, 0, 1, 2);
 
 
-        gridLayout_3->addWidget(groupBoxSeedFinder, 0, 1, 1, 1);
+        gridLayout_3->addWidget(groupBoxSeedFinder, 1, 1, 1, 1);
 
-        tableViewSearcher = new TableView(IDs4);
-        tableViewSearcher->setObjectName("tableViewSearcher");
+        closebutton = new QToolButton(IDs4);
+        closebutton->setObjectName("closebutton");
 
-        gridLayout_3->addWidget(tableViewSearcher, 2, 0, 1, 1);
-
-        tableViewSeedFinder = new TableView(IDs4);
-        tableViewSeedFinder->setObjectName("tableViewSeedFinder");
-
-        gridLayout_3->addWidget(tableViewSeedFinder, 2, 1, 1, 1);
+        gridLayout_3->addWidget(closebutton, 0, 0, 1, 1);
 
         QWidget::setTabOrder(textBoxYear, textBoxSearcherMinDelay);
         QWidget::setTabOrder(textBoxSearcherMinDelay, textBoxSearcherMaxDelay);
@@ -261,6 +268,7 @@ public:
         labelSeedFinderMinDelay->setText(QCoreApplication::translate("IDs4", "Min Delay", nullptr));
         labelSeedFinderMaxDelay->setText(QCoreApplication::translate("IDs4", "Max Delay", nullptr));
         pushButtonFind->setText(QCoreApplication::translate("IDs4", "Find", nullptr));
+        closebutton->setText(QCoreApplication::translate("IDs4", "X", nullptr));
     } // retranslateUi
 
 };

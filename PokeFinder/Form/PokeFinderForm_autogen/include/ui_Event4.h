@@ -22,6 +22,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QTabWidget>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 #include "Form/Controls/Filter.hpp"
 #include "Form/Controls/TableView.hpp"
@@ -99,6 +100,7 @@ public:
     Filter *filterSearcher;
     QProgressBar *progressBar;
     TableView *tableViewSearcher;
+    QToolButton *closebutton;
 
     void setupUi(QWidget *Event4)
     {
@@ -166,7 +168,7 @@ public:
         gridLayout_6->addWidget(labelProfileGameValue, 0, 6, 1, 1);
 
 
-        gridLayout_5->addWidget(groupBoxProfile, 0, 0, 1, 1);
+        gridLayout_5->addWidget(groupBoxProfile, 1, 0, 1, 1);
 
         tabRNGSelector = new QTabWidget(Event4);
         tabRNGSelector->setObjectName("tabRNGSelector");
@@ -441,7 +443,12 @@ public:
 
         tabRNGSelector->addTab(tabSearcher, QString());
 
-        gridLayout_5->addWidget(tabRNGSelector, 1, 0, 1, 1);
+        gridLayout_5->addWidget(tabRNGSelector, 2, 0, 1, 1);
+
+        closebutton = new QToolButton(Event4);
+        closebutton->setObjectName("closebutton");
+
+        gridLayout_5->addWidget(closebutton, 0, 0, 1, 1);
 
         QWidget::setTabOrder(comboBoxProfiles, pushButtonProfileManager);
         QWidget::setTabOrder(pushButtonProfileManager, tabRNGSelector);
@@ -505,6 +512,7 @@ public:
         labelSearcherNature->setText(QCoreApplication::translate("Event4", "Nature", nullptr));
         groupBoxSearcherFilters->setTitle(QCoreApplication::translate("Event4", "Filters", nullptr));
         tabRNGSelector->setTabText(tabRNGSelector->indexOf(tabSearcher), QCoreApplication::translate("Event4", "Searcher", nullptr));
+        closebutton->setText(QCoreApplication::translate("Event4", "X", nullptr));
     } // retranslateUi
 
 };

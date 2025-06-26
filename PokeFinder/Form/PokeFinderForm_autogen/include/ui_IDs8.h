@@ -16,6 +16,7 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 #include "Form/Controls/IDsFilter.hpp"
 #include "Form/Controls/TableView.hpp"
@@ -27,6 +28,7 @@ class Ui_IDs8
 {
 public:
     QGridLayout *gridLayout;
+    TableView *tableView;
     QGroupBox *groupBoxRNGInfo;
     QGridLayout *gridLayout_6;
     QLabel *labelInitialAdvances;
@@ -41,7 +43,7 @@ public:
     QGroupBox *groupBoxFilter;
     QGridLayout *gridLayout_7;
     IDsFilter *filter;
-    TableView *tableView;
+    QToolButton *closebutton;
 
     void setupUi(QWidget *IDs8)
     {
@@ -51,6 +53,11 @@ public:
         IDs8->setMinimumSize(QSize(1200, 600));
         gridLayout = new QGridLayout(IDs8);
         gridLayout->setObjectName("gridLayout");
+        tableView = new TableView(IDs8);
+        tableView->setObjectName("tableView");
+
+        gridLayout->addWidget(tableView, 2, 0, 1, 2);
+
         groupBoxRNGInfo = new QGroupBox(IDs8);
         groupBoxRNGInfo->setObjectName("groupBoxRNGInfo");
         gridLayout_6 = new QGridLayout(groupBoxRNGInfo);
@@ -103,7 +110,7 @@ public:
         gridLayout_6->addWidget(pushButtonGenerate, 4, 0, 1, 3);
 
 
-        gridLayout->addWidget(groupBoxRNGInfo, 0, 0, 1, 1);
+        gridLayout->addWidget(groupBoxRNGInfo, 1, 0, 1, 1);
 
         groupBoxFilter = new QGroupBox(IDs8);
         groupBoxFilter->setObjectName("groupBoxFilter");
@@ -115,12 +122,12 @@ public:
         gridLayout_7->addWidget(filter, 0, 0, 1, 1);
 
 
-        gridLayout->addWidget(groupBoxFilter, 0, 1, 1, 1);
+        gridLayout->addWidget(groupBoxFilter, 1, 1, 1, 1);
 
-        tableView = new TableView(IDs8);
-        tableView->setObjectName("tableView");
+        closebutton = new QToolButton(IDs8);
+        closebutton->setObjectName("closebutton");
 
-        gridLayout->addWidget(tableView, 1, 0, 1, 2);
+        gridLayout->addWidget(closebutton, 0, 0, 1, 1);
 
         QWidget::setTabOrder(textBoxInitialAdvances, textBoxMaxAdvances);
         QWidget::setTabOrder(textBoxMaxAdvances, textBoxSeed0);
@@ -143,6 +150,7 @@ public:
         labelSeed1->setText(QCoreApplication::translate("IDs8", "Seed 1", nullptr));
         pushButtonGenerate->setText(QCoreApplication::translate("IDs8", "Generate", nullptr));
         groupBoxFilter->setTitle(QCoreApplication::translate("IDs8", "Filters", nullptr));
+        closebutton->setText(QCoreApplication::translate("IDs8", "X", nullptr));
     } // retranslateUi
 
 };

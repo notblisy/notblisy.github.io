@@ -14,6 +14,7 @@
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QToolButton>
 
 QT_BEGIN_NAMESPACE
 
@@ -21,14 +22,15 @@ class Ui_RoamerMap
 {
 public:
     QGridLayout *gridLayout;
-    QLabel *labelMap;
-    QLabel *labelEnteiImage;
     QLabel *labelEntei;
-    QLabel *labelRaikouImage;
     QLabel *labelRaikou;
-    QLabel *labelLatiasImage;
     QLabel *labelLatiosImage;
     QLabel *labelLatiasLatios;
+    QLabel *labelLatiasImage;
+    QLabel *labelMap;
+    QLabel *labelEnteiImage;
+    QLabel *labelRaikouImage;
+    QToolButton *closebutton;
 
     void setupUi(QDialog *RoamerMap)
     {
@@ -39,52 +41,22 @@ public:
         RoamerMap->setMaximumSize(QSize(540, 340));
         gridLayout = new QGridLayout(RoamerMap);
         gridLayout->setObjectName("gridLayout");
-        labelMap = new QLabel(RoamerMap);
-        labelMap->setObjectName("labelMap");
-        labelMap->setPixmap(QPixmap(QString::fromUtf8(":/images/roamers.png")));
-
-        gridLayout->addWidget(labelMap, 0, 0, 1, 7);
-
-        labelEnteiImage = new QLabel(RoamerMap);
-        labelEnteiImage->setObjectName("labelEnteiImage");
+        labelEntei = new QLabel(RoamerMap);
+        labelEntei->setObjectName("labelEntei");
         QSizePolicy sizePolicy(QSizePolicy::Policy::Preferred, QSizePolicy::Policy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(labelEnteiImage->sizePolicy().hasHeightForWidth());
-        labelEnteiImage->setSizePolicy(sizePolicy);
-        labelEnteiImage->setPixmap(QPixmap(QString::fromUtf8(":/images/entei.png")));
-
-        gridLayout->addWidget(labelEnteiImage, 1, 0, 1, 1);
-
-        labelEntei = new QLabel(RoamerMap);
-        labelEntei->setObjectName("labelEntei");
         sizePolicy.setHeightForWidth(labelEntei->sizePolicy().hasHeightForWidth());
         labelEntei->setSizePolicy(sizePolicy);
 
-        gridLayout->addWidget(labelEntei, 1, 1, 1, 1);
-
-        labelRaikouImage = new QLabel(RoamerMap);
-        labelRaikouImage->setObjectName("labelRaikouImage");
-        sizePolicy.setHeightForWidth(labelRaikouImage->sizePolicy().hasHeightForWidth());
-        labelRaikouImage->setSizePolicy(sizePolicy);
-        labelRaikouImage->setPixmap(QPixmap(QString::fromUtf8(":/images/raikou.png")));
-
-        gridLayout->addWidget(labelRaikouImage, 1, 2, 1, 1);
+        gridLayout->addWidget(labelEntei, 2, 2, 1, 1);
 
         labelRaikou = new QLabel(RoamerMap);
         labelRaikou->setObjectName("labelRaikou");
         sizePolicy.setHeightForWidth(labelRaikou->sizePolicy().hasHeightForWidth());
         labelRaikou->setSizePolicy(sizePolicy);
 
-        gridLayout->addWidget(labelRaikou, 1, 3, 1, 1);
-
-        labelLatiasImage = new QLabel(RoamerMap);
-        labelLatiasImage->setObjectName("labelLatiasImage");
-        sizePolicy.setHeightForWidth(labelLatiasImage->sizePolicy().hasHeightForWidth());
-        labelLatiasImage->setSizePolicy(sizePolicy);
-        labelLatiasImage->setPixmap(QPixmap(QString::fromUtf8(":/images/latias.png")));
-
-        gridLayout->addWidget(labelLatiasImage, 1, 4, 1, 1);
+        gridLayout->addWidget(labelRaikou, 2, 4, 1, 1);
 
         labelLatiosImage = new QLabel(RoamerMap);
         labelLatiosImage->setObjectName("labelLatiosImage");
@@ -92,14 +64,49 @@ public:
         labelLatiosImage->setSizePolicy(sizePolicy);
         labelLatiosImage->setPixmap(QPixmap(QString::fromUtf8(":/images/latios.png")));
 
-        gridLayout->addWidget(labelLatiosImage, 1, 5, 1, 1);
+        gridLayout->addWidget(labelLatiosImage, 2, 6, 1, 1);
 
         labelLatiasLatios = new QLabel(RoamerMap);
         labelLatiasLatios->setObjectName("labelLatiasLatios");
         sizePolicy.setHeightForWidth(labelLatiasLatios->sizePolicy().hasHeightForWidth());
         labelLatiasLatios->setSizePolicy(sizePolicy);
 
-        gridLayout->addWidget(labelLatiasLatios, 1, 6, 1, 1);
+        gridLayout->addWidget(labelLatiasLatios, 2, 7, 1, 1);
+
+        labelLatiasImage = new QLabel(RoamerMap);
+        labelLatiasImage->setObjectName("labelLatiasImage");
+        sizePolicy.setHeightForWidth(labelLatiasImage->sizePolicy().hasHeightForWidth());
+        labelLatiasImage->setSizePolicy(sizePolicy);
+        labelLatiasImage->setPixmap(QPixmap(QString::fromUtf8(":/images/latias.png")));
+
+        gridLayout->addWidget(labelLatiasImage, 2, 5, 1, 1);
+
+        labelMap = new QLabel(RoamerMap);
+        labelMap->setObjectName("labelMap");
+        labelMap->setPixmap(QPixmap(QString::fromUtf8(":/images/roamers.png")));
+
+        gridLayout->addWidget(labelMap, 1, 1, 1, 7);
+
+        labelEnteiImage = new QLabel(RoamerMap);
+        labelEnteiImage->setObjectName("labelEnteiImage");
+        sizePolicy.setHeightForWidth(labelEnteiImage->sizePolicy().hasHeightForWidth());
+        labelEnteiImage->setSizePolicy(sizePolicy);
+        labelEnteiImage->setPixmap(QPixmap(QString::fromUtf8(":/images/entei.png")));
+
+        gridLayout->addWidget(labelEnteiImage, 2, 1, 1, 1);
+
+        labelRaikouImage = new QLabel(RoamerMap);
+        labelRaikouImage->setObjectName("labelRaikouImage");
+        sizePolicy.setHeightForWidth(labelRaikouImage->sizePolicy().hasHeightForWidth());
+        labelRaikouImage->setSizePolicy(sizePolicy);
+        labelRaikouImage->setPixmap(QPixmap(QString::fromUtf8(":/images/raikou.png")));
+
+        gridLayout->addWidget(labelRaikouImage, 2, 3, 1, 1);
+
+        closebutton = new QToolButton(RoamerMap);
+        closebutton->setObjectName("closebutton");
+
+        gridLayout->addWidget(closebutton, 0, 1, 1, 1);
 
 
         retranslateUi(RoamerMap);
@@ -110,6 +117,7 @@ public:
     void retranslateUi(QDialog *RoamerMap)
     {
         RoamerMap->setWindowTitle(QCoreApplication::translate("RoamerMap", "Roamer Map", nullptr));
+        closebutton->setText(QCoreApplication::translate("RoamerMap", "X", nullptr));
     } // retranslateUi
 
 };

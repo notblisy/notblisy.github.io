@@ -24,6 +24,7 @@
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QSpinBox>
 #include <QtWidgets/QTabWidget>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 #include "Form/Controls/ComboBox.hpp"
 #include "Form/Controls/DateTimeEdit.hpp"
@@ -36,6 +37,8 @@ class Ui_ProfileCalibrator5
 {
 public:
     QGridLayout *gridLayout;
+    TableView *tableView;
+    QProgressBar *progressBar;
     QGroupBox *groupBox;
     QGridLayout *gridLayout_5;
     QTabWidget *tabWidgetType;
@@ -115,10 +118,9 @@ public:
     ComboBox *comboBoxKeypress1;
     ComboBox *comboBoxKeypress2;
     ComboBox *comboBoxKeypress3;
-    QProgressBar *progressBar;
-    TableView *tableView;
-    QButtonGroup *buttonGroupNeedles;
+    QToolButton *closebutton;
     QButtonGroup *buttonGroupNeedleType;
+    QButtonGroup *buttonGroupNeedles;
 
     void setupUi(QWidget *ProfileCalibrator5)
     {
@@ -127,6 +129,16 @@ public:
         ProfileCalibrator5->resize(793, 481);
         gridLayout = new QGridLayout(ProfileCalibrator5);
         gridLayout->setObjectName("gridLayout");
+        tableView = new TableView(ProfileCalibrator5);
+        tableView->setObjectName("tableView");
+
+        gridLayout->addWidget(tableView, 3, 0, 1, 2);
+
+        progressBar = new QProgressBar(ProfileCalibrator5);
+        progressBar->setObjectName("progressBar");
+
+        gridLayout->addWidget(progressBar, 2, 0, 1, 2);
+
         groupBox = new QGroupBox(ProfileCalibrator5);
         groupBox->setObjectName("groupBox");
         gridLayout_5 = new QGridLayout(groupBox);
@@ -357,7 +369,7 @@ public:
         gridLayout_5->addLayout(horizontalLayout, 2, 0, 1, 2);
 
 
-        gridLayout->addWidget(groupBox, 0, 0, 1, 1);
+        gridLayout->addWidget(groupBox, 1, 0, 1, 1);
 
         groupBox_2 = new QGroupBox(ProfileCalibrator5);
         groupBox_2->setObjectName("groupBox_2");
@@ -547,17 +559,12 @@ public:
         gridLayout_4->addWidget(comboBoxKeypress3, 11, 1, 1, 1);
 
 
-        gridLayout->addWidget(groupBox_2, 0, 1, 1, 1);
+        gridLayout->addWidget(groupBox_2, 1, 1, 1, 1);
 
-        progressBar = new QProgressBar(ProfileCalibrator5);
-        progressBar->setObjectName("progressBar");
+        closebutton = new QToolButton(ProfileCalibrator5);
+        closebutton->setObjectName("closebutton");
 
-        gridLayout->addWidget(progressBar, 1, 0, 1, 2);
-
-        tableView = new TableView(ProfileCalibrator5);
-        tableView->setObjectName("tableView");
-
-        gridLayout->addWidget(tableView, 2, 0, 1, 2);
+        gridLayout->addWidget(closebutton, 0, 0, 1, 1);
 
         QWidget::setTabOrder(tabWidgetType, spinBoxMinHP);
         QWidget::setTabOrder(spinBoxMinHP, spinBoxMinAtk);
@@ -665,6 +672,7 @@ public:
 
         labelMACAddress->setText(QCoreApplication::translate("ProfileCalibrator5", "MAC Address", nullptr));
         labelKeypresses->setText(QCoreApplication::translate("ProfileCalibrator5", "Keypresses", nullptr));
+        closebutton->setText(QCoreApplication::translate("ProfileCalibrator5", "X", nullptr));
     } // retranslateUi
 
 };
