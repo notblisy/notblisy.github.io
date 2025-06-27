@@ -45,21 +45,19 @@ public:
     QGridLayout *gridLayout_4;
     QFrame *line;
     QGridLayout *gridLayout_5;
-    QLabel *labelProfile;
+    QPushButton *pushButtonProfileManager;
     QLabel *labelProfileGame;
+    QLabel *labelProfile;
     QLabel *labelProfileTID;
-    QComboBox *comboBoxProfiles;
     QLabel *labelProfileTIDValue;
     QLabel *labelProfileSID;
-    QLabel *labelProfileSIDValue;
     QLabel *labelProfileGameValue;
-    QPushButton *pushButtonProfileManager;
+    QLabel *labelProfileSIDValue;
+    QComboBox *comboBoxProfiles;
     QToolButton *closebutton;
     QTabWidget *tabRNGSelector;
     QWidget *tabStatic;
     QFormLayout *formLayout_2;
-    Filter *filterGenerator;
-    QPushButton *pushButtonGenerate;
     QGridLayout *gridLayout;
     ComboBox *comboBoxGeneratorCategory;
     ComboBox *comboBoxGeneratorMethod;
@@ -77,6 +75,8 @@ public:
     QLabel *labelGeneratorSeed;
     TextBox *textBoxGeneratorInitialAdvances;
     TextBox *textBoxGeneratorMaxAdvances;
+    Filter *filterGenerator;
+    QPushButton *pushButtonGenerate;
     QWidget *tabSpreadSearcher;
     QGridLayout *gridLayout_9;
     QGroupBox *groupBoxSearcherRNGInfo;
@@ -106,7 +106,7 @@ public:
     {
         if (Static3->objectName().isEmpty())
             Static3->setObjectName("Static3");
-        Static3->resize(468, 691);
+        Static3->resize(498, 691);
         QIcon icon;
         icon.addFile(QString::fromUtf8(":/pokefinder.ico"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
         Static3->setWindowIcon(icon);
@@ -121,12 +121,13 @@ public:
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(scrollArea->sizePolicy().hasHeightForWidth());
         scrollArea->setSizePolicy(sizePolicy);
+        scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
         scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
         scrollArea->setSizeAdjustPolicy(QAbstractScrollArea::SizeAdjustPolicy::AdjustToContentsOnFirstShow);
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents_2 = new QWidget();
         scrollAreaWidgetContents_2->setObjectName("scrollAreaWidgetContents_2");
-        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 455, 856));
+        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 478, 856));
         formLayout = new QFormLayout(scrollAreaWidgetContents_2);
         formLayout->setSpacing(6);
         formLayout->setContentsMargins(11, 11, 11, 11);
@@ -150,25 +151,25 @@ public:
         gridLayout_5->setSpacing(6);
         gridLayout_5->setObjectName("gridLayout_5");
         gridLayout_5->setContentsMargins(0, 0, -1, -1);
-        labelProfile = new QLabel(groupBoxProfile);
-        labelProfile->setObjectName("labelProfile");
+        pushButtonProfileManager = new QPushButton(groupBoxProfile);
+        pushButtonProfileManager->setObjectName("pushButtonProfileManager");
 
-        gridLayout_5->addWidget(labelProfile, 0, 0, 1, 1);
+        gridLayout_5->addWidget(pushButtonProfileManager, 1, 1, 1, 1);
 
         labelProfileGame = new QLabel(groupBoxProfile);
         labelProfileGame->setObjectName("labelProfileGame");
 
         gridLayout_5->addWidget(labelProfileGame, 0, 4, 1, 1);
 
+        labelProfile = new QLabel(groupBoxProfile);
+        labelProfile->setObjectName("labelProfile");
+
+        gridLayout_5->addWidget(labelProfile, 0, 0, 1, 1);
+
         labelProfileTID = new QLabel(groupBoxProfile);
         labelProfileTID->setObjectName("labelProfileTID");
 
         gridLayout_5->addWidget(labelProfileTID, 0, 2, 1, 1);
-
-        comboBoxProfiles = new QComboBox(groupBoxProfile);
-        comboBoxProfiles->setObjectName("comboBoxProfiles");
-
-        gridLayout_5->addWidget(comboBoxProfiles, 0, 1, 1, 1);
 
         labelProfileTIDValue = new QLabel(groupBoxProfile);
         labelProfileTIDValue->setObjectName("labelProfileTIDValue");
@@ -180,20 +181,20 @@ public:
 
         gridLayout_5->addWidget(labelProfileSID, 0, 3, 1, 1);
 
-        labelProfileSIDValue = new QLabel(groupBoxProfile);
-        labelProfileSIDValue->setObjectName("labelProfileSIDValue");
-
-        gridLayout_5->addWidget(labelProfileSIDValue, 1, 3, 1, 1);
-
         labelProfileGameValue = new QLabel(groupBoxProfile);
         labelProfileGameValue->setObjectName("labelProfileGameValue");
 
         gridLayout_5->addWidget(labelProfileGameValue, 1, 4, 1, 1);
 
-        pushButtonProfileManager = new QPushButton(groupBoxProfile);
-        pushButtonProfileManager->setObjectName("pushButtonProfileManager");
+        labelProfileSIDValue = new QLabel(groupBoxProfile);
+        labelProfileSIDValue->setObjectName("labelProfileSIDValue");
 
-        gridLayout_5->addWidget(pushButtonProfileManager, 1, 1, 1, 1);
+        gridLayout_5->addWidget(labelProfileSIDValue, 1, 3, 1, 1);
+
+        comboBoxProfiles = new QComboBox(groupBoxProfile);
+        comboBoxProfiles->setObjectName("comboBoxProfiles");
+
+        gridLayout_5->addWidget(comboBoxProfiles, 0, 1, 1, 1);
 
         closebutton = new QToolButton(groupBoxProfile);
         closebutton->setObjectName("closebutton");
@@ -214,16 +215,6 @@ public:
         formLayout_2->setSpacing(6);
         formLayout_2->setContentsMargins(11, 11, 11, 11);
         formLayout_2->setObjectName("formLayout_2");
-        filterGenerator = new Filter(tabStatic);
-        filterGenerator->setObjectName("filterGenerator");
-
-        formLayout_2->setWidget(17, QFormLayout::ItemRole::LabelRole, filterGenerator);
-
-        pushButtonGenerate = new QPushButton(tabStatic);
-        pushButtonGenerate->setObjectName("pushButtonGenerate");
-
-        formLayout_2->setWidget(19, QFormLayout::ItemRole::LabelRole, pushButtonGenerate);
-
         gridLayout = new QGridLayout();
         gridLayout->setSpacing(6);
         gridLayout->setObjectName("gridLayout");
@@ -361,6 +352,16 @@ public:
 
 
         formLayout_2->setLayout(0, QFormLayout::ItemRole::LabelRole, gridLayout);
+
+        filterGenerator = new Filter(tabStatic);
+        filterGenerator->setObjectName("filterGenerator");
+
+        formLayout_2->setWidget(17, QFormLayout::ItemRole::LabelRole, filterGenerator);
+
+        pushButtonGenerate = new QPushButton(tabStatic);
+        pushButtonGenerate->setObjectName("pushButtonGenerate");
+
+        formLayout_2->setWidget(19, QFormLayout::ItemRole::LabelRole, pushButtonGenerate);
 
         tabRNGSelector->addTab(tabStatic, QString());
         tabSpreadSearcher = new QWidget();
@@ -536,13 +537,12 @@ public:
     {
         Static3->setWindowTitle(QCoreApplication::translate("Static3", "Gen 3 Static", nullptr));
         groupBoxProfile->setTitle(QCoreApplication::translate("Static3", "Profile", nullptr));
-        labelProfile->setText(QCoreApplication::translate("Static3", "Profile", nullptr));
+        pushButtonProfileManager->setText(QCoreApplication::translate("Static3", "Manager", nullptr));
         labelProfileGame->setText(QCoreApplication::translate("Static3", "Game", nullptr));
+        labelProfile->setText(QCoreApplication::translate("Static3", "Profile", nullptr));
         labelProfileTID->setText(QCoreApplication::translate("Static3", "TID", nullptr));
         labelProfileSID->setText(QCoreApplication::translate("Static3", "SID", nullptr));
-        pushButtonProfileManager->setText(QCoreApplication::translate("Static3", "Manager", nullptr));
         closebutton->setText(QCoreApplication::translate("Static3", "X", nullptr));
-        pushButtonGenerate->setText(QCoreApplication::translate("Static3", "Generate", nullptr));
         comboBoxGeneratorCategory->setItemText(0, QCoreApplication::translate("Static3", "Starters", nullptr));
         comboBoxGeneratorCategory->setItemText(1, QCoreApplication::translate("Static3", "Fossils", nullptr));
         comboBoxGeneratorCategory->setItemText(2, QCoreApplication::translate("Static3", "Gifts", nullptr));
@@ -563,6 +563,7 @@ public:
         labelGeneratorOffset->setText(QCoreApplication::translate("Static3", "Offset", nullptr));
         labelGeneratorMaxAdvances->setText(QCoreApplication::translate("Static3", "Max Advances", nullptr));
         labelGeneratorSeed->setText(QCoreApplication::translate("Static3", "Seed", nullptr));
+        pushButtonGenerate->setText(QCoreApplication::translate("Static3", "Generate", nullptr));
         tabRNGSelector->setTabText(tabRNGSelector->indexOf(tabStatic), QCoreApplication::translate("Static3", "Generator", nullptr));
         groupBoxSearcherRNGInfo->setTitle(QCoreApplication::translate("Static3", "RNG Info", nullptr));
         labelSearcherMethod->setText(QCoreApplication::translate("Static3", "Method", nullptr));
