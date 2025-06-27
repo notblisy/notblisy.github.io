@@ -121,12 +121,12 @@ public:
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(scrollArea->sizePolicy().hasHeightForWidth());
         scrollArea->setSizePolicy(sizePolicy);
-        scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAsNeeded);
+        scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
         scrollArea->setSizeAdjustPolicy(QAbstractScrollArea::SizeAdjustPolicy::AdjustToContentsOnFirstShow);
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents_2 = new QWidget();
         scrollAreaWidgetContents_2->setObjectName("scrollAreaWidgetContents_2");
-        scrollAreaWidgetContents_2->setGeometry(QRect(0, 0, 455, 856));
+        scrollAreaWidgetContents_2->setGeometry(QRect(0, -185, 455, 856));
         formLayout = new QFormLayout(scrollAreaWidgetContents_2);
         formLayout->setSpacing(6);
         formLayout->setContentsMargins(11, 11, 11, 11);
@@ -506,10 +506,11 @@ public:
         tableViewGenerator->setMinimumSize(QSize(0, 300));
         tableViewGenerator->setMaximumSize(QSize(16777215, 16777215));
         tableViewGenerator->setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAsNeeded);
-        tableViewGenerator->setSizeAdjustPolicy(QAbstractScrollArea::SizeAdjustPolicy::AdjustToContentsOnFirstShow);
+        tableViewGenerator->setSizeAdjustPolicy(QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents);
         tableViewGenerator->setHorizontalScrollMode(QAbstractItemView::ScrollMode::ScrollPerPixel);
         tableViewGenerator->setUpdateThreshold(10);
         tableViewGenerator->verticalHeader()->setMinimumSectionSize(0);
+        tableViewGenerator->verticalHeader()->setDefaultSectionSize(0);
 
         formLayout->setWidget(2, QFormLayout::ItemRole::FieldRole, tableViewGenerator);
 
