@@ -33,7 +33,7 @@ public:
     {
         if (ProfileManager3->objectName().isEmpty())
             ProfileManager3->setObjectName("ProfileManager3");
-        ProfileManager3->resize(630, 300);
+        ProfileManager3->resize(541, 357);
         gridLayout = new QGridLayout(ProfileManager3);
         gridLayout->setObjectName("gridLayout");
         pushButtonNew = new QPushButton(ProfileManager3);
