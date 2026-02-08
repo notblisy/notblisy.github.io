@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<style>
+.container {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  background-color: dodgerblue;
+  padding: 5px;
+}
+.container div {
+  background-color: #f1f1f1;
+  border: 1px solid black;
+  padding: 2px;
+  font-size: 25px;
+  text-align: center;
+}
+
+
+.container2 {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  background-color: dodgerblue;
+  padding: 5px;
+}
+.container2 div {
+  background-color: #f1f1f1;
+  border: 1px solid black;
+  padding: 2px;
+  font-size: 25px;
+  text-align: center;
+}
+
+.container-flex {
+  display: flex;
+  flex-direction: column;
+  background-color: DodgerBlue;
+}
+
+.container-flex div {
+  background-color: #f1f1f1;
+
+  margin: 10px;
+  padding: 10px;
+  text-align: center;  
+  font-size: 25px;
+}
+</style>
+
+<title>
+Blisy RNG Guides
+</title>
+<link rel="stylesheet" type="text/css" href="../style.css" title="default" />
+<link rel="alternate stylesheet" type="text/css" href="../nightmode.css" title="alternate"/>
+<link rel="alternate stylesheet" type="text/css" href="../dnd.css" title="dnd"/>
+<script type="text/javascript" src="../style.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+<div w3-include-html="../menu.html"></div> 
+
+<script>
+includeHTML();
+</script>
+<div id="header-img">
+<div id="header"><h1>H</h1></div>
+<div class="butts">
+
+<ul>
+  <p>Navigation</p>
+  
+<li><a href="#prereq">Prerequisits</a></li>
+  
+<li><a href="#initseed">Finding Initial Seed</a></li>
+  
+<li><a href="#rng">Doing the RNG</a></li>
+
+<li><a href="#end">Notes and Conclusions</a></li>
+</ul>
+
+
+</div>
+<div class="textformat">
+
+
+
+
+
+<div class="container">
+  <div><img src="feraligatr.png" width="45%" style="float:center; border: 3px solid grey; padding: 3px; margin: 1px"></div>
+  <div>Species Info: <br>Name: Feraligatr <br> Typing: Water</div>
+  <div>Abilities: <br>Torret <br> Sheer Force</div>  
+  <div><img src="stats.png" width="60%" ></div>
+</div>
+<br>
+<div class="container2">
+  <div>Evolution Line:<br>Totodile->18->Croconaw->30->Feraligatr</div>
+  <div>Location:<br>Professor Birches Lab</div>
+  <div>Misc Stats:<br>Height:500ft. <br> Weight: 500Lbs<br>Capture Rate: 2</div>
+</div>
+<br>
+<div class="container-flex">
+  <div>Level Up Moves:<br> 1: Fart <br> 18: Slappa</div>
+  <div>TMs: <br>TM01: Dragon Slap <br> TM500: Big Cannon</div>
+  <div>Egg:<br>Bite <br> Crunch <br> Big Teeth</div>
+</div>
+<br>
+<div class="container">
+  <div>Egg Groups: <br> Monster <br> Water 1</div>
+  <div>Egg Steps: <br> 2,560 </div>
+  <div>Gender Ratio: <br>Boys only</div>
+  <div>EV Yield: <br>Attack: 2 <br> Defense: 1</div>  
+</div>
+<br>
+<div class="container2">
+  <div>Ruby: <br>  FERALIGATR intimidates its foes by opening its huge mouth. In battle, it will kick the ground hard with its thick and powerful hind legs to charge at the foe at an incredible speed. </div>
+  <div>Sapphire: <br>  FERALIGATR intimidates its foes by opening its huge mouth. In battle, it will kick the ground hard with its thick and powerful hind legs to charge at the foe at an incredible speed. </div>
+  <div>Emerald: <br> It opens its huge mouth to intimidate enemies. In battle, it runs using its thick and powerful hind legs to charge the foe with incredible speed. </div>
+
+</div>
+
+</body>
+
+
+
+
+
+
+</div>
+
+
+
+
+</html>
