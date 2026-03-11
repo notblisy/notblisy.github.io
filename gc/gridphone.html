@@ -45,9 +45,47 @@
   margin: 10px;
   padding: 10px;
   text-align: center;  
-  font-size: 25px;
+  font-size: 40px;
 }
 
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 10px solid dodgerblue;
+  border-bottom: none;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 40px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 10px solid dodgerblue;
+    font-size: 40px;
+  border-top: none;
+}
 
 </style>
 </head>
@@ -64,26 +102,59 @@
 <br>
 <div class="container">
   <div>Abilities: <br>Torret <br> Sheer Force</div>  
-  <div><img src="stats.png" width="60%" ></div>
+  <div><img src="stats.png" width="90%" ></div>
+</div>
+<br>
+<div class="tab">
+  <button class="tablinks" onclick="openCity(event, 'London')">Level Up</button>
+  <button class="tablinks" onclick="openCity(event, 'Paris')">TM</button>
+  <button class="tablinks" onclick="openCity(event, 'Tokyo')">Egg</button>
+</div>
+<div id="London" class="tabcontent">
+
+  <div>1: Fart <br> 18: Slappa</div>
+
+</div>
+
+<div id="Paris" class="tabcontent">
+  <div>TM01: Dragon Slap <br> TM500: Big Cannon</div>
+</div>
+
+<div id="Tokyo" class="tabcontent">
+  <div>Bite <br> Crunch <br> Big Teeth</div>
 </div>
 <br>
 
+
 <div class="container-flex">
-  <div>Level Up Moves:<br> 1: Fart <br> 18: Slappa</div>
-  <div>TMs: <br>TM01: Dragon Slap <br> TM500: Big Cannon</div>
-  <div>Egg:<br>Bite <br> Crunch <br> Big Teeth</div>
+  <div>Egg Groups:Monster, Water 1<br>Egg Steps: 2,560<br>Egg Cycles: 10 <br>Gender Ratio: Boys only</div>
+</div>
+<br>
+<div class="container">
+  <div>Training Info:<br>Exp growth: medium <br> base happiness: 70</div>
+  <div>Misc Info: <br>Habbitat: forest <br> Color: blue </div>  
 </div>
 <br>
 <div class="container-flex">
-  <div>Egg Groups:Monster, Water 1<br>Egg Steps: 2,560 <br>Gender Ratio: Boys only</div>
-</div>
-<br>
-<div class="container2">
   <div>Ruby: <br>  FERALIGATR intimidates its foes by opening its huge mouth. In battle, it will kick the ground hard with its thick and powerful hind legs to charge at the foe at an incredible speed. </div>
-  <div>Sapphire: <br>  FERALIGATR intimidates its foes by opening its huge mouth. In battle, it will kick the ground hard with its thick and powerful hind legs to charge at the foe at an incredible speed. </div>
-  <div>Emerald: <br> It opens its huge mouth to intimidate enemies. In battle, it runs using its thick and powerful hind legs to charge the foe with incredible speed. </div>
-
 </div>
+
+<script>
+function openCity(evt, cityName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+document.body.addEventListener('DOMContentLoaded', openCity(event, 'London'));
+</script>
 
 </body>
 </html>
