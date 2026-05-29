@@ -1,57 +1,35 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-<title>
-Blisy RNG Guides
-</title>
-<link rel="stylesheet" type="text/css" href="style.css" title="default" />
-<script type="text/javascript" src="style.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
+<!doctype html>
+<html lang="en">
+  <head>
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3943102684396180"
+     crossorigin="anonymous"></script>
+	 <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-82BB37CJDH"></script>
 <script>
-function includeHTML() {
-  var z, i, elmnt, file, xhttp;
-  /*loop through a collection of all HTML elements:*/
-  z = document.getElementsByTagName("*");
-  for (i = 0; i < z.length; i++) {
-    elmnt = z[i];
-    /*search for elements with a certain atrribute:*/
-    file = elmnt.getAttribute("w3-include-html");
-    if (file) {
-      /*make an HTTP request using the attribute value as the file name:*/
-      xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function() {
-        if (this.readyState == 4) {
-          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
-          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
-          /*remove the attribute, and call this function once more:*/
-          elmnt.removeAttribute("w3-include-html");
-          includeHTML();
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-82BB37CJDH');
+</script>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BlisyDex</title>
+    <!-- SPA redirect restore for GitHub Pages (paired with 404.html) -->
+    <script type="text/javascript">
+      (function() {
+        var params = new URLSearchParams(window.location.search);
+        var redirect = params.get('redirect');
+        if (redirect) {
+          window.history.replaceState(null, null, redirect);
         }
-      }      
-      xhttp.open("GET", file, true);
-      xhttp.send();
-      /*exit the function:*/
-      return;
-    }
-  }
-};
-</script>
-<body>
-<div w3-include-html="menu.html"></div> 
-
-<script>
-includeHTML();
-</script>
-<div id="header-img">
-<div id="header"><h1>Blisys DND Stuff</h1></div>
-<div class="textformat">
-<h2>Introduction</h2>
-<p>This is the Dungeons and Dragons section of my website, where I will be keeping track of the campaigns I play and DM in, as well as various homebrews by my friends and I! Please enjoy and use anything here you like! 
-</p>
-
-</body>
-
-
-
+      })();
+    </script>
+    <script type="module" crossorigin src="/assets/index-Nz1aZIUl.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-Be9zclyO.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
 </html>
