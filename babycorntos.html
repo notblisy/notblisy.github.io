@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+<title>
+Blisy RNG Guides
+</title>
+<link rel="stylesheet" type="text/css" href="style.css" title="default" />
+<link rel="alternate stylesheet" type="text/css" href="nightmode.css" title="alternate"/>
+<link rel="alternate stylesheet" type="text/css" href="dnd.css" title="dnd"/>
+<script type="text/javascript" src="style.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<script>
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};
+</script>
+<body>
+
+
+<div id="header-img">
+<div id="header"><h1>privacy policy</h1></div>
+<div w3-include-html="sidebar.html"></div> 
+
+<script>
+includeHTML();
+</script><div class="textformat">
+Terms of Service
+
+Effective Date: October 11, 2026
+
+Bot Name: babycornbot
+
+Welcome to babycornbot ("the Bot"). By adding the Bot to your Discord server or interacting with it, you agree to these Terms of Service ("Terms"). If you do not agree to these Terms, please remove the Bot from your server immediately.
+
+1. Acceptance of Terms
+
+These Terms constitute a legally binding agreement between you (the user or server administrator) and the creator of the Bot ("we," "our," or "us"). You must comply with Discord's Terms of Service and Community Guidelines at all times while using the Bot.
+
+2. Zero Data Collection Policy
+
+We respect your privacy. babycornbot does not collect, store, log, or process any personal data, user messages, user IDs, server IDs, or usage metrics.
+
+When you issue a command, the Bot processes the request in real-time within memory and immediately discards any associated information.
+
+No databases are maintained to track your activity, preferences, or interactions with the Bot.
+
+3. Changes to the Bot and Terms
+
+We reserve the right to modify, suspend, or discontinue the Bot (or any part of it) at any time without notice. We may also update these Terms periodically. Continued use of the Bot after changes constitutes your acceptance of the revised Terms.
+
+4. Intellectual Property and License
+
+The Bot's source code, branding, and associated assets are the property of the developer. Subject to these Terms, we grant you a limited, non-exclusive, non-transferable, revocable license to use babycornbot within Discord in accordance with its intended functionality.
+
+5. Disclaimer of Warranties
+
+babycornbot is provided on an "AS IS" and "AS AVAILABLE" basis, without warranties of any kind, whether express or implied. We do not guarantee that the Bot will be uninterrupted, secure, or error-free, or that it will meet your specific requirements.
+
+6. Limitation of Liability
+
+To the maximum extent permitted by applicable law, the creator of babycornbot shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, arising out of or related to your use of the Bot.
+
+7. Contact
+
+If you have any questions or concerns regarding these Terms or the operation of babycornbot, you can reach out via email at imablisy@gmail.com.</div>
+
+</body>
+
+
+
+</html>
